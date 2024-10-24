@@ -1,0 +1,50 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Modelos;
+
+import Modelos.Usuarios.AdminFlota;
+import Utils.IList;
+import Utils.Lista;
+
+/**
+ *
+ * @author Javier Argoty
+ */
+public class EmpresaTransporte {
+    private int nit;
+    private String nombre;
+    private AdminFlota admin;
+    
+    private IList<Bus> buses;
+    private IList<Viaje> viajes;
+
+    public EmpresaTransporte(int nit, String nombre, AdminFlota admin) {
+        this.nit = nit;
+        this.nombre = nombre;
+        this.admin = admin;
+        
+        this.buses = new Lista<>();
+        this.viajes = new Lista<>();
+    }
+
+    public int getNit() {
+        return nit;
+    }
+
+    public void setNit(int nit) {
+        this.nit = nit;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    
+}
+

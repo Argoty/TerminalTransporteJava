@@ -20,13 +20,17 @@ public class ControladorCaseta {
         this.caseta = caseta;
     }
     
-    public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento, int plazasEstacionamiento) {
-        caseta.asignarFlota(empresa, canonArrendamiento, plazasEstacionamiento);
+    public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento, 
+            int plazasEstacionamiento, Caseta[][] casetas, Caseta caseta) {
+        caseta.asignarFlota(empresa, canonArrendamiento, plazasEstacionamiento, casetas, caseta);
     }
     
 //    public AdminFlota getAdminFlota() {
 //        return caseta.getAdminFlota();
 //    }
+    public Caseta getCaseta() {
+        return caseta;
+    }
 
     public void liberarCaseta() {
         caseta.liberarCaseta();
@@ -35,8 +39,4 @@ public class ControladorCaseta {
     public boolean isDisponible() {
         return caseta.isDisponible();
     }
-    
-    
-    
-
 }

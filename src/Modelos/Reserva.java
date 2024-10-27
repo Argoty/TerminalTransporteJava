@@ -17,7 +17,6 @@ public class Reserva {
     private Date fechaReserva;     // Fecha de la reserva
     private boolean activa;        // Estado de la reserva (activa o cancelada)
 
-    // Constructor
     public Reserva(Cliente cliente, Viaje viaje, int cantidad) {
         this.cliente = cliente;
         this.viaje = viaje;

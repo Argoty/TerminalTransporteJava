@@ -4,8 +4,17 @@
  */
 package Vistas;
 
+import Controladores.ControladorBuses;
 import Controladores.ControladorCasetasPrincipal;
+import Controladores.ControladorCaseta;
 import Controladores.ControladorUsuario;
+
+import Modelos.Bus;
+import Modelos.Caseta;
+import Modelos.Usuarios.AdminFlota;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,17 +25,53 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     /**
      * Creates new form VistaGestionAdminFlota
      */
+    ControladorCaseta cc;
     ControladorCasetasPrincipal ccp;
     ControladorUsuario cu;
+    
+    ControladorBuses cb;
 
-    public VistaGestionAdminFlota(ControladorCasetasPrincipal ccp, ControladorUsuario cu) {
+    public VistaGestionAdminFlota(ControladorCasetasPrincipal ccp, ControladorUsuario cu, AdminFlota admin) {
         initComponents();
         setLocationRelativeTo(this);
 
         this.ccp = ccp;
         this.cu = cu;
+        
+        // Asignacion y creacion del controlador de la caseta de esta vista
+        Caseta caseta = ccp.getCasetaPorAdminID(admin.getNroId());
+        this.cc = new ControladorCaseta(caseta);
+        
+        // Creacion de controladores de cada tab
+        this.cb = new ControladorBuses(caseta.getEmpresa());
+        
+        // Refresco de las tablas
+        llenarTablaBuses();
+    }
+    // METODOS DEL TAB BUSES
+    private void limpiarCamposBus() {
+        placaBusField.setText("");
+        marcaBusField.setText("");
+        tipoBusField.setText("");
+        nroPuestosBusField.setText("");
     }
 
+    private void llenarTablaBuses() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"Placa", "Marca", "Tipo", "Nro Puestos"});
+        for (int i = 0; i < cb.getBuses().size(); i++) {
+            Bus bus = cb.getBuses().get(i);
+
+            model.addRow(new Object[]{
+                bus.getPlaca(),
+                bus.getMarca(),
+                bus.getTipo(),
+                bus.getPuestosDisponibles()
+            });
+        }
+        busesTabla.setModel(model);
+        plazasDispLabel.setText(cb.getBuses().size() + "/" + cc.getCaseta().getPlazasEstacionamiento());
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,19 +84,22 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jTabbedPaneAdminFlota = new javax.swing.JTabbedPane();
         gestionBusesPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        plazasDispLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        placaField = new javax.swing.JTextField();
-        nroPuestosField = new javax.swing.JTextField();
+        placaBusField = new javax.swing.JTextField();
+        nroPuestosBusField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        agregarBusBtn = new javax.swing.JButton();
+        eliminarBusBtn = new javax.swing.JButton();
+        editarBusBtn = new javax.swing.JButton();
+        buscarBusBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        busesTabla = new javax.swing.JTable();
+        jLabel15 = new javax.swing.JLabel();
+        marcaBusField = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        tipoBusField = new javax.swing.JTextField();
         gestionViajesPanel = new javax.swing.JPanel();
         gestionBusesPanel1 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -84,9 +132,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Plazas Disponibles:");
+        jLabel1.setText("Plazas Ocupadas:");
 
-        jLabel2.setText("1/10");
+        plazasDispLabel.setText("0/0");
 
         jLabel3.setText("Placa");
 
@@ -94,113 +142,135 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jLabel5.setText("Puestos");
 
-        jButton1.setText("Agregar");
+        agregarBusBtn.setText("Agregar");
+        agregarBusBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarBusBtnActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Eliminar");
+        eliminarBusBtn.setText("Eliminar");
+        eliminarBusBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBusBtnActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Editar");
+        editarBusBtn.setText("Editar");
+        editarBusBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarBusBtnActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Buscar");
+        buscarBusBtn.setText("Buscar");
+        buscarBusBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarBusBtnActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        busesTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Placa", "Numero Puestos"
+                "Placa", "Marca", "Tipo", "Numero Puestos"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(busesTabla);
+
+        jLabel15.setText("Marca");
+
+        jLabel16.setText("Tipo");
 
         javax.swing.GroupLayout gestionBusesPanelLayout = new javax.swing.GroupLayout(gestionBusesPanel);
         gestionBusesPanel.setLayout(gestionBusesPanelLayout);
         gestionBusesPanelLayout.setHorizontalGroup(
             gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel5)
-                        .addGap(236, 236, 236))
-                    .addGroup(gestionBusesPanelLayout.createSequentialGroup()
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gestionBusesPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(gestionBusesPanelLayout.createSequentialGroup()
+                                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel15))
+                                .addGap(46, 46, 46)
+                                .addComponent(placaBusField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(gestionBusesPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                                    .addComponent(jButton1)
-                                    .addGap(30, 30, 30)
-                                    .addComponent(jButton2))
-                                .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                                    .addComponent(jButton3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton4)))
+                                .addGap(45, 45, 45)
+                                .addComponent(plazasDispLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
+                                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(gestionBusesPanelLayout.createSequentialGroup()
+                                            .addComponent(jLabel16)
+                                            .addGap(41, 41, 41))
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nroPuestosField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(48, 48, 48)
-                                .addComponent(placaField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tipoBusField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(nroPuestosBusField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(marcaBusField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gestionBusesPanelLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(editarBusBtn)
+                            .addComponent(agregarBusBtn))
+                        .addGap(39, 39, 39)
+                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(eliminarBusBtn)
+                            .addComponent(buscarBusBtn))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         gestionBusesPanelLayout.setVerticalGroup(
             gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(28, 28, 28)
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(placaBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(marcaBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tipoBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addGap(18, 18, 18)
                 .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(placaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39)
-                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5))
-                            .addComponent(nroPuestosField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(53, 53, 53)
-                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2))
-                        .addGap(31, 31, 31)
-                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4)
-                            .addComponent(jButton3))
-                        .addGap(56, 56, 56))
-                    .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                        .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(23, Short.MAX_VALUE))))
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5))
+                    .addComponent(nroPuestosBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(plazasDispLabel))
+                .addGap(41, 41, 41)
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(agregarBusBtn)
+                    .addComponent(eliminarBusBtn))
+                .addGap(18, 18, 18)
+                .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buscarBusBtn)
+                    .addComponent(editarBusBtn))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionBusesPanelLayout.createSequentialGroup()
+                .addGap(0, 15, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
         );
 
         jTabbedPaneAdminFlota.addTab("Gestion Buses", gestionBusesPanel);
@@ -323,7 +393,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             gestionViajesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionViajesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(gestionBusesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 724, Short.MAX_VALUE)
+                .addComponent(gestionBusesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 789, Short.MAX_VALUE)
                 .addContainerGap())
         );
         gestionViajesPanelLayout.setVerticalGroup(
@@ -378,7 +448,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGap(82, 82, 82)
                         .addComponent(jButton5)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43))
         );
@@ -445,16 +515,77 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
 
+    private void agregarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBusBtnActionPerformed
+        try {
+            String placa = placaBusField.getText();
+            String marca = marcaBusField.getText();
+            String tipo = tipoBusField.getText();
+            int nroPuestos = Integer.parseInt(nroPuestosBusField.getText());
+            
+            cb.agregarBus(new Bus(placa, marca, tipo, nroPuestos), ccp.getCasetas(), cc.getCaseta().getPlazasEstacionamiento());
+            llenarTablaBuses();
+            limpiarCamposBus();
+            JOptionPane.showMessageDialog(this, "Bus agregado correctamente");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El numero de puestos debe ser un número válido", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        } catch(RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_agregarBusBtnActionPerformed
+
+    private void eliminarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBusBtnActionPerformed
+        try {
+            String placa = placaBusField.getText();
+            cb.eliminarBus(placa);
+            llenarTablaBuses();
+            JOptionPane.showMessageDialog(this, "Bus eliminado correctamente");
+        } catch(RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_eliminarBusBtnActionPerformed
+
+    private void editarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBusBtnActionPerformed
+        try {
+            String placa = placaBusField.getText();
+            String marca = marcaBusField.getText();
+            String tipo = tipoBusField.getText();
+            int nroPuestos = Integer.parseInt(nroPuestosBusField.getText());
+            
+            cb.editarBus(new Bus(placa, marca, tipo, nroPuestos));
+            llenarTablaBuses();
+            limpiarCamposBus();
+            JOptionPane.showMessageDialog(this, "Bus agregado correctamente");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El numero de puestos debe ser un número válido", "Error de formato", JOptionPane.ERROR_MESSAGE);
+        } catch(RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_editarBusBtnActionPerformed
+
+    private void buscarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBusBtnActionPerformed
+        try {
+            String placa = placaBusField.getText();
+            Bus bus = cb.buscarBusPorPlaca(placa);
+            marcaBusField.setText(bus.getMarca());
+            tipoBusField.setText(bus.getTipo());
+            nroPuestosBusField.setText(bus.getPuestosDisponibles() + "");
+            JOptionPane.showMessageDialog(this, "Bus encontrado correctamente");
+        } catch(RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_buscarBusBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton agregarBusBtn;
+    private javax.swing.JButton buscarBusBtn;
+    private javax.swing.JTable busesTabla;
     private javax.swing.JButton cerrarSesionBtn;
+    private javax.swing.JButton editarBusBtn;
+    private javax.swing.JButton eliminarBusBtn;
     private javax.swing.JPanel gestionBusesPanel;
     private javax.swing.JPanel gestionBusesPanel1;
     private javax.swing.JPanel gestionVentaTiqPanel;
     private javax.swing.JPanel gestionViajesPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -466,7 +597,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -474,22 +606,23 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPaneAdminFlota;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField nroPuestosField;
+    private javax.swing.JTextField marcaBusField;
+    private javax.swing.JTextField nroPuestosBusField;
     private javax.swing.JTextField nroPuestosField1;
     private javax.swing.JTextField nroPuestosField2;
     private javax.swing.JTextField nroPuestosField3;
-    private javax.swing.JTextField placaField;
+    private javax.swing.JTextField placaBusField;
     private javax.swing.JTextField placaField1;
+    private javax.swing.JLabel plazasDispLabel;
+    private javax.swing.JTextField tipoBusField;
     // End of variables declaration//GEN-END:variables
 }

@@ -10,8 +10,8 @@ package Modelos.Usuarios;
  */
 public class AdminTerminal extends Usuario {
 
-    public AdminTerminal(String name,int nroId, String password) {
-        super(name,nroId, password);
+    public AdminTerminal(String name,int nroId, String email, String tel,String password) {
+        super(name,nroId, email, tel,password);
     }
 
     // Métodos adicionales específicos para la gestión de casetas y empresas

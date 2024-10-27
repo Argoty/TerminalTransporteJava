@@ -11,8 +11,8 @@ package Modelos.Usuarios;
 public class AdminFlota extends Usuario {
 
 
-    public AdminFlota(String name,int nroId, String password) {
-        super(name,nroId, password);
+    public AdminFlota(String name,int nroId, String email, String tel,String password) {
+        super(name,nroId, email, tel,password);
 
     }
 

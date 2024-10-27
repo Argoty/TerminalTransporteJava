@@ -10,11 +10,15 @@ package Modelos;
  */
 public class Bus {
     private String placa;
+    private String marca;
+    private String tipo; // Por ejemplo, "Turismo", "Lujo", "Económico", "MiniBus"
     private int puestosDisponibles;
     private boolean disponible;
 
-    public Bus(String placa, int puestosDisponibles) {
+    public Bus(String placa, String marca, String tipo,int puestosDisponibles) {
         this.placa = placa;
+        this.marca = marca;
+        this.tipo = tipo;
         this.puestosDisponibles = puestosDisponibles;
         this.disponible = true; // por defecto está disponible al ser creado
     }
@@ -33,6 +37,22 @@ public class Bus {
 
     public void setPuestosDisponibles(int puestosDisponibles) {
         this.puestosDisponibles = puestosDisponibles;
+    }
+    
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+    
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public boolean isDisponible() {

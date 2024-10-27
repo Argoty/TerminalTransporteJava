@@ -6,8 +6,10 @@ package Modelos.Usuarios;
 
 import Modelos.Devolucion;
 import Modelos.Notificacion;
+import Modelos.Reserva;
 import Modelos.Tiquete;
 import Utils.IList;
+import Utils.Lista;
 
 /**
  *
@@ -16,14 +18,18 @@ import Utils.IList;
 public class Cliente extends Usuario {
     private int puntosAcumulados;
     // Sujeto a cambios
-    //private IList<Notificacion> notificaciones;
-    //private IList<Notificacion> tiquetes;
-    
+    private IList<Notificacion> notificaciones;
+    private IList<Tiquete> tiquetes;
+    private IList<Reserva> reservas;
 
 
-    public Cliente(String name,int nroId, String password) {
-        super(name, nroId,password);
+    public Cliente(String name,int nroId, String email, String tel,String password) {
+        super(name,nroId, email, tel,password);
         this.puntosAcumulados = 0;
+        
+        notificaciones = new Lista<>();
+        tiquetes = new Lista<>();
+        reservas = new Lista<>();
     }
 
 

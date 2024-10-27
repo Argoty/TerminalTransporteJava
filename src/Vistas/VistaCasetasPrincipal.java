@@ -52,9 +52,9 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
     }
 
     private void dibujarBotones() {
-        int separado = 20; // Espacio entre los botones
-        int ancho = 80;    // Ancho de cada botón
-        int alto = 60;     // Alto de cada botón
+        int separado = 20; 
+        int ancho = 80;    
+        int alto = 60;     
 
         for (int i = 0; i < botones.length; i++) {
             for (int j = 0; j < botones[i].length; j++) {
@@ -68,11 +68,11 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
                 botones[i][j].setBounds(
                         ancho * validacionSeparacion + separado,
                         alto * i + separado,
-                        ancho, alto);         // Dimensiones del botón (ancho y alto)
+                        ancho, alto);         
 
-                //botones[i][j].setText(String.valueOf(texto)); // Establecer el texto del botón
-                botones[i][j].addActionListener(this);        // Añadir el ActionListener
-                panelBtnCasetas.add(botones[i][j]);              // Añadir el botón al panel
+                //botones[i][j].setText(String.valueOf(texto)); 
+                botones[i][j].addActionListener(this);        
+                panelBtnCasetas.add(botones[i][j]);              
             }
         }
     }
@@ -120,7 +120,6 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
 
         panelBtnCasetas = new javax.swing.JPanel();
         cerrarSesionBtn = new javax.swing.JButton();
-        listaEmpBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,21 +133,12 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
             }
         });
 
-        listaEmpBtn.setText("Lista de Empresas");
-        listaEmpBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listaEmpBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelBtnCasetasLayout = new javax.swing.GroupLayout(panelBtnCasetas);
         panelBtnCasetas.setLayout(panelBtnCasetasLayout);
         panelBtnCasetasLayout.setHorizontalGroup(
             panelBtnCasetasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCasetasLayout.createSequentialGroup()
-                .addContainerGap(188, Short.MAX_VALUE)
-                .addComponent(listaEmpBtn)
-                .addGap(31, 31, 31)
+                .addContainerGap(336, Short.MAX_VALUE)
                 .addComponent(cerrarSesionBtn)
                 .addGap(22, 22, 22))
         );
@@ -156,9 +146,7 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
             panelBtnCasetasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCasetasLayout.createSequentialGroup()
                 .addContainerGap(248, Short.MAX_VALUE)
-                .addGroup(panelBtnCasetasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cerrarSesionBtn)
-                    .addComponent(listaEmpBtn))
+                .addComponent(cerrarSesionBtn)
                 .addContainerGap())
         );
 
@@ -190,15 +178,8 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
         this.dispose();
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
 
-    private void listaEmpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaEmpBtnActionPerformed
-        // TODO add your handling code here:
-        new VistaListaEmpresa(ccp, cu).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_listaEmpBtnActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cerrarSesionBtn;
-    private javax.swing.JButton listaEmpBtn;
     private javax.swing.JPanel panelBtnCasetas;
     // End of variables declaration//GEN-END:variables
 

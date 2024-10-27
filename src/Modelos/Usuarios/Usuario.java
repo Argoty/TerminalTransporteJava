@@ -11,11 +11,15 @@ package Modelos.Usuarios;
 public abstract class Usuario {
     private String name;
     private int nroId;
+    private String email;
+    private String telefono;
     private String password;
 
-    public Usuario(String name, int nroId,String password) {
+    public Usuario(String name, int nroId,String email, String telefono,String password) {
         this.name = name;
         this.nroId = nroId;
+        this.email = email;
+        this.telefono = telefono;
         this.password = password;
     }
 
@@ -32,6 +36,18 @@ public abstract class Usuario {
 
     public void setNroId(int nroId) {
         this.nroId = nroId;
+    }
+    public String getEmail() {
+        return this.email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getTelefono() {
+        return this.telefono;
+    }
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getPassword() {

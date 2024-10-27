@@ -214,7 +214,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
                     new VistaCasetasPrincipal(ccp, cu).setVisible(true);
                     this.dispose();
                 } else if (usuario instanceof AdminFlota) {
-                    new VistaGestionAdminFlota(ccp, cu).setVisible(true);
+                    new VistaGestionAdminFlota(ccp, cu, (AdminFlota) usuario).setVisible(true);
                     this.dispose();
                 } else if (usuario instanceof Cliente) {
                     new VistaGestionCliente(ccp, cu).setVisible(true);

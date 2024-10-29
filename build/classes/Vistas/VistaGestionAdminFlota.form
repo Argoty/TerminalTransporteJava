@@ -29,7 +29,7 @@
               <EmptySpace max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="622" max="32767" attributes="0"/>
+              <EmptySpace pref="672" max="32767" attributes="0"/>
               <Component id="cerrarSesionBtn" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
           </Group>
@@ -114,9 +114,9 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="16" max="32767" attributes="0"/>
+                      <EmptySpace pref="41" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="42" max="32767" attributes="0"/>
+                      <EmptySpace pref="67" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -307,32 +307,34 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                           <Component id="jLabel8" max="32767" attributes="0"/>
                                           <Component id="jLabel6" max="32767" attributes="0"/>
                                           <Component id="jLabel7" alignment="0" pref="82" max="32767" attributes="0"/>
                                           <Component id="jLabel9" alignment="0" max="32767" attributes="0"/>
                                           <Component id="jLabel10" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="jLabel17" alignment="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="placaField1" max="32767" attributes="0"/>
-                                      <Component id="nroPuestosField1" max="32767" attributes="0"/>
-                                      <Component id="nroPuestosField2" max="32767" attributes="0"/>
-                                      <Component id="nroPuestosField3" max="32767" attributes="0"/>
-                                      <Component id="jComboBox1" alignment="0" pref="126" max="32767" attributes="0"/>
-                                      <Component id="jTextField1" max="32767" attributes="0"/>
+                                      <Component id="destinoField" max="32767" attributes="0"/>
+                                      <Component id="horaSalField" max="32767" attributes="0"/>
+                                      <Component id="fechaLlegField" max="32767" attributes="0"/>
+                                      <Component id="horaLlegField" max="32767" attributes="0"/>
+                                      <Component id="busesCoBox" alignment="0" pref="126" max="32767" attributes="0"/>
+                                      <Component id="vlrUnitField" max="32767" attributes="0"/>
+                                      <Component id="fechaSalField" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
-                                  <Component id="jButton6" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
+                                  <Component id="crearViajeBtn" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" min="-2" pref="456" max="-2" attributes="0"/>
+                          <Component id="jScrollPane2" min="-2" pref="475" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
@@ -343,46 +345,51 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jScrollPane2" min="-2" pref="351" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
                                           <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                              <Component id="placaField1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="destinoField" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="nroPuestosField1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="fechaSalField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="horaSalField" alignment="1" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
                                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="nroPuestosField2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                                              <Component id="nroPuestosField3" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="fechaLlegField" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-                                  <Component id="jButton6" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="horaLlegField" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="busesCoBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="vlrUnitField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                                  <Component id="crearViajeBtn" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace pref="26" max="32767" attributes="0"/>
@@ -396,14 +403,17 @@
                     <Property name="text" type="java.lang.String" value="Destino"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="placaField1">
+                <Component class="javax.swing.JTextField" name="destinoField">
                 </Component>
-                <Component class="javax.swing.JTextField" name="nroPuestosField1">
+                <Component class="javax.swing.JTextField" name="horaSalField">
                 </Component>
-                <Component class="javax.swing.JButton" name="jButton6">
+                <Component class="javax.swing.JButton" name="crearViajeBtn">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Crear Viaje"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="crearViajeBtnActionPerformed"/>
+                  </Events>
                 </Component>
                 <Container class="javax.swing.JPanel" name="jPanel2">
 
@@ -430,11 +440,10 @@
                     <Component class="javax.swing.JTable" name="jTable2">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="6" rowCount="4">
+                          <Table columnCount="5" rowCount="4">
                             <Column editable="true" title="Destino" type="java.lang.Object"/>
-                            <Column editable="true" title="Hora Salida" type="java.lang.Object"/>
+                            <Column editable="true" title="Fecha Salida" type="java.lang.Object"/>
                             <Column editable="true" title="Fecha llegada" type="java.lang.Object"/>
-                            <Column editable="true" title="Hora llegada" type="java.lang.Object"/>
                             <Column editable="true" title="Bus" type="java.lang.Object"/>
                             <Column editable="true" title="Vlr Unit" type="java.lang.Object"/>
                           </Table>
@@ -453,21 +462,21 @@
                     <Property name="text" type="java.lang.String" value="Fecha llegada"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="nroPuestosField2">
+                <Component class="javax.swing.JTextField" name="fechaLlegField">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hora llegada"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="nroPuestosField3">
+                <Component class="javax.swing.JTextField" name="horaLlegField">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Bus"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox1">
+                <Component class="javax.swing.JComboBox" name="busesCoBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="4">
@@ -487,7 +496,14 @@
                     <Property name="text" type="java.lang.String" value="Valor Unitario"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField1">
+                <Component class="javax.swing.JTextField" name="vlrUnitField">
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel17">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Fecha Salida"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="fechaSalField">
                 </Component>
               </SubComponents>
             </Container>
@@ -526,7 +542,7 @@
                               <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="164" max="32767" attributes="0"/>
+                      <EmptySpace pref="149" max="32767" attributes="0"/>
                       <Component id="jScrollPane3" min="-2" pref="364" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   </Group>

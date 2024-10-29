@@ -7,6 +7,9 @@ package Modelos;
 import Modelos.Usuarios.AdminFlota;
 import Utils.IList;
 import Utils.Lista;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  *
@@ -55,8 +58,10 @@ public class EmpresaTransporte {
         return buses;
     }
 
-    public void agregarBus(Bus bus, Caseta[][] casetas,int nroPlazasCaseta) throws RuntimeException {
-        if (buses.size() >= nroPlazasCaseta) throw new RuntimeException("La caseta de esta empresa ya tiene las plazas ocupadas");
+    public void agregarBus(Bus bus, Caseta[][] casetas, int nroPlazasCaseta) throws RuntimeException {
+        if (buses.size() >= nroPlazasCaseta) {
+            throw new RuntimeException("La caseta de esta empresa ya tiene las plazas ocupadas");
+        }
         if (esVaciosCamposBus(bus)) {
             throw new RuntimeException("COMPLETA LOS CAMPOS");
         }
@@ -70,7 +75,9 @@ public class EmpresaTransporte {
     private boolean buscarBusGlobal(String placa, Caseta[][] casetas) {
         for (Caseta[] caseta : casetas) {
             for (Caseta caseta1 : caseta) {
-                if (caseta1.getEmpresa() == null) continue;
+                if (caseta1.getEmpresa() == null) {
+                    continue;
+                }
                 for (int k = 0; k < caseta1.getEmpresa().getBuses().size(); k++) {
                     if (caseta1.getEmpresa().getBuses().get(k).getPlaca().equals(placa)) {
                         return true;
@@ -121,4 +128,46 @@ public class EmpresaTransporte {
         return null;
     }
 
+    // --------------------- METODOS PARA GESTIONAR VIAJES -------------------------------
+    public void agregarViaje(String destino, String fSal, String hSal, String fLle, String hLle,
+            String placaBus, int vlrUnit) throws RuntimeException {
+        if (destino.isBlank() || placaBus.isBlank()) {
+            throw new RuntimeException("LOS CAMPOS NO DEBEN SER VACIOS");
+        }
+
+        // Formato de fecha y hora
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        // Concatenar fecha y hora para salida y llegada
+        String fechaHoraSalidaTexto = fSal + " " + hSal;
+        String fechaHoraLlegadaTexto = fLle + " " + hLle;
+
+        LocalDateTime fechaSalida;
+        LocalDateTime fechaLlegada;
+
+        try {
+            // Parsear las fechas y horas de salida y llegada
+            fechaSalida = LocalDateTime.parse(fechaHoraSalidaTexto, formatter);
+            fechaLlegada = LocalDateTime.parse(fechaHoraLlegadaTexto, formatter);
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("FORMATO DE FECHA U HORA INCORRECTO. USE yyyy-MM-dd para fecha y HH:mm para hora.");
+        }
+
+        // Validación: La fecha de salida debe estar en el futuro
+        if (!fechaSalida.isAfter(LocalDateTime.now())) {
+            throw new RuntimeException("LA FECHA Y HORA DE SALIDA DEBEN SER FUTURAS.");
+        }
+
+        // Validación: La fecha de llegada debe ser posterior a la fecha de salida
+        if (!fechaLlegada.isAfter(fechaSalida)) {
+            throw new RuntimeException("LA FECHA Y HORA DE LLEGADA DEBEN SER POSTERIORES A LA FECHA Y HORA DE SALIDA.");
+        }
+
+        // Asumimos que tienes una lista de buses para buscar por placa
+        Bus bus = buscarBusPorPlaca(placaBus);
+
+        // Crear y agregar el viaje si todas las validaciones son correctas
+        Viaje nuevoViaje = new Viaje(destino, fechaSalida, fechaLlegada, vlrUnit, bus);
+        viajes.add(nuevoViaje);
+    }
 }

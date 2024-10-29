@@ -11,6 +11,7 @@ package Modelos;
 import Utils.IList;
 import Utils.Lista;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Viaje {
     private String origen = "Armenia";
@@ -18,13 +19,13 @@ public class Viaje {
     private LocalDateTime fechaSalida;  // Incluye fecha y hora de salida
     private LocalDateTime fechaLlegada; // Incluye fecha y hora de llegada
     private LocalDateTime fechaCreacion; // Fecha y hora de creación del viaje
-    private double vlrUnit;
+    private int vlrUnit;
     private Bus bus;
     
     private IList<Tiquete> tiquetes;
 
     // Constructor
-    public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, double vlrUnit, Bus bus) {
+    public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int vlrUnit, Bus bus) {
         this.destino = destino;
         this.fechaSalida = fechaSalida;
         this.fechaLlegada = fechaLlegada;
@@ -55,6 +56,9 @@ public class Viaje {
     public LocalDateTime getFechaSalida() {
         return fechaSalida;
     }
+    public String getFechaSalidaStr() {
+        return this.fechaSalida.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
 
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
@@ -62,6 +66,9 @@ public class Viaje {
 
     public LocalDateTime getFechaLlegada() {
         return fechaLlegada;
+    }
+    public String getFechaLlegadaStr() {
+        return this.fechaLlegada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public void setFechaLlegada(LocalDateTime fechaLlegada) {
@@ -72,11 +79,11 @@ public class Viaje {
         return fechaCreacion;
     }
 
-    public double getVlrUnit() {
+    public int getVlrUnit() {
         return vlrUnit;
     }
 
-    public void setVlrUnit(double vlrUnit) {
+    public void setVlrUnit(int vlrUnit) {
         this.vlrUnit = vlrUnit;
     }
 

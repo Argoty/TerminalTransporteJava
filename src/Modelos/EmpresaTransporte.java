@@ -129,6 +129,9 @@ public class EmpresaTransporte {
     }
 
     // --------------------- METODOS PARA GESTIONAR VIAJES -------------------------------
+    public IList<Viaje> getViajes() {
+        return this.viajes;
+    }
     public void agregarViaje(String destino, String fSal, String hSal, String fLle, String hLle,
             String placaBus, int vlrUnit) throws RuntimeException {
         if (destino.isBlank() || placaBus.isBlank()) {
@@ -136,7 +139,7 @@ public class EmpresaTransporte {
         }
 
         // Formato de fecha y hora
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         // Concatenar fecha y hora para salida y llegada
         String fechaHoraSalidaTexto = fSal + " " + hSal;
@@ -150,7 +153,7 @@ public class EmpresaTransporte {
             fechaSalida = LocalDateTime.parse(fechaHoraSalidaTexto, formatter);
             fechaLlegada = LocalDateTime.parse(fechaHoraLlegadaTexto, formatter);
         } catch (DateTimeParseException e) {
-            throw new RuntimeException("FORMATO DE FECHA U HORA INCORRECTO. USE yyyy-MM-dd para fecha y HH:mm para hora.");
+            throw new RuntimeException("FORMATO DE FECHA U HORA INCORRECTO. USE dia/mes/año para fecha y Hora:minutos para hora.");
         }
 
         // Validación: La fecha de salida debe estar en el futuro
@@ -169,5 +172,8 @@ public class EmpresaTransporte {
         // Crear y agregar el viaje si todas las validaciones son correctas
         Viaje nuevoViaje = new Viaje(destino, fechaSalida, fechaLlegada, vlrUnit, bus);
         viajes.add(nuevoViaje);
+    }
+    public void eliminarViaje(int nroViaje) {
+        viajes.remove(nroViaje);
     }
 }

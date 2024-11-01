@@ -6,6 +6,7 @@ package Vistas;
 
 import Controladores.ControladorCasetasPrincipal;
 import Controladores.ControladorUsuario;
+import Modelos.Usuarios.Cliente;
 
 /**
  *
@@ -16,14 +17,10 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     /**
      * Creates new form VistaGestionCliente
      */
-    ControladorCasetasPrincipal ccp;
-    ControladorUsuario cu;
-    public VistaGestionCliente(ControladorCasetasPrincipal ccp, ControladorUsuario cu) {
+
+    public VistaGestionCliente(Cliente cliente) {
         initComponents();
         setLocationRelativeTo(this);
-        
-        this.ccp = ccp;
-        this.cu = cu;
     }
 
     /**
@@ -317,7 +314,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
     private void cerrarSesionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionBtnActionPerformed
         // TODO add your handling code here:
-        new VistaAccesoUsuario(cu, ccp).setVisible(true);
+        new VistaAccesoUsuario().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
 

@@ -4,17 +4,10 @@
  */
 package Controladores;
 
-import Modelos.Usuarios.AdminFlota;
-import Modelos.Usuarios.AdminTerminal;
-import Modelos.Usuarios.Cliente;
-import Modelos.Usuarios.Usuario;
-import Utils.IList;
-import Utils.Lista;
-
 /**
  *
- * @author Javier Argoty
+ * @author PC
  */
-public class ControladorUsuario {
+public class ControladorTiquetes {
     
 }

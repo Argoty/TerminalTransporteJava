@@ -22,20 +22,17 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
 
     JButton[][] botones;
     ControladorCasetasPrincipal ccp;
-    ControladorUsuario cu;
     
-    public VistaCasetasPrincipal(ControladorCasetasPrincipal ccp, ControladorUsuario cu) {
+    public VistaCasetasPrincipal() {
         initComponents();
         setLocationRelativeTo(this);
         
-        this.ccp = ccp;
-        this.cu = cu;
+        this.ccp = new ControladorCasetasPrincipal();
 
         this.botones = new JButton[4][];
         configurarMatrizBotones(botones, 5);
 
         dibujarBotones();
-        //pintarBotones();
     }
 
     private void configurarMatrizBotones(JButton[][] botones, int columnas) {
@@ -76,22 +73,6 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
             }
         }
     }
-
-
-//    private void pintarBotones() {
-//        for (int i = 0; i < botones.length; i++) {
-//            for (int j = 0; j < botones[i].length; j++) {
-//                Caseta caseta = ccp.getCaseta(i, j);
-//                if (caseta.validarOcupada()) {
-//                    botones[i][j].setBackground(Color.GREEN);
-//                } else if (caseta.getPersonaUsuario() != null) {
-//                    botones[i][j].setBackground(Color.BLUE);
-//                } else {
-//                    botones[i][j].setBackground(Color.WHITE);
-//                }
-//            }
-//        }
-//    }
     @Override
     public void actionPerformed(ActionEvent e) {
         for (int i = 0; i < botones.length; i++) {
@@ -101,7 +82,7 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
                     int columna = j;
                     Caseta caseta = ccp.getCaseta(fila, columna);
                     
-                    new VistaFlota(ccp, cu, caseta).setVisible(true);
+                    new VistaCaseta(caseta).setVisible(true);
                     this.dispose();
                 }
             }
@@ -173,8 +154,7 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
     }// </editor-fold>//GEN-END:initComponents
 
     private void cerrarSesionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionBtnActionPerformed
-        // TODO add your handling code here:
-        new VistaAccesoUsuario(cu, ccp).setVisible(true);
+        new VistaAccesoUsuario().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
 

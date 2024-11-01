@@ -6,6 +6,9 @@ package Controladores;
 
 import Modelos.Caseta;
 import Modelos.EmpresaTransporte;
+import Servicios.ServicioCaseta;
+import Servicios.ServicioCasetasPrincipal;
+import Servicios.ServicioUsuarios;
 
 /**
  *
@@ -13,30 +16,44 @@ import Modelos.EmpresaTransporte;
  */
 
 public class ControladorCaseta {
-
-    Caseta caseta;
-
+    private ServicioCaseta sc;
+    private ServicioCasetasPrincipal scp;
+    private ServicioUsuarios su;
+    
     public ControladorCaseta(Caseta caseta) {
-        this.caseta = caseta;
+        this.sc = new ServicioCaseta(caseta);
+        this.scp = ServicioCasetasPrincipal.getInstance();
+        this.su = ServicioUsuarios.getInstance();
     }
     
     public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento, 
-            int plazasEstacionamiento, Caseta[][] casetas, Caseta caseta) {
-        caseta.asignarFlota(empresa, canonArrendamiento, plazasEstacionamiento, casetas, caseta);
+            int plazasEstacionamiento) {
+          if (this.isDisponible()) {
+                // Valida primero info del usuario admin
+                su.validarUsuarioInfo(empresa.getAdmin());
+                // Asigno toda la flota
+                sc.asignarFlota(empresa,
+                        canonArrendamiento, plazasEstacionamiento, scp.getCasetas());
+                su.registrarUsuario(empresa.getAdmin());
+            } else {
+                sc.asignarFlota(empresa,
+                        canonArrendamiento, plazasEstacionamiento, scp.getCasetas());
+                su.actualizarUsuario(empresa.getAdmin());
+            }
     }
     
 //    public AdminFlota getAdminFlota() {
 //        return caseta.getAdminFlota();
 //    }
     public Caseta getCaseta() {
-        return caseta;
+        return sc.getCaseta();
     }
 
-    public void liberarCaseta() {
-        caseta.liberarCaseta();
-    }
+//    public void liberarCaseta() {
+//        caseta.liberarCaseta();
+//    }
 
     public boolean isDisponible() {
-        return caseta.isDisponible();
+        return sc.isDisponible();
     }
 }

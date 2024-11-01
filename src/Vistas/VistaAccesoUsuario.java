@@ -4,8 +4,8 @@
  */
 package Vistas;
 
-import Controladores.ControladorCasetasPrincipal;
-import Controladores.ControladorUsuario;
+import Controladores.ControladorLogin;
+import Controladores.ControladorRegistro;
 import Modelos.Usuarios.AdminFlota;
 import Modelos.Usuarios.AdminTerminal;
 import Modelos.Usuarios.Cliente;
@@ -21,15 +21,14 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
     /**
      * Creates new form VistaAccesoUsuario
      */
-    ControladorUsuario cu;
-    ControladorCasetasPrincipal ccp;
-
-    public VistaAccesoUsuario(ControladorUsuario cu, ControladorCasetasPrincipal ccp) {
+    ControladorLogin cl;
+    ControladorRegistro cr;
+    public VistaAccesoUsuario() {
         initComponents();
         setLocationRelativeTo(this);
         
-        this.cu = cu == null ? new ControladorUsuario() : cu;
-        this.ccp = ccp == null ? new ControladorCasetasPrincipal() : ccp;
+        this.cl = new ControladorLogin();
+        this.cr = new ControladorRegistro();
     }
 
     /**
@@ -208,16 +207,16 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
             int id = Integer.parseInt(nroIdField.getText());
             String password = passwordField.getText();
 
-            Usuario usuario = cu.loginUsuario(id, password);
+            Usuario usuario = cl.login(id, password);
             if (usuario != null) {
                 if (usuario instanceof AdminTerminal) {
-                    new VistaCasetasPrincipal(ccp, cu).setVisible(true);
+                    new VistaCasetasPrincipal().setVisible(true);
                     this.dispose();
                 } else if (usuario instanceof AdminFlota) {
-                    new VistaGestionAdminFlota(ccp, cu, (AdminFlota) usuario).setVisible(true);
+                    new VistaGestionAdminFlota((AdminFlota) usuario).setVisible(true);
                     this.dispose();
                 } else if (usuario instanceof Cliente) {
-                    new VistaGestionCliente(ccp, cu).setVisible(true);
+                    new VistaGestionCliente((Cliente) usuario).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(
@@ -238,7 +237,6 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registroCliBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registroCliBtnActionPerformed
-        // TODO add your handling code here:
         try {
             String nombreCli = nombreCliField.getText();
             int idCli = Integer.parseInt(nroIdCliField.getText());
@@ -285,7 +283,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VistaAccesoUsuario(null,null).setVisible(true);
+                new VistaAccesoUsuario().setVisible(true);
             }
         });
     }

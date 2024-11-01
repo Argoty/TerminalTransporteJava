@@ -9,29 +9,41 @@ import Modelos.Caseta;
 import Modelos.EmpresaTransporte;
 import Utils.IList;
 
+import Servicios.ServicioCasetasPrincipal;
+import Servicios.ServicioBuses;
+
 /**
  *
  * @author PC
  */
 public class ControladorBuses {
-    EmpresaTransporte empresa;
+    private ServicioBuses sb;
+    private ServicioCasetasPrincipal scc;
 
-    public ControladorBuses(EmpresaTransporte empresa) {
-        this.empresa = empresa;
+    public ControladorBuses(int idAdmin) {
+        this.scc = ServicioCasetasPrincipal.getInstance();
+        EmpresaTransporte empr = scc.getCasetaPorAdminID(idAdmin)
+                .getEmpresa();
+        this.sb = new ServicioBuses(empr);
     }
-    public void agregarBus(Bus bus, Caseta[][] casetas, int nroPlazasCaseta) throws RuntimeException{
-        empresa.agregarBus(bus, casetas, nroPlazasCaseta);
+
+    public void agregarBus(Bus bus, int nroPlazasCaseta) throws RuntimeException {
+        sb.agregarBus(bus, scc.getCasetas(), nroPlazasCaseta);
     }
-    public void editarBus(Bus bus) throws RuntimeException{
-        empresa.editarBus(bus);
+
+    public void editarBus(Bus bus) throws RuntimeException {
+        sb.editarBus(bus);
     }
-    public void eliminarBus(String placa) throws RuntimeException{
-        empresa.eliminarBus(placa);
+
+    public void eliminarBus(String placa) throws RuntimeException {
+        sb.eliminarBus(placa);
     }
+
     public Bus buscarBusPorPlaca(String placa) {
-        return empresa.buscarBusPorPlaca(placa);
+        return sb.buscarBusPorPlaca(placa);
     }
+
     public IList<Bus> getBuses() {
-        return empresa.getBuses();
+        return sb.getBuses();
     }
 }

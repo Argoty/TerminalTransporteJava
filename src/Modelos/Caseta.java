@@ -25,9 +25,9 @@ public class Caseta {
 
 
     public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento, 
-            int plazasEstacionamiento, Caseta[][] casetas, Caseta caseta) throws RuntimeException {
+            int plazasEstacionamiento, Caseta[][] casetas) throws RuntimeException {
         if (empresa.getNombre().isBlank()) throw new RuntimeException("COMPLETA TODOS LOS CAMPOS");
-        if (!validarNitEmpresa(casetas, caseta.getNroCaseta(), empresa.getNit())) throw new RuntimeException("El nit de esta empresa ya existe");
+        if (!validarNitEmpresa(casetas, this.getNroCaseta(), empresa.getNit())) throw new RuntimeException("El nit de esta empresa ya existe");
         
         this.empresa = empresa;
         this.canonArrendamiento = canonArrendamiento;

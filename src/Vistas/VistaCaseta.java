@@ -5,8 +5,7 @@
 package Vistas;
 
 import Controladores.ControladorCaseta;
-import Controladores.ControladorCasetasPrincipal;
-import Controladores.ControladorUsuario;
+
 import Modelos.Caseta;
 import Modelos.EmpresaTransporte;
 import Modelos.Usuarios.AdminFlota;
@@ -16,22 +15,17 @@ import javax.swing.JOptionPane;
  *
  * @author PC
  */
-public class VistaFlota extends javax.swing.JFrame {
+public class VistaCaseta extends javax.swing.JFrame {
 
     /**
      * Creates new form VistaFlota
      */
-    ControladorCasetasPrincipal ccp;
-    ControladorUsuario cu;
     ControladorCaseta cc;
 
-    public VistaFlota(ControladorCasetasPrincipal ccp, ControladorUsuario cu, Caseta caseta) {
+    public VistaCaseta(Caseta caseta) {
         initComponents();
         setLocationRelativeTo(this);
-        this.ccp = ccp;
-        this.cu = cu;
-        cc = new ControladorCaseta(caseta);
-
+        this.cc = new ControladorCaseta(caseta);
         obtenerDatosCaseta();
     }
 
@@ -53,7 +47,7 @@ public class VistaFlota extends javax.swing.JFrame {
 
             passwordFlotaField.setEnabled(false);
             nroIdAdminField.setEnabled(false);
-            
+
             guardarFlotaBtn.setText("Editar Flota");
         }
     }
@@ -273,8 +267,7 @@ public class VistaFlota extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void regresarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarBtnActionPerformed
-        // TODO add your handling code here:
-        new VistaCasetasPrincipal(ccp, cu).setVisible(true);
+        new VistaCasetasPrincipal().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_regresarBtnActionPerformed
 
@@ -293,27 +286,15 @@ public class VistaFlota extends javax.swing.JFrame {
 
             String password = passwordFlotaField.getText();
 
-            AdminFlota admin = new AdminFlota(nombreAd, nroIdAd, emailAd, telAd, password);
-
-            if (cc.isDisponible()) {
-                // Valida primero info del usuario admin
-                cu.validarUsuarioInfo(admin);
-                // Asigno toda la flota
-                cc.asignarFlota(new EmpresaTransporte(nit, nombreEmp, admin),
-                        canon, plazas, ccp.getCasetas(), cc.getCaseta());
-                cu.registrarUsuario(admin);
-            } else {
-                cc.asignarFlota(new EmpresaTransporte(nit, nombreEmp, admin),
-                        canon, plazas, ccp.getCasetas(), cc.getCaseta());
-                cu.actualizarUsuario(admin);
-            }
-
+            cc.asignarFlota(new EmpresaTransporte(nit, nombreEmp,
+                    new AdminFlota(nombreAd, nroIdAd, emailAd, telAd, password)),
+                    canon, plazas);
             JOptionPane.showMessageDialog(this, "Caseta asignada correctamente");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Debe ser un entero valido", "Error de formato", JOptionPane.ERROR_MESSAGE);
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        } 
+        }
     }//GEN-LAST:event_guardarFlotaBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

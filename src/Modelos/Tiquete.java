@@ -5,23 +5,24 @@
 package Modelos;
 
 import Modelos.Usuarios.Cliente;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  *
- * @author PC
+ * @author Leonardo Argoty
  */
-public class Tiquete {
+public class Tiquete implements Serializable{
     private Viaje viaje;
     private Cliente cliente;
     private int cantidad;
-    private Date fechaCompra;
+    private LocalDateTime fechaCompra;
 
-    public Tiquete(Viaje viaje, Cliente cliente, int cantidad, Date fechaCompra) {
+    public Tiquete(Viaje viaje, Cliente cliente, int cantidad) {
         this.viaje = viaje;
         this.cliente = cliente;
         this.cantidad = cantidad;
-        this.fechaCompra = fechaCompra;
+        this.fechaCompra = LocalDateTime.now();
     }
 
     public Viaje getViaje() {
@@ -48,11 +49,11 @@ public class Tiquete {
         this.cantidad = cantidad;
     }
 
-    public Date getFechaCompra() {
+    public LocalDateTime getFechaCompra() {
         return fechaCompra;
     }
 
-    public void setFechaCompra(Date fechaCompra) {
+    public void setFechaCompra(LocalDateTime fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
 

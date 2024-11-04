@@ -9,19 +9,20 @@ package Modelos;
  * @author PC
  */
 import Modelos.Usuarios.Cliente;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
-public class Devolucion {
+public class Devolucion implements Serializable{
     private Tiquete tiquete;
     private Cliente cliente;
-    private Date fechaDevolucion;
+    private LocalDateTime fechaDevolucion;
     private double montoDevuelto; // Monto del dinero devuelto
 
     // Constructor
-    public Devolucion(Tiquete tiquete, Cliente cliente, Date fechaDevolucion, double montoDevuelto) {
+    public Devolucion(Tiquete tiquete, Cliente cliente, double montoDevuelto) {
         this.tiquete = tiquete;
         this.cliente = cliente;
-        this.fechaDevolucion = fechaDevolucion;
+        this.fechaDevolucion = LocalDateTime.now();
         this.montoDevuelto = montoDevuelto;
     }
 
@@ -42,11 +43,11 @@ public class Devolucion {
         this.cliente = cliente;
     }
 
-    public Date getFechaDevolucion() {
+    public LocalDateTime getFechaDevolucion() {
         return fechaDevolucion;
     }
 
-    public void setFechaDevolucion(Date fechaDevolucion) {
+    public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
 

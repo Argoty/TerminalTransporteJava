@@ -10,12 +10,13 @@ import Modelos.Reserva;
 import Modelos.Tiquete;
 import Utils.IList;
 import Utils.Lista;
+import java.io.Serializable;
 
 /**
  *
  * @author Javier Argoty
  */
-public class Cliente extends Usuario {
+public class Cliente extends Usuario implements Serializable{
     private int puntosAcumulados;
     // Sujeto a cambios
     private IList<Notificacion> notificaciones;

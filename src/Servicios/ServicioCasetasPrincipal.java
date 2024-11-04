@@ -5,8 +5,8 @@
 package Servicios;
 
 import Modelos.Caseta;
-import Modelos.EmpresaTransporte;
-import Modelos.Usuarios.AdminFlota;
+
+import DataPersistencia.DataCasetas;
 
 /**
  *
@@ -14,44 +14,24 @@ import Modelos.Usuarios.AdminFlota;
  */
 public class ServicioCasetasPrincipal {
     private static ServicioCasetasPrincipal instancia;
+    private DataCasetas dataCasetas;
     Caseta[][] casetas;
 
     private ServicioCasetasPrincipal() {
-        this.casetas = new Caseta[4][];
-        configurarMatrizCasetas(5, this.casetas);
-
-        initCasetas();
+        dataCasetas = new DataCasetas("casetasData.bin");
+        this.casetas = dataCasetas.loadCasetasFromFile();
     }
+    
+    public void saveDataCasetas() {
+        dataCasetas.saveCasetasToFile(casetas);
+    }
+    
     // Método para obtener la instancia única
     public static ServicioCasetasPrincipal getInstance() {
         if (instancia == null) {
             instancia = new ServicioCasetasPrincipal();
         }
         return instancia;
-    }
-
-    private void configurarMatrizCasetas(int columnas, Caseta[][] casetas) {
-        int filas = casetas.length;
-        for (int i = 0; i < filas; i++) {
-            if (i == 0) {
-                // La primera fila tiene todas sus columnas
-                casetas[i] = new Caseta[columnas];
-            } else {
-                // El resto de las filas tienen la mitad de las columnas
-                casetas[i] = new Caseta[columnas / 2];
-            }
-        }
-    }
-
-    private void initCasetas() {
-        for (int i = 0; i < casetas.length; i++) {
-            for (int j = 0; j < casetas[i].length; j++) {
-                casetas[i][j] = new Caseta();
-            }
-        }
-        // Asigno por defecto una empresa con su admin para testear mejor
-        casetas[0][0].asignarFlota(new EmpresaTransporte(1, "Bolivariano",
-                new AdminFlota("Javier", 2, "javier@", "+57", "1")), 900000, 5, this.casetas);
     }
 
     public Caseta getCaseta(int fila, int columna) {

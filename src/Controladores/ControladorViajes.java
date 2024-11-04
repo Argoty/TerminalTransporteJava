@@ -4,10 +4,13 @@
  */
 package Controladores;
 
+import Modelos.Bus;
 import Modelos.EmpresaTransporte;
 import Modelos.Viaje;
 
 import Servicios.ServicioViajes;
+import Servicios.ServicioBuses;
+
 import Servicios.ServicioCasetasPrincipal;
 
 import Utils.IList;
@@ -18,11 +21,13 @@ import Utils.IList;
  */
 public class ControladorViajes {
     private ServicioViajes sv;
+    private ServicioBuses sb;
     
     public ControladorViajes(int idAdmin) {
         EmpresaTransporte empr = ServicioCasetasPrincipal.getInstance().getCasetaPorAdminID(idAdmin)
                 .getEmpresa();
         this.sv = new ServicioViajes(empr);
+        this.sb = new ServicioBuses(empr);
     }
     public IList<Viaje> getViajes() {
         return sv.getViajes();
@@ -33,5 +38,8 @@ public class ControladorViajes {
     }
     public void eliminarViaje(int nroViaje) throws RuntimeException{
         sv.eliminarViaje(nroViaje);
+    }
+    public IList<Bus> getBuses() {
+        return sb.getBuses();
     }
 }

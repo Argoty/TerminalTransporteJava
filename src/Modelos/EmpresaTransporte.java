@@ -7,6 +7,7 @@ package Modelos;
 import Modelos.Usuarios.AdminFlota;
 import Utils.IList;
 import Utils.Lista;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -15,7 +16,7 @@ import java.time.format.DateTimeParseException;
  *
  * @author Javier Argoty
  */
-public class EmpresaTransporte {
+public class EmpresaTransporte implements Serializable{
 
     private int nit;
     private String nombre;
@@ -132,6 +133,7 @@ public class EmpresaTransporte {
     public IList<Viaje> getViajes() {
         return this.viajes;
     }
+
     public void agregarViaje(String destino, String fSal, String hSal, String fLle, String hLle,
             String placaBus, int vlrUnit) throws RuntimeException {
         if (destino.isBlank() || placaBus.isBlank()) {
@@ -169,10 +171,16 @@ public class EmpresaTransporte {
         // Asumimos que tienes una lista de buses para buscar por placa
         Bus bus = buscarBusPorPlaca(placaBus);
 
+        if (!bus.isDisponible()) {
+            throw new RuntimeException("EL BUS NO ESTÁ DISPONIBLE PARA OTRO VIAJE.");
+        }
+
         // Crear y agregar el viaje si todas las validaciones son correctas
+        bus.setFechaDisponible(fechaLlegada.plusDays(1));
         Viaje nuevoViaje = new Viaje(destino, fechaSalida, fechaLlegada, vlrUnit, bus);
         viajes.add(nuevoViaje);
     }
+
     public void eliminarViaje(int nroViaje) {
         viajes.remove(nroViaje);
     }

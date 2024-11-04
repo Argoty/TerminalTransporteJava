@@ -4,11 +4,13 @@
  */
 package Utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author JAVIER ARGOTY
  */
-public class Lista<T> implements IList<T>{
+public class Lista<T> implements IList<T>, Serializable{
     private Nodo<T> primero;
     private int size;
     

@@ -4,11 +4,13 @@
  */
 package Modelos.Usuarios;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Javier Argoty
  */
-public abstract class Usuario {
+public class Usuario implements Serializable{
     private String name;
     private int nroId;
     private String email;

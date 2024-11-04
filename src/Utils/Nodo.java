@@ -3,11 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Utils;
+
+import java.io.Serializable;
+
 /**
  *
  * @author JAVIER ARGOTY
  */
-public class Nodo<T> {
+public class Nodo<T> implements Serializable {
     T dato;
     Nodo siguiente;
     

@@ -14,34 +14,35 @@ import Servicios.ServicioUsuarios;
  *
  * @author Javier Leoanardo Argoty Roa
  */
-
 public class ControladorCaseta {
+
     private ServicioCaseta sc;
     private ServicioCasetasPrincipal scp;
     private ServicioUsuarios su;
-    
+
     public ControladorCaseta(Caseta caseta) {
         this.sc = new ServicioCaseta(caseta);
         this.scp = ServicioCasetasPrincipal.getInstance();
         this.su = ServicioUsuarios.getInstance();
     }
-    
-    public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento, 
+
+    public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento,
             int plazasEstacionamiento) {
-          if (this.isDisponible()) {
-                // Valida primero info del usuario admin
-                su.validarUsuarioInfo(empresa.getAdmin());
-                // Asigno toda la flota
-                sc.asignarFlota(empresa,
-                        canonArrendamiento, plazasEstacionamiento, scp.getCasetas());
-                su.registrarUsuario(empresa.getAdmin());
-            } else {
-                sc.asignarFlota(empresa,
-                        canonArrendamiento, plazasEstacionamiento, scp.getCasetas());
-                su.actualizarUsuario(empresa.getAdmin());
-            }
+        if (this.isDisponible()) {
+            // Valida primero info del usuario admin
+            su.validarUsuarioInfo(empresa.getAdmin());
+            // Asigno toda la flota
+            sc.asignarFlota(empresa,
+                    canonArrendamiento, plazasEstacionamiento, scp.getCasetas());
+            su.registrarUsuario(empresa.getAdmin());
+        } else {
+            sc.asignarFlota(empresa,
+                    canonArrendamiento, plazasEstacionamiento, scp.getCasetas());
+            su.actualizarUsuario(empresa.getAdmin());
+        }
+        scp.saveDataCasetas();
     }
-    
+
 //    public AdminFlota getAdminFlota() {
 //        return caseta.getAdminFlota();
 //    }
@@ -52,7 +53,6 @@ public class ControladorCaseta {
 //    public void liberarCaseta() {
 //        caseta.liberarCaseta();
 //    }
-
     public boolean isDisponible() {
         return sc.isDisponible();
     }

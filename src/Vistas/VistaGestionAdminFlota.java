@@ -5,6 +5,7 @@
 package Vistas;
 
 import Controladores.ControladorBuses;
+import Controladores.ControladorTiquetes;
 import Controladores.ControladorViajes;
 
 import Modelos.Bus;
@@ -25,20 +26,26 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
      */    
     ControladorBuses cb;
     ControladorViajes cv;
+    ControladorTiquetes ct;
 
     public VistaGestionAdminFlota(AdminFlota admin) {
         initComponents();
         setLocationRelativeTo(this);
-
+        
+        int idAdmin = admin.getNroId();
         // Creacion de controladores de cada tab
-        this.cb = new ControladorBuses(admin.getNroId());
-        this.cv = new ControladorViajes(admin.getNroId());
+        this.cb = new ControladorBuses(idAdmin);
+        this.cv = new ControladorViajes(idAdmin);
+        this.ct = new ControladorTiquetes(idAdmin);
         // Refresco de las tablas
         llenarTablaBuses();
         llenarTablaViajes();
+        
         // Alistar combobox
         alistarPlacasBusesCombobox();
         alistarNrosViajesCombobox();
+        alistarViajes2Combobox();
+        alistarClientesCombobox();
     }
 
     // METODOS PRIVADOS DEL TAB BUSES
@@ -63,14 +70,14 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             });
         }
         busesTabla.setModel(model);
-        plazasDispLabel.setText(cb.getBuses().size() + "/" + cb.getCaseta().getPlazasEstacionamiento());
+        plazasDispLabel.setText(cb.getBuses().size() + "/" + cb.getPlazasEstacionamiento());
     }
 
     // METODOS PRIVADOS DEL TAB DE VIAJES
     private void alistarPlacasBusesCombobox() {
         DefaultComboBoxModel<String> comboBoxPlacasBuses = new DefaultComboBoxModel<>();
-        for (int i = 0; i < cb.getBuses().size(); i++) {
-            comboBoxPlacasBuses.addElement(cb.getBuses().get(i).getPlaca());
+        for (int i = 0; i < cv.getBuses().size(); i++) {
+            comboBoxPlacasBuses.addElement(cv.getBuses().get(i).getPlaca());
         }
 
         busesCoBox.setModel(comboBoxPlacasBuses);
@@ -83,7 +90,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         }
 
         nrosViajeCobox.setModel(comboBoxNrosViajes);
-        nrosViaje2Cobox.setModel(comboBoxNrosViajes);
     }    
 
     private void llenarTablaViajes() {
@@ -112,10 +118,18 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     // METODOS PRIVADOS DEL TAB DE TIQUETES
     private void alistarClientesCombobox() {
         DefaultComboBoxModel<String> comboBoxClientes = new DefaultComboBoxModel<>();
-        for (int i = 0; i < cv.getViajes().size(); i++) {
-            comboBoxClientes.addElement(i + 1 + ". " + cv.getViajes().get(i).getDestino());
+        for (int i = 0; i < ct.getClientes().size(); i++) {
+            comboBoxClientes.addElement(ct.getClientes().get(i).getNroId() + ". " + ct.getClientes().get(i).getName());
+        }
+        clientesCobox.setModel(comboBoxClientes);
+    }
+    private void alistarViajes2Combobox() {
+        DefaultComboBoxModel<String> comboBoxNrosViajes = new DefaultComboBoxModel<>();
+        for (int i = 0; i < ct.getViajes().size(); i++) {
+            comboBoxNrosViajes.addElement(i + 1 + ". " + cv.getViajes().get(i).getDestino());
         }
 
+        nrosViaje2Cobox.setModel(comboBoxNrosViajes);
     }  
 
     /**
@@ -640,7 +654,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         new VistaAccesoUsuario().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
-    // ------------------- METODOS DEL TAB BUSES ----------------------
+    // ------------------- METODOS PERFORMED DEL TAB BUSES ----------------------
     private void agregarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBusBtnActionPerformed
         try {
             String placa = placaBusField.getText();
@@ -648,7 +662,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             String tipo = tipoBusField.getText();
             int nroPuestos = Integer.parseInt(nroPuestosBusField.getText());
 
-            cb.agregarBus(new Bus(placa, marca, tipo, nroPuestos), cb.getCaseta().getPlazasEstacionamiento());
+            cb.agregarBus(new Bus(placa, marca, tipo, nroPuestos));
             llenarTablaBuses();
             limpiarCamposBus();
             alistarPlacasBusesCombobox();
@@ -694,6 +708,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         try {
             String placa = placaBusField.getText();
             Bus bus = cb.buscarBusPorPlaca(placa);
+            
             marcaBusField.setText(bus.getMarca());
             tipoBusField.setText(bus.getTipo());
             nroPuestosBusField.setText(bus.getPuestosDisponibles() + "");
@@ -702,7 +717,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_buscarBusBtnActionPerformed
-
+    // ------------------- METODOS PERFORMED DEL TAB VIAJES ----------------------
     private void crearViajeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearViajeBtnActionPerformed
         try {
             String destino = destinoField.getText();
@@ -715,7 +730,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
             cv.agregarViaje(destino, fechaSal, horaSal, fechaLle, horaLle, placaBus, vlrUnit);
             llenarTablaViajes();
+            
             alistarNrosViajesCombobox();
+            alistarViajes2Combobox();
             JOptionPane.showMessageDialog(this, "Viaje agregado correctamente");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor unitario debe ser un número valido", "Error de formato", JOptionPane.ERROR_MESSAGE);
@@ -730,7 +747,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             
             cv.eliminarViaje(nroViaje);
             llenarTablaViajes();
+            
             alistarNrosViajesCombobox();
+            alistarViajes2Combobox();
             JOptionPane.showMessageDialog(this, "Viaje eliminado correctamente");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El numero de viaje debe ser un número valido", "Error de formato", JOptionPane.ERROR_MESSAGE);

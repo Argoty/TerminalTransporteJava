@@ -10,15 +10,16 @@ package Modelos;
  */
 import Utils.IList;
 import Utils.Lista;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Viaje {
+public class Viaje implements Serializable{
     private String origen = "Armenia";
     private String destino;
-    private LocalDateTime fechaSalida;  // Incluye fecha y hora de salida
-    private LocalDateTime fechaLlegada; // Incluye fecha y hora de llegada
-    private LocalDateTime fechaCreacion; // Fecha y hora de creación del viaje
+    private LocalDateTime fechaSalida;  
+    private LocalDateTime fechaLlegada; 
+    private LocalDateTime fechaCreacion; 
     private int vlrUnit;
     private Bus bus;
     

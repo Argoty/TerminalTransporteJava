@@ -4,11 +4,13 @@
  */
 package Modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Javier Argoty
  */
-public class Caseta {
+public class Caseta implements Serializable{
     private static int contadorCasetas = 1;
     
     private int nroCaseta;
@@ -27,18 +29,18 @@ public class Caseta {
     public void asignarFlota(EmpresaTransporte empresa, int canonArrendamiento, 
             int plazasEstacionamiento, Caseta[][] casetas) throws RuntimeException {
         if (empresa.getNombre().isBlank()) throw new RuntimeException("COMPLETA TODOS LOS CAMPOS");
-        if (!validarNitEmpresa(casetas, this.getNroCaseta(), empresa.getNit())) throw new RuntimeException("El nit de esta empresa ya existe");
+        if (!validarNitEmpresa(casetas, empresa.getNit())) throw new RuntimeException("El nit de esta empresa ya existe");
         
         this.empresa = empresa;
         this.canonArrendamiento = canonArrendamiento;
         this.plazasEstacionamiento = plazasEstacionamiento;
         this.disponible = false; // Al asignar una empresa, la caseta ya no está disponible
     }
-    
-    public boolean validarNitEmpresa(Caseta[][] casetas, int nroCaseta, int nit) {
+    // valida a privado despues
+    public boolean validarNitEmpresa(Caseta[][] casetas, int nit) {
         for (Caseta[] caseta : casetas) {
             for (Caseta caseta1 : caseta) {
-                if (caseta1.getEmpresa() != null && caseta1.getNroCaseta() != nroCaseta 
+                if (caseta1.getEmpresa() != null && caseta1.getNroCaseta() != this.getNroCaseta()
                         && caseta1.getEmpresa().getNit() == nit) {
                     return false;
                 }

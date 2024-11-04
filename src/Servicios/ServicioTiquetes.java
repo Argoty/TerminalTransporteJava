@@ -4,10 +4,16 @@
  */
 package Servicios;
 
+import Modelos.EmpresaTransporte;
+
 /**
  *
  * @author PC
  */
 public class ServicioTiquetes {
-    
+    EmpresaTransporte empresa;
+
+    public ServicioTiquetes(EmpresaTransporte empresa) {
+        this.empresa = empresa;
+    }
 }

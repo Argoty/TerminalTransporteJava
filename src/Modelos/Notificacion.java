@@ -9,19 +9,18 @@ package Modelos;
  * @author PC
  */
 import Modelos.Usuarios.Cliente;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
-public class Notificacion {
+public class Notificacion implements Serializable{
     private Cliente cliente;
     private String mensaje;         
-    private Date fechaEnvio;        
+    private LocalDateTime fechaEnvio;        
         
-
-    // Constructor
     public Notificacion(Cliente cliente, String mensaje) {
         this.cliente = cliente;
         this.mensaje = mensaje;
-        this.fechaEnvio = new Date(); // Fecha actual
+        this.fechaEnvio = LocalDateTime.now(); // Fecha actual
     }
 
     // Getters y Setters
@@ -41,11 +40,11 @@ public class Notificacion {
         this.mensaje = mensaje;
     }
 
-    public Date getFechaEnvio() {
+    public LocalDateTime getFechaEnvio() {
         return fechaEnvio;
     }
 
-    public void setFechaEnvio(Date fechaEnvio) {
+    public void setFechaEnvio(LocalDateTime fechaEnvio) {
         this.fechaEnvio = fechaEnvio;
     }
 

@@ -4,11 +4,13 @@
  */
 package Modelos.Usuarios;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Javier Argoty
  */
-public class AdminTerminal extends Usuario {
+public class AdminTerminal extends Usuario implements Serializable{
 
     public AdminTerminal(String name,int nroId, String email, String tel,String password) {
         super(name,nroId, email, tel,password);

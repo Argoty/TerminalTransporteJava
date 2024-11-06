@@ -52,6 +52,8 @@ public class Caseta implements Serializable{
 
     public void liberarCaseta() {
         this.empresa = null;
+        this.canonArrendamiento = 0;
+        this.plazasEstacionamiento = 0;
         this.disponible = true; // Al liberar la caseta, vuelve a estar disponible
     }
 

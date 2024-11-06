@@ -5,7 +5,6 @@
 package Servicios;
 
 import Modelos.Usuarios.AdminFlota;
-import Modelos.Usuarios.AdminTerminal;
 import Modelos.Usuarios.Cliente;
 import Modelos.Usuarios.Usuario;
 
@@ -79,6 +78,16 @@ public class ServicioUsuarios {
         aux.setTelefono(usuario.getTelefono());
         
         saveDataUsuarios();
+    }
+    public void eliminarUsuario(int idUsuario) {
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getNroId() == idUsuario) {
+                usuarios.remove(i);
+                saveDataUsuarios();
+                return;
+            }
+        }
+        throw new RuntimeException("NO EXISTE USUARIO CON ESTE ID");
     }
 
     public Usuario buscarUsuarioPorId(int id) {

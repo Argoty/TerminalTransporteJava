@@ -17,10 +17,22 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     /**
      * Creates new form VistaGestionCliente
      */
+    Cliente cliente;
 
     public VistaGestionCliente(Cliente cliente) {
         initComponents();
         setLocationRelativeTo(this);
+        
+        this.cliente = cliente;
+        mostrarInfo();
+    }
+    
+    // METODOS PRIVADOS DEL TAB DE INFO DE CLIENTE
+    private void mostrarInfo() {
+        nombreCliLabel.setText(cliente.getName());
+        nroIdLabel.setText(cliente.getNroId() + "");
+        emailLabel.setText(cliente.getEmail());
+        telefonoLabel.setText(cliente.getTelefono());
     }
 
     /**
@@ -36,6 +48,12 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         informacionPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        nombreCliLabel = new javax.swing.JLabel();
+        nroIdLabel = new javax.swing.JLabel();
+        emailLabel = new javax.swing.JLabel();
+        telefonoLabel = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -65,6 +83,18 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         jLabel2.setText("Numero de Identificacion:");
 
+        jLabel8.setText("Email:");
+
+        jLabel9.setText("Telefono:");
+
+        nombreCliLabel.setText("jLabel10");
+
+        nroIdLabel.setText("jLabel11");
+
+        emailLabel.setText("jLabel12");
+
+        telefonoLabel.setText("jLabel13");
+
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
         informacionPanelLayout.setHorizontalGroup(
@@ -72,18 +102,38 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             .addGroup(informacionPanelLayout.createSequentialGroup()
                 .addGap(98, 98, 98)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addContainerGap(386, Short.MAX_VALUE))
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addGap(46, 46, 46)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(telefonoLabel)
+                    .addComponent(emailLabel)
+                    .addComponent(nroIdLabel)
+                    .addComponent(nombreCliLabel))
+                .addContainerGap(292, Short.MAX_VALUE))
         );
         informacionPanelLayout.setVerticalGroup(
             informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(informacionPanelLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jLabel1)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(nombreCliLabel))
                 .addGap(30, 30, 30)
-                .addComponent(jLabel2)
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(nroIdLabel))
+                .addGap(33, 33, 33)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(emailLabel))
+                .addGap(37, 37, 37)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(telefonoLabel))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -323,6 +373,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JButton cerrarSesionBtn;
     private javax.swing.JTabbedPane clienteTabbedPane;
     private javax.swing.JPanel devolucionesPanel;
+    private javax.swing.JLabel emailLabel;
     private javax.swing.JPanel informacionPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -334,6 +385,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -343,7 +396,10 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
+    private javax.swing.JLabel nombreCliLabel;
+    private javax.swing.JLabel nroIdLabel;
     private javax.swing.JPanel puntosAcumulados;
     private javax.swing.JPanel reservaTiqPanel;
+    private javax.swing.JLabel telefonoLabel;
     // End of variables declaration//GEN-END:variables
 }

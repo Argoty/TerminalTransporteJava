@@ -49,6 +49,7 @@ public class VistaCaseta extends javax.swing.JFrame {
             nroIdAdminField.setEnabled(false);
 
             guardarFlotaBtn.setText("Editar Flota");
+            desocuparBtn.setEnabled(true);
         }
     }
 
@@ -85,6 +86,7 @@ public class VistaCaseta extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         passwordFlotaField = new javax.swing.JTextField();
         regresarBtn = new javax.swing.JButton();
+        desocuparBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -184,6 +186,14 @@ public class VistaCaseta extends javax.swing.JFrame {
             }
         });
 
+        desocuparBtn.setText("Desocupar caseta");
+        desocuparBtn.setEnabled(false);
+        desocuparBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                desocuparBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,15 +207,8 @@ public class VistaCaseta extends javax.swing.JFrame {
                         .addGap(179, 179, 179)
                         .addComponent(plazasEstField, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(guardarFlotaBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(regresarBtn)
-                        .addGap(33, 33, 33))))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -228,6 +231,14 @@ public class VistaCaseta extends javax.swing.JFrame {
                         .addGap(259, 259, 259)
                         .addComponent(jLabel1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(248, 248, 248)
+                .addComponent(guardarFlotaBtn)
+                .addGap(18, 18, 18)
+                .addComponent(desocuparBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(regresarBtn)
+                .addGap(33, 33, 33))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,7 +251,9 @@ public class VistaCaseta extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(guardarFlotaBtn)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(guardarFlotaBtn)
+                                .addComponent(desocuparBtn))
                             .addComponent(regresarBtn)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -289,6 +302,8 @@ public class VistaCaseta extends javax.swing.JFrame {
             cc.asignarFlota(new EmpresaTransporte(nit, nombreEmp,
                     new AdminFlota(nombreAd, nroIdAd, emailAd, telAd, password)),
                     canon, plazas);
+            guardarFlotaBtn.setText("Editar Flota");
+            desocuparBtn.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Caseta asignada correctamente");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Debe ser un entero valido", "Error de formato", JOptionPane.ERROR_MESSAGE);
@@ -297,8 +312,33 @@ public class VistaCaseta extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_guardarFlotaBtnActionPerformed
 
+    private void desocuparBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desocuparBtnActionPerformed
+        try {
+            cc.liberarCaseta();
+            canonArrField.setText("");
+            plazasEstField.setText("");
+
+            nitField.setText("");
+            nombreEmpField.setText("");
+
+            nombreAdminField.setText("");
+            nroIdAdminField.setText("");
+            emailAdminField.setText("");
+            telefAdminField.setText("");
+            passwordFlotaField.setText("");
+            passwordFlotaField.setEnabled(true);
+            nroIdAdminField.setEnabled(true);
+
+            guardarFlotaBtn.setText("Guardar Flota");
+            desocuparBtn.setEnabled(false);
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_desocuparBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField canonArrField;
+    private javax.swing.JButton desocuparBtn;
     private javax.swing.JTextField emailAdminField;
     private javax.swing.JButton guardarFlotaBtn;
     private javax.swing.JLabel jLabel1;

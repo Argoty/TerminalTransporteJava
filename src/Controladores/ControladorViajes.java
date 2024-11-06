@@ -22,9 +22,11 @@ import Utils.IList;
 public class ControladorViajes {
     private ServicioViajes sv;
     private ServicioBuses sb;
+    private ServicioCasetasPrincipal scp;
     
     public ControladorViajes(int idAdmin) {
-        EmpresaTransporte empr = ServicioCasetasPrincipal.getInstance().getCasetaPorAdminID(idAdmin)
+        this.scp = ServicioCasetasPrincipal.getInstance();
+        EmpresaTransporte empr = scp.getCasetaPorAdminID(idAdmin)
                 .getEmpresa();
         this.sv = new ServicioViajes(empr);
         this.sb = new ServicioBuses(empr);
@@ -35,9 +37,11 @@ public class ControladorViajes {
     public void agregarViaje(String destino, String fSal, String hSal, String fLle, String hLle,
             String placaBus, int vlrUnit) throws RuntimeException{
         sv.agregarViaje(destino, fSal, hSal, fLle, hLle, placaBus, vlrUnit);
+        scp.saveDataCasetas();
     }
     public void eliminarViaje(int nroViaje) throws RuntimeException{
         sv.eliminarViaje(nroViaje);
+        scp.saveDataCasetas();
     }
     public IList<Bus> getBuses() {
         return sb.getBuses();

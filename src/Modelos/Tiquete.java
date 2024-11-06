@@ -15,13 +15,11 @@ import java.time.LocalDateTime;
 public class Tiquete implements Serializable{
     private Viaje viaje;
     private Cliente cliente;
-    private int cantidad;
     private LocalDateTime fechaCompra;
 
-    public Tiquete(Viaje viaje, Cliente cliente, int cantidad) {
+    public Tiquete(Viaje viaje, Cliente cliente) {
         this.viaje = viaje;
         this.cliente = cliente;
-        this.cantidad = cantidad;
         this.fechaCompra = LocalDateTime.now();
     }
 
@@ -39,14 +37,6 @@ public class Tiquete implements Serializable{
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
     }
 
     public LocalDateTime getFechaCompra() {

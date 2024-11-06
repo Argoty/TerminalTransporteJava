@@ -19,24 +19,27 @@ import Servicios.ServicioBuses;
 public class ControladorBuses {
     private ServicioCaseta sc;
     private ServicioBuses sb;
-    private ServicioCasetasPrincipal scc;
+    private ServicioCasetasPrincipal scp;
 
     public ControladorBuses(int idAdmin) {
-        this.scc = ServicioCasetasPrincipal.getInstance(); // Obtiene servicios de la matriz casetas
-        this.sc = new ServicioCaseta(scc.getCasetaPorAdminID(idAdmin)); // Obtiene servicio de esta caseta
+        this.scp = ServicioCasetasPrincipal.getInstance(); // Obtiene servicios de la matriz casetas
+        this.sc = new ServicioCaseta(scp.getCasetaPorAdminID(idAdmin)); // Obtiene servicio de esta caseta
         this.sb = new ServicioBuses(sc.getCaseta().getEmpresa()); // Obtiene el servicio de buses exclusivo
     }
 
     public void agregarBus(Bus bus) throws RuntimeException {
-        sb.agregarBus(bus, scc.getCasetas(), sc.getCaseta().getPlazasEstacionamiento());
+        sb.agregarBus(bus, scp.getCasetas(), sc.getCaseta().getPlazasEstacionamiento());
+        scp.saveDataCasetas();
     }
 
     public void editarBus(Bus bus) throws RuntimeException {
         sb.editarBus(bus);
+        scp.saveDataCasetas();
     }
 
     public void eliminarBus(String placa) throws RuntimeException {
         sb.eliminarBus(placa);
+        scp.saveDataCasetas();
     }
 
     public Bus buscarBusPorPlaca(String placa) {

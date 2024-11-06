@@ -50,9 +50,11 @@ public class ControladorCaseta {
         return sc.getCaseta();
     }
 
-//    public void liberarCaseta() {
-//        caseta.liberarCaseta();
-//    }
+    public void liberarCaseta() {
+        su.eliminarUsuario(getCaseta().getEmpresa().getAdmin().getNroId());
+        sc.liberarCaseta();
+        scp.saveDataCasetas();
+    }
     public boolean isDisponible() {
         return sc.isDisponible();
     }

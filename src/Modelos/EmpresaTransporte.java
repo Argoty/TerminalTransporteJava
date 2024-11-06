@@ -136,7 +136,7 @@ public class EmpresaTransporte implements Serializable{
 
     public void agregarViaje(String destino, String fSal, String hSal, String fLle, String hLle,
             String placaBus, int vlrUnit) throws RuntimeException {
-        if (destino.isBlank() || placaBus.isBlank()) {
+        if (placaBus == null || destino.isBlank() || placaBus.isBlank()) {
             throw new RuntimeException("LOS CAMPOS NO DEBEN SER VACIOS");
         }
 

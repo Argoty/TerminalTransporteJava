@@ -16,7 +16,7 @@ import java.time.format.DateTimeParseException;
  *
  * @author Javier Argoty
  */
-public class EmpresaTransporte implements Serializable{
+public class EmpresaTransporte implements Serializable {
 
     private int nit;
     private String nombre;
@@ -155,7 +155,7 @@ public class EmpresaTransporte implements Serializable{
             fechaSalida = LocalDateTime.parse(fechaHoraSalidaTexto, formatter);
             fechaLlegada = LocalDateTime.parse(fechaHoraLlegadaTexto, formatter);
         } catch (DateTimeParseException e) {
-            throw new RuntimeException("FORMATO DE FECHA U HORA INCORRECTO. USE dia/mes/año para fecha y Hora:minutos para hora.");
+            throw new RuntimeException("FORMATO DE FECHA U HORA INCORRECTO. USE 'dd/mm/aaaa' para fecha y 'HH:mm' para hora.");
         }
 
         // Validación: La fecha de salida debe estar en el futuro
@@ -170,18 +170,37 @@ public class EmpresaTransporte implements Serializable{
 
         // Asumimos que tienes una lista de buses para buscar por placa
         Bus bus = buscarBusPorPlaca(placaBus);
-
-        if (!bus.isDisponible()) {
-            throw new RuntimeException("EL BUS NO ESTÁ DISPONIBLE PARA OTRO VIAJE.");
+        if (bus == null) {
+            throw new RuntimeException("NO SE ENCONTRÓ EL BUS CON LA PLACA ESPECIFICADA.");
         }
 
-        // Crear y agregar el viaje si todas las validaciones son correctas
-        bus.setFechaDisponible(fechaLlegada.plusDays(1));
+        // Validación de disponibilidad y tiempo de inhabilitación de 1 día
+        for (int i = 0; i < viajes.size(); i++) {
+            Viaje viajeExistente = viajes.get(i);
+
+            // Solo nos importa si el viaje es del mismo bus
+            if (viajeExistente.getBus().getPlaca().equals(placaBus)) {
+                LocalDateTime finExistente = viajeExistente.getFechaLlegada();
+
+                // Verificar si el nuevo viaje comienza antes de 1 día después de la llegada del viaje existente
+                LocalDateTime habilitadoDesde = finExistente.plusDays(1);
+                if (fechaSalida.isBefore(habilitadoDesde)) {
+                    throw new RuntimeException("EL BUS NO ESTÁ DISPONIBLE HASTA EL DÍA SIGUIENTE A LA LLEGADA DE SU ÚLTIMO VIAJE.");
+                }
+            }
+        }
+
+        // Si pasa todas las validaciones, se crea y agrega el nuevo viaje
         Viaje nuevoViaje = new Viaje(destino, fechaSalida, fechaLlegada, vlrUnit, bus);
         viajes.add(nuevoViaje);
     }
 
-    public void eliminarViaje(int nroViaje) {
-        viajes.remove(nroViaje);
+    public Bus buscarBusPorViaje(String placaBus) {
+        for (int i = 0; i < viajes.size(); i++) {
+            if (placaBus.equals(viajes.get(i).getBus().getPlaca())) {
+                return viajes.get(i).getBus();
+            }
+        }
+        return null;
     }
 }

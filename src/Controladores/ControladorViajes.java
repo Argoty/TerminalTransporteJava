@@ -39,10 +39,6 @@ public class ControladorViajes {
         sv.agregarViaje(destino, fSal, hSal, fLle, hLle, placaBus, vlrUnit);
         scp.saveDataCasetas();
     }
-    public void eliminarViaje(int nroViaje) throws RuntimeException{
-        sv.eliminarViaje(nroViaje);
-        scp.saveDataCasetas();
-    }
     public IList<Bus> getBuses() {
         return sb.getBuses();
     }

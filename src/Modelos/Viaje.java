@@ -90,7 +90,7 @@ public class Viaje implements Serializable{
     }
 
     public Bus getBus() {
-        return bus;
+        return this.bus;
     }
 
     public void setBus(Bus bus) {

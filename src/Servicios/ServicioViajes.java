@@ -4,6 +4,7 @@
  */
 package Servicios;
 
+import Modelos.Bus;
 import Modelos.EmpresaTransporte;
 import Modelos.Viaje;
 import Utils.IList;
@@ -25,7 +26,7 @@ public class ServicioViajes {
             String placaBus, int vlrUnit) throws RuntimeException{
         empresa.agregarViaje(destino, fSal, hSal, fLle, hLle, placaBus, vlrUnit);
     }
-    public void eliminarViaje(int nroViaje) throws RuntimeException{
-        empresa.eliminarViaje(nroViaje);
+    public Bus buscarBusPorViaje(String placaBus){
+        return empresa.buscarBusPorViaje(placaBus);
     }
 }

@@ -30,7 +30,7 @@ public class Bus implements Serializable{
     }
 
     public String getPlaca() {
-        return placa;
+        return this.placa;
     }
 
     public void setPlaca(String placa) {

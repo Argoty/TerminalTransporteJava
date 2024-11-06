@@ -23,7 +23,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
     /**
      * Creates new form VistaGestionAdminFlota
-     */    
+     */
     ControladorBuses cb;
     ControladorViajes cv;
     ControladorTiquetes ct;
@@ -31,7 +31,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     public VistaGestionAdminFlota(AdminFlota admin) {
         initComponents();
         setLocationRelativeTo(this);
-        
+
         int idAdmin = admin.getNroId();
         // Creacion de controladores de cada tab
         this.cb = new ControladorBuses(idAdmin);
@@ -40,11 +40,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         // Refresco de las tablas
         llenarTablaBuses();
         llenarTablaViajes();
-        
+        llenarTablaViajesTiq();
+
         // Alistar combobox
         alistarPlacasBusesCombobox();
-        alistarViajes2Combobox();
-        alistarClientesCombobox();
+
     }
 
     // METODOS PRIVADOS DEL TAB BUSES
@@ -80,7 +80,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         }
 
         busesCoBox.setModel(comboBoxPlacasBuses);
-    }  
+    }
 
     private void llenarTablaViajes() {
         DefaultTableModel model = new DefaultTableModel();
@@ -104,23 +104,31 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         viajesTabla.getColumnModel().getColumn(4).setPreferredWidth(90); // Ancho estándar para "Bus"
         viajesTabla.getColumnModel().getColumn(5).setPreferredWidth(120);  // Ancho estándar para "Vlr Unit"
     }
-    
+
     // METODOS PRIVADOS DEL TAB DE TIQUETES
-    private void alistarClientesCombobox() {
-        DefaultComboBoxModel<String> comboBoxClientes = new DefaultComboBoxModel<>();
-        for (int i = 0; i < ct.getClientes().size(); i++) {
-            comboBoxClientes.addElement(ct.getClientes().get(i).getNroId() + ". " + ct.getClientes().get(i).getName());
-        }
-        clientesCobox.setModel(comboBoxClientes);
-    }
-    private void alistarViajes2Combobox() {
-        DefaultComboBoxModel<String> comboBoxNrosViajes = new DefaultComboBoxModel<>();
+    private void llenarTablaViajesTiq() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"N°", "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"});
         for (int i = 0; i < ct.getViajes().size(); i++) {
-            comboBoxNrosViajes.addElement(i + 1 + ". " + cv.getViajes().get(i).getDestino());
+            model.addRow(new Object[]{
+                cv.getViajes().get(i).getId(),
+                cv.getViajes().get(i).getDestino(),
+                cv.getViajes().get(i).getFechaSalidaStr(),
+                cv.getViajes().get(i).getFechaLlegadaStr(),
+                cv.getViajes().get(i).getBus().getPlaca(),
+                cv.getViajes().get(i).getVlrUnit()
+            });
         }
 
-        nrosViaje2Cobox.setModel(comboBoxNrosViajes);
-    }  
+        viajesTablaTiq.setModel(model);
+        // Ajustar el ancho de las columnas
+        viajesTablaTiq.getColumnModel().getColumn(0).setPreferredWidth(30);  // Ancho más pequeño para la columna N°
+        viajesTablaTiq.getColumnModel().getColumn(1).setPreferredWidth(150); // Ancho estándar para "Destino"
+        viajesTablaTiq.getColumnModel().getColumn(2).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Salida"
+        viajesTablaTiq.getColumnModel().getColumn(3).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Llegada"
+        viajesTablaTiq.getColumnModel().getColumn(4).setPreferredWidth(90); // Ancho estándar para "Bus"
+        viajesTablaTiq.getColumnModel().getColumn(5).setPreferredWidth(120);  // Ancho estándar para "Vlr Unit"
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -174,15 +182,14 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         gestionVentaTiqPanel = new javax.swing.JPanel();
-        clientesCobox = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        nrosViaje2Cobox = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
         cantidadTiquete = new javax.swing.JTextField();
         venderTiquete = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        viajesTablaTiq = new javax.swing.JTable();
+        idClienteField = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
         cerrarSesionBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -287,7 +294,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(eliminarBusBtn)
                             .addComponent(buscarBusBtn))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45))
         );
@@ -503,77 +510,74 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jTabbedPaneAdminFlota.addTab("Gestion Viajes", gestionViajesPanel);
 
-        clientesCobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel12.setText("Cliente");
-
-        jLabel13.setText("Viaje");
-
-        nrosViaje2Cobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel12.setText("ID de Cliente");
 
         jLabel14.setText("Cantidad");
 
         venderTiquete.setText("Vender Tiquete");
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        viajesTablaTiq.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Cliente", "Viaje", "Cantidad"
+                "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane4.setViewportView(viajesTablaTiq);
+
+        jLabel13.setText("SELECCIONAR VIAJE");
 
         javax.swing.GroupLayout gestionVentaTiqPanelLayout = new javax.swing.GroupLayout(gestionVentaTiqPanel);
         gestionVentaTiqPanel.setLayout(gestionVentaTiqPanelLayout);
         gestionVentaTiqPanelLayout.setHorizontalGroup(
             gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel14)
                             .addComponent(jLabel12)
-                            .addComponent(jLabel13))
-                        .addGap(35, 35, 35)
+                            .addComponent(jLabel14))
+                        .addGap(42, 42, 42)
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nrosViaje2Cobox, 0, 120, Short.MAX_VALUE)
-                            .addComponent(cantidadTiquete)
-                            .addComponent(clientesCobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(venderTiquete)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
+                            .addComponent(idClienteField, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(cantidadTiquete))
+                        .addGap(21, 21, 21))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                        .addComponent(venderTiquete)
+                        .addGap(102, 102, 102))))
+            .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                .addGap(161, 161, 161)
+                .addComponent(jLabel13)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         gestionVentaTiqPanelLayout.setVerticalGroup(
             gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(nrosViaje2Cobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(clientesCobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
-                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
-                .addGap(54, 54, 54)
-                .addComponent(venderTiquete)
-                .addContainerGap(171, Short.MAX_VALUE))
-            .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel13)
+                        .addGap(8, 8, 8)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(idClienteField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(44, 44, 44)
+                        .addComponent(venderTiquete)))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
 
         jTabbedPaneAdminFlota.addTab("Venta Tiquetes", gestionVentaTiqPanel);
@@ -596,7 +600,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -665,16 +669,19 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     }//GEN-LAST:event_editarBusBtnActionPerformed
 
     private void buscarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBusBtnActionPerformed
-        try {
-            String placa = placaBusField.getText();
-            Bus bus = cb.buscarBusPorPlaca(placa);
-            
+
+        String placa = placaBusField.getText();
+        Bus bus = cb.buscarBusPorPlaca(placa);
+
+        if (bus == null) {
+            JOptionPane.showMessageDialog(this, "No se encuentra bus con esta placa", "", JOptionPane.ERROR_MESSAGE);
+        } else {
             marcaBusField.setText(bus.getMarca());
             tipoBusField.setText(bus.getTipo());
             nroPuestosBusField.setText(bus.getPuestosDisponibles() + "");
-        } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
+
+
     }//GEN-LAST:event_buscarBusBtnActionPerformed
     // ------------------- METODOS PERFORMED DEL TAB VIAJES ----------------------
     private void crearViajeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearViajeBtnActionPerformed
@@ -689,8 +696,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
             cv.agregarViaje(destino, fechaSal, horaSal, fechaLle, horaLle, placaBus, vlrUnit);
             llenarTablaViajes();
-            
-            alistarViajes2Combobox();
+            llenarTablaViajesTiq();
             JOptionPane.showMessageDialog(this, "Viaje agregado correctamente");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor unitario debe ser un número valido", "Error de formato", JOptionPane.ERROR_MESSAGE);
@@ -706,7 +712,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JTable busesTabla;
     private javax.swing.JTextField cantidadTiquete;
     private javax.swing.JButton cerrarSesionBtn;
-    private javax.swing.JComboBox<String> clientesCobox;
     private javax.swing.JButton crearViajeBtn;
     private javax.swing.JTextField destinoField;
     private javax.swing.JButton editarBusBtn;
@@ -718,6 +723,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JPanel gestionViajesPanel;
     private javax.swing.JTextField horaLlegField;
     private javax.swing.JTextField horaSalField;
+    private javax.swing.JTextField idClienteField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -740,18 +746,17 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPaneAdminFlota;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTextField marcaBusField;
     private javax.swing.JTextField nroPuestosBusField;
-    private javax.swing.JComboBox<String> nrosViaje2Cobox;
     private javax.swing.JPanel panelContainer;
     private javax.swing.JTextField placaBusField;
     private javax.swing.JLabel plazasDispLabel;
     private javax.swing.JTextField tipoBusField;
     private javax.swing.JButton venderTiquete;
     private javax.swing.JTable viajesTabla;
+    private javax.swing.JTable viajesTablaTiq;
     private javax.swing.JTextField vlrUnitField;
     // End of variables declaration//GEN-END:variables
 }

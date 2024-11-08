@@ -11,13 +11,16 @@ import java.io.Serializable;
  * @author Javier Argoty
  */
 public class AdminFlota extends Usuario implements Serializable{
-    private int salario;
+    private int sueldo;
 
-    public AdminFlota(String name,int nroId, String email, String tel,String password) {
+    public AdminFlota(String name,int nroId, String email, String tel,String password, int sueldo) {
         super(name,nroId, email, tel,password);
-
+        this.sueldo = sueldo;
     }
-
-
-    // Métodos adicionales para gestionar buses y viajes
+    public int getSueldo() {
+        return this.sueldo;
+    }
+    public void setSueldo(int sueldo) {
+        this.sueldo = sueldo;
+    }
 }

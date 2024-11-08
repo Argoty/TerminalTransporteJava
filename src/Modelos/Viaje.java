@@ -8,7 +8,6 @@ package Modelos;
  *
  * @author Javier Argoty
  */
-import Modelos.Usuarios.Cliente;
 import Utils.IList;
 import Utils.Lista;
 import java.io.Serializable;
@@ -16,20 +15,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Viaje implements Serializable{
-    private String origen = "Armenia";
+    private static int cont = 1;
     private int id;
+    private String origen = "Armenia";
     private String destino;
     private LocalDateTime fechaSalida;  
     private LocalDateTime fechaLlegada; 
     private LocalDateTime fechaCreacion; 
     private int vlrUnit;
     private Bus bus;
-    
+ 
     private IList<Tiquete> tiquetes;
-    private static int cont = 1;
 
     // Constructor
     public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int vlrUnit, Bus bus) {
+        this.id = cont++; 
         this.destino = destino;
         this.fechaSalida = fechaSalida;
         this.fechaLlegada = fechaLlegada;
@@ -38,9 +38,6 @@ public class Viaje implements Serializable{
         this.bus = bus;
         
         this.tiquetes = new Lista<>();
-        
-        this.id = cont;
-        cont++;
     }
 
     // Getters y Setters
@@ -96,12 +93,13 @@ public class Viaje implements Serializable{
     public void setBus(Bus bus) {
         this.bus = bus;
     }
-    // METODOS PARA MANEJAR LOGICA DE TIQUETES SEGUN EL VIAJE
+    // Método para ajustar contador en la persistencia
+    public static void ajustarContadorPersistencia(int numeroDeViajes) {
+        cont = numeroDeViajes + 1;
+    }
+    
     public IList<Tiquete> getTiquetes() {
         return this.tiquetes;
-    }
-    public void crearTiquete(Cliente cliente, int cantidad) {
-        tiquetes.add(new Tiquete(this, cliente));
     }
 }
 

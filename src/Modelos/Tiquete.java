@@ -7,22 +7,28 @@ package Modelos;
 import Modelos.Usuarios.Cliente;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author Leonardo Argoty
  */
 public class Tiquete implements Serializable{
+    private static int cont = 1;
+    private int id;
     private Viaje viaje;
     private Cliente cliente;
     private LocalDateTime fechaCompra;
 
     public Tiquete(Viaje viaje, Cliente cliente) {
+        this.id = cont++; 
         this.viaje = viaje;
         this.cliente = cliente;
         this.fechaCompra = LocalDateTime.now();
     }
-
+    public int getId() {
+        return id;
+    }
     public Viaje getViaje() {
         return viaje;
     }
@@ -42,11 +48,16 @@ public class Tiquete implements Serializable{
     public LocalDateTime getFechaCompra() {
         return fechaCompra;
     }
+    public String getFechaCompraStr() {
+        return this.fechaCompra.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
 
     public void setFechaCompra(LocalDateTime fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
-
+    public static void ajustarContadorPersistencia(int numeroDeTiquetes) {
+        cont = numeroDeTiquetes + 1;
+    }
     
 }
 

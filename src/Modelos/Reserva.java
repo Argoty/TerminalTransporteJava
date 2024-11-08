@@ -28,9 +28,9 @@ public class Reserva implements Serializable{
 
     // Método para hacer efectiva la reserva
     public void hacerEfectiva() {
-        if (activa && viaje.getBus().getPuestosDisponibles() >= cantidad) {
+        if (activa && viaje.getBus().getPuestos() >= cantidad) {
             // Disminuir los puestos disponibles en el bus
-            viaje.getBus().setPuestosDisponibles(viaje.getBus().getPuestosDisponibles() - cantidad);
+            viaje.getBus().setPuestos(viaje.getBus().getPuestos() - cantidad);
             // Crear un tiquete para el cliente
             Tiquete tiquete = new Tiquete(viaje, cliente);
             // Agregar el tiquete al cliente (podría ser a una lista de tiquetes)

@@ -46,8 +46,8 @@ public class DataUsuarios {
             // Esto es de test nomás
             IList<Usuario> usuarios = new Lista<>();
             usuarios.add(new AdminTerminal("Leo", 1, "leo@gmail.com", "+57 3222838161", "123"));
-            usuarios.add(new AdminFlota("Javier", 2, "javier@gmail.com", "+57 318 9431874", "1"));
-            usuarios.add(new Cliente("Roa", 3, "roa@gmail.com", "+57 340 1852907", "1"));
+//            usuarios.add(new AdminFlota("Javier", 2, "javier@gmail.com", "+57 318 9431874", "1",2000000));
+//            usuarios.add(new Cliente("Roa", 3, "roa@gmail.com", "+57 340 1852907", "1"));
             
             saveUsuariosToFile(usuarios);
             return usuarios;

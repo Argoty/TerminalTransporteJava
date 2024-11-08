@@ -4,9 +4,10 @@
  */
 package Vistas;
 
-import Controladores.ControladorCasetasPrincipal;
-import Controladores.ControladorUsuario;
+import Controladores.ControladorPuntos;
+import Modelos.RegistroPuntos;
 import Modelos.Usuarios.Cliente;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,13 +19,17 @@ public class VistaGestionCliente extends javax.swing.JFrame {
      * Creates new form VistaGestionCliente
      */
     Cliente cliente;
+    ControladorPuntos cp;
 
     public VistaGestionCliente(Cliente cliente) {
         initComponents();
         setLocationRelativeTo(this);
         
         this.cliente = cliente;
+        cp = new ControladorPuntos(cliente);
+        
         mostrarInfo();
+        llenarTablaPuntos();
     }
     
     // METODOS PRIVADOS DEL TAB DE INFO DE CLIENTE
@@ -33,6 +38,23 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         nroIdLabel.setText(cliente.getNroId() + "");
         emailLabel.setText(cliente.getEmail());
         telefonoLabel.setText(cliente.getTelefono());
+        puntosAcumuladosLabel.setText(cliente.getPuntosAcumulados() + "");
+    }
+    // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
+    private void llenarTablaPuntos() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"Puntos Ganados", "Viaje", "Bus", "Fecha Creacion"});
+        for (int i = 0; i < cp.getRegistroPuntos().size(); i++) {
+            RegistroPuntos regPunto = cp.getRegistroPuntos().get(i);
+
+            model.addRow(new Object[]{
+                regPunto.getPuntos(),
+                regPunto.getTiquete().getViaje().getDestino() + " el " + regPunto.getTiquete().getViaje().getFechaSalidaStr(),
+                regPunto.getTiquete().getViaje().getBus().getPlaca(),
+                regPunto.getFechaCreacion(),
+            });
+        }
+        puntosGanadosTable.setModel(model);
     }
 
     /**
@@ -54,9 +76,12 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         nroIdLabel = new javax.swing.JLabel();
         emailLabel = new javax.swing.JLabel();
         telefonoLabel = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        puntosAcumuladosLabel = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        puntosGanadosTable = new javax.swing.JTable();
+        jLabel11 = new javax.swing.JLabel();
         devolucionesPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -95,6 +120,10 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         telefonoLabel.setText("jLabel13");
 
+        jLabel10.setText("Puntos Acumulados");
+
+        puntosAcumuladosLabel.setText("jLabel13");
+
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
         informacionPanelLayout.setHorizontalGroup(
@@ -105,9 +134,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
                 .addGap(46, 46, 46)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(puntosAcumuladosLabel)
                     .addComponent(telefonoLabel)
                     .addComponent(emailLabel)
                     .addComponent(nroIdLabel)
@@ -133,42 +164,54 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(telefonoLabel))
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(puntosAcumuladosLabel))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        puntosGanadosTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Puntos Ganados", "Viaje"
+                "Puntos", "Viaje", "Fecha Salida", "Bus", "Empresa", "Fecha Creacion"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane5.setViewportView(puntosGanadosTable);
+
+        jLabel11.setText("Puntos Ganados");
 
         javax.swing.GroupLayout puntosAcumuladosLayout = new javax.swing.GroupLayout(puntosAcumulados);
         puntosAcumulados.setLayout(puntosAcumuladosLayout);
         puntosAcumuladosLayout.setHorizontalGroup(
             puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
-                .addContainerGap(160, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73))
+            .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                .addGap(265, 265, 265)
+                .addComponent(jLabel11)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         puntosAcumuladosLayout.setVerticalGroup(
             puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        clienteTabbedPane.addTab("Puntos Acumulados", puntosAcumulados);
+        clienteTabbedPane.addTab("Puntos de Tiquetes", puntosAcumulados);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -379,6 +422,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -388,17 +433,18 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
     private javax.swing.JLabel nombreCliLabel;
     private javax.swing.JLabel nroIdLabel;
     private javax.swing.JPanel puntosAcumulados;
+    private javax.swing.JLabel puntosAcumuladosLabel;
+    private javax.swing.JTable puntosGanadosTable;
     private javax.swing.JPanel reservaTiqPanel;
     private javax.swing.JLabel telefonoLabel;
     // End of variables declaration//GEN-END:variables

@@ -66,7 +66,7 @@ public class Devolucion implements Serializable{
 
         // Descontar los puntos acumulados por el cliente
         int puntosADescontar = (int) (montoDevuelto / 10000) * 3; // Regla de 3 puntos por cada $10,000
-        cliente.redimirPuntos(puntosADescontar);
+//        cliente.redimirPuntos(puntosADescontar);
 
         System.out.println("Devolución realizada. Monto devuelto: " + montoDevuelto + ". Puntos descontados: " + puntosADescontar);
     }

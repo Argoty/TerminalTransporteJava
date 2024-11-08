@@ -46,17 +46,6 @@ public class ServicioUsuarios {
         return instancia;
     }
 
-    public IList<Cliente> getClientes() {
-        IList<Cliente> clientes = new Lista<>();
-
-        for (int i = 0; i < usuarios.size(); i++) {
-            if (usuarios.get(i) instanceof Cliente cliente) {
-                clientes.add(cliente);
-            }
-        }
-
-        return clientes;
-    }
 
     public void registrarUsuario(Usuario usuario) throws RuntimeException {
         if (!(usuario instanceof AdminFlota)) {

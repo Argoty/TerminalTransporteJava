@@ -36,7 +36,8 @@ public class ControladorViajes {
     }
     public void agregarViaje(String destino, String fSal, String hSal, String fLle, String hLle,
             String placaBus, int vlrUnit) throws RuntimeException{
-        sv.agregarViaje(destino, fSal, hSal, fLle, hLle, placaBus, vlrUnit);
+        Bus bus = sb.buscarBusPorPlaca(placaBus);
+        sv.agregarViaje(destino, fSal, hSal, fLle, hLle, bus, vlrUnit);
         scp.saveDataCasetas();
     }
     public IList<Bus> getBuses() {

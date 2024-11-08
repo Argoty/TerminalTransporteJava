@@ -5,7 +5,6 @@
 package Modelos;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  *
@@ -15,18 +14,13 @@ public class Bus implements Serializable{
     private String placa;
     private String marca;
     private String tipo; // Por ejemplo, "Turismo", "Lujo", "Económico", "MiniBus"
-    private int puestosDisponibles;
-    private boolean disponible;
-    private LocalDateTime fechaDisponible;
+    private int puestos;
 
-    public Bus(String placa, String marca, String tipo,int puestosDisponibles) {
+    public Bus(String placa, String marca, String tipo,int puestos) {
         this.placa = placa;
         this.marca = marca;
         this.tipo = tipo;
-        this.puestosDisponibles = puestosDisponibles;
-        
-        this.disponible = true; 
-        this.fechaDisponible = LocalDateTime.now(); 
+        this.puestos = puestos;
     }
 
     public String getPlaca() {
@@ -37,12 +31,12 @@ public class Bus implements Serializable{
         this.placa = placa;
     }
 
-    public int getPuestosDisponibles() {
-        return puestosDisponibles;
+    public int getPuestos() {
+        return puestos;
     }
 
-    public void setPuestosDisponibles(int puestosDisponibles) {
-        this.puestosDisponibles = puestosDisponibles;
+    public void setPuestos(int puestos) {
+        this.puestos = puestos;
     }
     
     public String getMarca() {
@@ -59,17 +53,6 @@ public class Bus implements Serializable{
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    public boolean isDisponible() {
-        return LocalDateTime.now().isAfter(fechaDisponible);
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
-    }
-    public void setFechaDisponible(LocalDateTime fechaDisponible) {
-        this.fechaDisponible = fechaDisponible;
     }
 }
 

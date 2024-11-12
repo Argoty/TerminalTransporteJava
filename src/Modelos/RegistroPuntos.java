@@ -10,20 +10,24 @@ package Modelos;
  */
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class RegistroPuntos implements Serializable {
     private int puntos;
     private Tiquete tiquete;
     private LocalDateTime fechaCreacion;
 
-    public RegistroPuntos(int puntos, Tiquete tiquete) {
+    public RegistroPuntos(int puntos, Tiquete tiquete, LocalDateTime fecha) {
         this.puntos = puntos;
         this.tiquete = tiquete;
-        this.fechaCreacion = LocalDateTime.now(); // Fecha de creación en el momento del registro
+        this.fechaCreacion = fecha == null ? LocalDateTime.now() : fecha; // Fecha de creación en el momento del registro
     }
 
     public int getPuntos() {
         return puntos;
+    }
+    public void aumentarPuntos(int puntos) {
+        this.puntos += puntos;
     }
 
     public Tiquete getTiquete() {
@@ -32,6 +36,9 @@ public class RegistroPuntos implements Serializable {
 
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
+    }
+    public String getFechaCreacionStr() {
+        return this.fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }
        

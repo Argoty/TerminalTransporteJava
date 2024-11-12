@@ -43,15 +43,18 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
     private void llenarTablaPuntos() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"Puntos Ganados", "Viaje", "Bus", "Fecha Creacion"});
+        model.setColumnIdentifiers(new Object[]{"Puntos", "Viaje", "Bus","Empresa","Vlr Unit", "Cantidad Tiq","Fecha"});
         for (int i = 0; i < cp.getRegistroPuntos().size(); i++) {
             RegistroPuntos regPunto = cp.getRegistroPuntos().get(i);
-
+            int vlrUnit = regPunto.getTiquete().getViaje().getVlrUnit();
             model.addRow(new Object[]{
                 regPunto.getPuntos(),
                 regPunto.getTiquete().getViaje().getDestino() + " el " + regPunto.getTiquete().getViaje().getFechaSalidaStr(),
                 regPunto.getTiquete().getViaje().getBus().getPlaca(),
-                regPunto.getFechaCreacion(),
+                cp.getNombreEmpresaSegunViaje(regPunto.getTiquete().getViaje().getId()),
+                vlrUnit,
+                Math.round(regPunto.getPuntos() / (3.0 * vlrUnit/ 10000.0 )), // Formula para saber la cantidad de esa venta
+                regPunto.getFechaCreacionStr(),
             });
         }
         puntosGanadosTable.setModel(model);
@@ -143,7 +146,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addComponent(emailLabel)
                     .addComponent(nroIdLabel)
                     .addComponent(nombreCliLabel))
-                .addContainerGap(292, Short.MAX_VALUE))
+                .addContainerGap(423, Short.MAX_VALUE))
         );
         informacionPanelLayout.setVerticalGroup(
             informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +171,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(puntosAcumuladosLabel))
-                .addContainerGap(107, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -194,21 +197,21 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(puntosAcumuladosLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(puntosAcumuladosLayout.createSequentialGroup()
-                .addGap(265, 265, 265)
+                .addGap(284, 284, 284)
                 .addComponent(jLabel11)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         puntosAcumuladosLayout.setVerticalGroup(
             puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Puntos de Tiquetes", puntosAcumulados);
@@ -233,14 +236,14 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             .addGroup(devolucionesPanelLayout.createSequentialGroup()
                 .addGap(54, 54, 54)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(267, Short.MAX_VALUE))
         );
         devolucionesPanelLayout.setVerticalGroup(
             devolucionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(devolucionesPanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Devoluciones", devolucionesPanel);
@@ -295,7 +298,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addGap(16, 16, 16))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservaTiqPanelLayout.createSequentialGroup()
-                .addContainerGap(290, Short.MAX_VALUE)
+                .addContainerGap(421, Short.MAX_VALUE)
                 .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservaTiqPanelLayout.createSequentialGroup()
                         .addComponent(jLabel5)
@@ -362,12 +365,12 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(110, 110, 110)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap(249, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap(41, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
@@ -385,21 +388,21 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cerrarSesionBtn)
-                .addGap(19, 19, 19))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(clienteTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(clienteTabbedPane)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cerrarSesionBtn)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(clienteTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(clienteTabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cerrarSesionBtn)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();

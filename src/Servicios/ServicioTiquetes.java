@@ -27,22 +27,16 @@ public class ServicioTiquetes {
         if (cantidad > puestosDesocupados) {
             throw new RuntimeException("Lo siento, este tiquete tiene solo " + puestosDesocupados + " puestos disponibles");
         }
-
-        int totalInvertido = viaje.getVlrUnit() * cantidad;
-
+        // Agrega la cantidad de tiquetes que se pidieron con un for
         for (int i = 0; i < cantidad; i++) {
             Tiquete tiquete = new Tiquete(viaje, cliente);
             viaje.getTiquetes().add(tiquete);
             cliente.getTiquetes().add(tiquete);
         }
-
-        cliente.agregarDineroInvertido(totalInvertido);
-
-        // Actualizamos los puntos con el total invertido y el último tiquete creado
-        cliente.actualizarPuntos(totalInvertido, cliente.getTiquetes().get(cliente.getTiquetes().size() - 1));
     }
     
     public IList<Tiquete> getTiquetes(Viaje viaje) {
         return viaje.getTiquetes();
     }
+    
 }

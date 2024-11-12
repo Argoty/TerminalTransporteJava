@@ -47,8 +47,8 @@ public class DataCasetas {
             configurarMatrizCasetas(5, casetas);
             initCasetas(casetas);
             // Esto es de prueba, despues se elimina
-//            casetas[0][0].asignarFlota(new EmpresaTransporte(1, "Bolivariano",
-//                    new AdminFlota("Javier", 2, "javier@gmail.com", "+57 318 9431874", "1", 2000000)), 900000, 5, casetas);
+            casetas[0][0].asignarFlota(new EmpresaTransporte(1, "Bolivariano",
+                    new AdminFlota("Javier", 2, "javier@gmail.com", "+57 318 9431874", "1", 2000000)), 900000, 5, casetas);
 
             saveCasetasToFile(casetas);
             return casetas;

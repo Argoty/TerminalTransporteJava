@@ -26,7 +26,7 @@ public class Viaje implements Serializable{
     private Bus bus;
  
     private IList<Tiquete> tiquetes;
-
+    private IList<Devolucion> devoluciones;
     // Constructor
     public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int vlrUnit, Bus bus) {
         this.id = cont++; 
@@ -38,6 +38,7 @@ public class Viaje implements Serializable{
         this.bus = bus;
         
         this.tiquetes = new Lista<>();
+        this.devoluciones = new Lista<>();
     }
 
     // Getters y Setters
@@ -100,6 +101,9 @@ public class Viaje implements Serializable{
     
     public IList<Tiquete> getTiquetes() {
         return this.tiquetes;
+    }
+    public IList<Devolucion> getDevoluciones(){
+        return this.devoluciones;
     }
 }
 

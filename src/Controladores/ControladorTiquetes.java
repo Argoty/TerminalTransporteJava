@@ -11,6 +11,8 @@ import Modelos.Usuarios.Usuario;
 import Modelos.Viaje;
 
 import Servicios.ServicioCasetasPrincipal;
+import Servicios.ServicioDevoluciones;
+import Servicios.ServicioPuntos;
 import Servicios.ServicioTiquetes;
 import Servicios.ServicioViajes;
 import Servicios.ServicioUsuarios;
@@ -26,6 +28,7 @@ public class ControladorTiquetes {
     private ServicioTiquetes st;
     private ServicioViajes sv;
     private ServicioUsuarios su;
+    private ServicioDevoluciones sd;
 
     public ControladorTiquetes(int idAdmin) {
         this.scp = ServicioCasetasPrincipal.getInstance();
@@ -33,6 +36,7 @@ public class ControladorTiquetes {
                 .getEmpresa();
         this.sv = new ServicioViajes(empr);
         this.st = new ServicioTiquetes();
+        this.sd = new ServicioDevoluciones();
         this.su = ServicioUsuarios.getInstance();
     }
 
@@ -40,7 +44,27 @@ public class ControladorTiquetes {
         Viaje viaje = buscarViajePorId(idViaje);
         Cliente cliente = buscarClientePorId(idCliente);
         st.crearTiquete(viaje, cliente, cantidad);
+        
+        // Agrega Puntos al usuario
+        ServicioPuntos sp = new ServicioPuntos(cliente);
+        int totalInvertido = viaje.getVlrUnit() * cantidad;
+        sp.agregarDineroInvertido(totalInvertido);
+        sp.actualizarPuntos(totalInvertido,cliente.getTiquetes().get(cliente.getTiquetes().size() - 1));
+        
         // Guarda informacion en binarios
+        scp.saveDataCasetas();
+        su.saveDataUsuarios();
+    }
+    
+    public void crearDevolucion(int idViaje, int idCliente, int idTiquete) {
+        Viaje viaje = buscarViajePorId(idViaje);
+        Cliente cliente = buscarClientePorId(idCliente);
+        sd.crearDevolucion(viaje, cliente,idTiquete);
+        
+        ServicioPuntos sp = new ServicioPuntos(cliente);
+        sp.eliminarRegistroPunto(idTiquete);
+        
+        // Guardo info
         scp.saveDataCasetas();
         su.saveDataUsuarios();
     }

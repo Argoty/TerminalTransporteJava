@@ -52,4 +52,17 @@ public class ServicioCasetasPrincipal {
         }
         return null;
     }
+    public Caseta getCasetaPorViajeID(int idViaje) {
+        for (Caseta[] caseta : casetas) {
+            for (Caseta caseta1 : caseta) {
+                if (caseta1.getEmpresa() == null) continue;
+                for (int i=0; i<caseta1.getEmpresa().getViajes().size();i++) {
+                    if (caseta1.getEmpresa().getViajes().get(i).getId() == idViaje){
+                        return caseta1;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

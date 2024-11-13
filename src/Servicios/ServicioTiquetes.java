@@ -19,7 +19,7 @@ public class ServicioTiquetes {
     public ServicioTiquetes() {
     }
     
-    public void crearTiquete(Viaje viaje, Cliente cliente, int cantidad) throws RuntimeException {
+    public LocalDateTime crearTiquete(Viaje viaje, Cliente cliente, int cantidad) throws RuntimeException {
         if (viaje == null) throw new RuntimeException("Selecciona bien el viaje");
         if (viaje.getFechaSalida().isBefore(LocalDateTime.now())) throw new RuntimeException("Este viaje ya ocurrió");
 
@@ -27,16 +27,28 @@ public class ServicioTiquetes {
         if (cantidad > puestosDesocupados) {
             throw new RuntimeException("Lo siento, este tiquete tiene solo " + puestosDesocupados + " puestos disponibles");
         }
-        // Agrega la cantidad de tiquetes que se pidieron con un for
+        // Agrega la cantidad de tiquetes que se pidieron con un for y se les pone la misma
+        // fecha, luego se retorna para usarla como "id" de los registrosPuntos
+        LocalDateTime fechaVenta = LocalDateTime.now();
         for (int i = 0; i < cantidad; i++) {
-            Tiquete tiquete = new Tiquete(viaje, cliente);
+            Tiquete tiquete = new Tiquete(viaje, cliente, fechaVenta);
             viaje.getTiquetes().add(tiquete);
             cliente.getTiquetes().add(tiquete);
         }
+        return fechaVenta;
     }
     
     public IList<Tiquete> getTiquetes(Viaje viaje) {
         return viaje.getTiquetes();
+    }
+    
+    public Tiquete obtenerTiquete(Viaje viaje, int idTiquete) {
+        for (int i=0; i< viaje.getTiquetes().size();i++) {
+            if (viaje.getTiquetes().get(i).getId() == idTiquete) {
+                return viaje.getTiquetes().get(i);
+            }
+        }
+        return null;
     }
     
 }

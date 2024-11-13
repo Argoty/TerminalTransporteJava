@@ -18,6 +18,7 @@ import Servicios.ServicioViajes;
 import Servicios.ServicioUsuarios;
 
 import Utils.IList;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -43,13 +44,11 @@ public class ControladorTiquetes {
     public void venderTiquete(int idViaje, int idCliente, int cantidad) throws RuntimeException {
         Viaje viaje = buscarViajePorId(idViaje);
         Cliente cliente = buscarClientePorId(idCliente);
-        st.crearTiquete(viaje, cliente, cantidad);
+        LocalDateTime fechaCompra = st.crearTiquete(viaje, cliente, cantidad);
         
         // Agrega Puntos al usuario
         ServicioPuntos sp = new ServicioPuntos(cliente);
-        int totalInvertido = viaje.getVlrUnit() * cantidad;
-        sp.agregarDineroInvertido(totalInvertido);
-        sp.actualizarPuntos(totalInvertido,cliente.getTiquetes().get(cliente.getTiquetes().size() - 1));
+        sp.actualizarPuntos(viaje, cantidad, fechaCompra);
         
         // Guarda informacion en binarios
         scp.saveDataCasetas();
@@ -58,11 +57,11 @@ public class ControladorTiquetes {
     
     public void crearDevolucion(int idViaje, int idCliente, int idTiquete) {
         Viaje viaje = buscarViajePorId(idViaje);
-        Cliente cliente = buscarClientePorId(idCliente);
-        sd.crearDevolucion(viaje, cliente,idTiquete);
+        Tiquete tiqueteAEliminar = st.obtenerTiquete(viaje, idTiquete);
+        sd.crearDevolucion(viaje, tiqueteAEliminar);
         
-        ServicioPuntos sp = new ServicioPuntos(cliente);
-        sp.eliminarRegistroPunto(idTiquete);
+        ServicioPuntos sp = new ServicioPuntos(tiqueteAEliminar.getCliente());
+        sp.disminuirPuntos(viaje);
         
         // Guardo info
         scp.saveDataCasetas();

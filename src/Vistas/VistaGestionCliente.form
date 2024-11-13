@@ -71,9 +71,13 @@
                           <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="dineroFaltLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="dineroInvertidoLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="puntosAcumuladosLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="telefonoLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="emailLabel" min="-2" max="-2" attributes="0"/>
@@ -112,7 +116,17 @@
                           <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="puntosAcumuladosLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="132" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dineroInvertidoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dineroFaltLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="36" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -166,6 +180,26 @@
             <Component class="javax.swing.JLabel" name="puntosAcumuladosLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jLabel13"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel12">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Dinero Invertido"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="dineroInvertidoLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel13"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel13">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Dinero Faltante"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="dineroFaltLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jLabel14"/>
               </Properties>
             </Component>
           </SubComponents>

@@ -34,6 +34,9 @@ public class DataCasetas {
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             oos.writeObject(casetas);
             System.out.println("Casetas guardadass en: " + filePath);
+
+            // Guardar el contador de tiquetes
+            guardarContadorTiquetes(Tiquete.getContador());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,15 +62,39 @@ public class DataCasetas {
             Caseta[][] casetas = (Caseta[][]) ois.readObject();
 
             // Persiste los ids que dependen del contador estatico de Viajes y Tiquetes
-            int[] totalViajesYTiq = contarViajesTiqEnCasetas(casetas);
-            Viaje.ajustarContadorPersistencia(totalViajesYTiq[0]);
-            Tiquete.ajustarContadorPersistencia(totalViajesYTiq[1]);
-            
+            int contViajes = contarViajesEnCasetas(casetas);
+            Viaje.ajustarContadorPersistencia(contViajes);
+
+            int contadorTiquetes = cargarContadorTiquetes();
+            Tiquete.ajustarContadorPersistencia(contadorTiquetes);
+
             return casetas;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new Caseta[4][];
 
+        }
+    }
+
+    private void guardarContadorTiquetes(int contadorTiquetes) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("contadorTiquetes.bin"))) {
+            oos.writeInt(contadorTiquetes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int cargarContadorTiquetes() {
+        File file = new File("contadorTiquetes.bin");
+        if (!file.exists()) {
+            return 1; // Si el archivo no existe, empieza desde 1
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return ois.readInt();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 1;
         }
     }
 
@@ -93,28 +120,18 @@ public class DataCasetas {
     }
 
     // Método para contar el total de viajes en todas las casetas
-    private int[] contarViajesTiqEnCasetas(Caseta[][] casetas) {
-        int[] nroViajesYTiq = new int[2];
+    private int contarViajesEnCasetas(Caseta[][] casetas) {
         int contadorViajes = 0;
-        int contadorTiquetes = 0;
 
         for (Caseta[] filaCaseta : casetas) {
             for (Caseta caseta : filaCaseta) {
                 if (caseta.getEmpresa() != null) {
-
                     contadorViajes += caseta.getEmpresa().getViajes().size();
-
-                    for (int i = 0; i < caseta.getEmpresa().getViajes().size(); i++) {
-                        contadorTiquetes += caseta.getEmpresa().getViajes().get(i).getTiquetes().size();
-                    }
                 }
             }
         }
-        
-        nroViajesYTiq[0] = contadorViajes;
-        nroViajesYTiq[1] = contadorTiquetes;
-        
-        return nroViajesYTiq;
+
+        return contadorViajes;
     }
 
 }

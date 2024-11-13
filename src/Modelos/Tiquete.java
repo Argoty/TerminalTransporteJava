@@ -20,11 +20,11 @@ public class Tiquete implements Serializable{
     private Cliente cliente;
     private LocalDateTime fechaCompra;
 
-    public Tiquete(Viaje viaje, Cliente cliente) {
+    public Tiquete(Viaje viaje, Cliente cliente, LocalDateTime fecha) {
         this.id = cont++; 
         this.viaje = viaje;
         this.cliente = cliente;
-        this.fechaCompra = LocalDateTime.now();
+        this.fechaCompra =fecha;
     }
     public int getId() {
         return id;
@@ -56,7 +56,10 @@ public class Tiquete implements Serializable{
         this.fechaCompra = fechaCompra;
     }
     public static void ajustarContadorPersistencia(int numeroDeTiquetes) {
-        cont = numeroDeTiquetes + 1;
+        cont = numeroDeTiquetes;
+    }
+    public static int getContador() {
+        return cont;
     }
     
 }

@@ -20,25 +20,15 @@ public class ServicioDevoluciones {
     public ServicioDevoluciones() {
     }
     
-    public void crearDevolucion(Viaje viaje, Cliente cliente, int idTiquete) throws RuntimeException {
-        Tiquete tiqueteADevolver = null;
-        for (int i=0; i< viaje.getTiquetes().size();i++) {
-            if (viaje.getTiquetes().get(i).getId() == idTiquete) {
-                tiqueteADevolver = viaje.getTiquetes().get(i);
-                viaje.getTiquetes().remove(i);
-            }
-        }
+    public void crearDevolucion(Viaje viaje, Tiquete tiquete) throws RuntimeException {
+        viaje.getTiquetes().remove(tiquete);
         
-        for (int i=0; i< cliente.getTiquetes().size();i++) {
-            if (cliente.getTiquetes().get(i).getId() == idTiquete) {
-                cliente.getTiquetes().remove(i);
-            }
-        }
+        Cliente cliente = tiquete.getCliente();
+        cliente.getTiquetes().remove(tiquete);
         
-        Devolucion devolucion = new Devolucion(tiqueteADevolver);
+        Devolucion devolucion = new Devolucion(tiquete);
         viaje.getDevoluciones().add(devolucion);
         cliente.getDevoluciones().add(devolucion);
-   
     }
 
     

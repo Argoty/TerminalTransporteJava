@@ -15,6 +15,8 @@ public interface IList<T> {
     
     public void remove(int index);
     
+    public void remove(T dato);
+    
     public int size();
     
     public boolean isEmpty();

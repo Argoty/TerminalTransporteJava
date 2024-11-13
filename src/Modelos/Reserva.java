@@ -27,19 +27,19 @@ public class Reserva implements Serializable{
     }
 
     // Método para hacer efectiva la reserva
-    public void hacerEfectiva() {
-        if (activa && viaje.getBus().getPuestos() >= cantidad) {
-            // Disminuir los puestos disponibles en el bus
-            viaje.getBus().setPuestos(viaje.getBus().getPuestos() - cantidad);
-            // Crear un tiquete para el cliente
-            Tiquete tiquete = new Tiquete(viaje, cliente);
-            // Agregar el tiquete al cliente (podría ser a una lista de tiquetes)
-            System.out.println("Reserva hecha efectiva. Tiquete emitido.");
-            this.activa = false; // Marca la reserva como inactiva
-        } else {
-            System.out.println("No se puede hacer efectiva la reserva. El viaje no tiene suficientes puestos disponibles.");
-        }
-    }
+//    public void hacerEfectiva() {
+//        if (activa && viaje.getBus().getPuestos() >= cantidad) {
+//            // Disminuir los puestos disponibles en el bus
+//            viaje.getBus().setPuestos(viaje.getBus().getPuestos() - cantidad);
+//            // Crear un tiquete para el cliente
+//            Tiquete tiquete = new Tiquete(viaje, cliente);
+//            // Agregar el tiquete al cliente (podría ser a una lista de tiquetes)
+//            System.out.println("Reserva hecha efectiva. Tiquete emitido.");
+//            this.activa = false; // Marca la reserva como inactiva
+//        } else {
+//            System.out.println("No se puede hacer efectiva la reserva. El viaje no tiene suficientes puestos disponibles.");
+//        }
+//    }
 
     // Método para cancelar la reserva
     public void cancelar() {

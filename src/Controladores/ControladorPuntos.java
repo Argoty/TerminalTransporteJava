@@ -4,7 +4,7 @@
  */
 package Controladores;
 
-import Modelos.RegistroPuntos;
+import Modelos.RegistroCompra;
 import Modelos.Usuarios.Cliente;
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioPuntos;
@@ -21,8 +21,8 @@ public class ControladorPuntos {
         this.sp = new ServicioPuntos(cliente);
         this.scp = ServicioCasetasPrincipal.getInstance();
     }
-    public IList<RegistroPuntos> getRegistroPuntos() {
-        return sp.getPuntosJuntos();
+    public IList<RegistroCompra> getRegistroPuntos() {
+        return sp.getHistorialCompras();
     }
     public String getNombreEmpresaSegunViaje(int idViaje) {
         return scp.getCasetaPorViajeID(idViaje).getEmpresa().getNombre();

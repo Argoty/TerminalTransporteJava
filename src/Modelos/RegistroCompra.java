@@ -8,30 +8,41 @@ package Modelos;
  *
  * @author PC
  */
+import Modelos.Usuarios.Cliente;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class RegistroPuntos implements Serializable {
+public class RegistroCompra implements Serializable {
     private int puntos;
-    private Tiquete tiquete;
+    private Viaje viaje;
+//    private Cliente cliente;
+    private int cantidadTiquetes;
     private LocalDateTime fechaCreacion;
 
-    public RegistroPuntos(int puntos, Tiquete tiquete, LocalDateTime fecha) {
+    public RegistroCompra(int puntos, Viaje viaje, int cantidad, LocalDateTime fecha) {
         this.puntos = puntos;
-        this.tiquete = tiquete;
-        this.fechaCreacion = fecha == null ? LocalDateTime.now() : fecha; // Fecha de creación en el momento del registro
+        this.viaje = viaje;
+        this.cantidadTiquetes = cantidad;
+        this.fechaCreacion = fecha; // Fecha de creación en el momento del registro
     }
 
     public int getPuntos() {
         return puntos;
     }
-    public void aumentarPuntos(int puntos) {
-        this.puntos += puntos;
+    public void disminuirPuntos(int puntos) {
+        this.puntos -= puntos;
+    }
+    
+    public int getCantidadTiq() {
+        return cantidadTiquetes;
+    }
+    public void setCantidadTiq(int cantidadTiq) {
+        this.cantidadTiquetes = cantidadTiq;
     }
 
-    public Tiquete getTiquete() {
-        return tiquete;
+    public Viaje getViaje() {
+        return viaje;
     }
 
     public LocalDateTime getFechaCreacion() {

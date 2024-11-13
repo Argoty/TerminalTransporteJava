@@ -5,7 +5,7 @@
 package Vistas;
 
 import Controladores.ControladorPuntos;
-import Modelos.RegistroPuntos;
+import Modelos.RegistroCompra;
 import Modelos.Usuarios.Cliente;
 import javax.swing.table.DefaultTableModel;
 
@@ -39,27 +39,39 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         emailLabel.setText(cliente.getEmail());
         telefonoLabel.setText(cliente.getTelefono());
         puntosAcumuladosLabel.setText(cliente.getPuntosAcumulados() + "");
+        dineroInvertidoLabel.setText("$" + cliente.getDineroInvertido() + "");
+        dineroFaltLabel.setText("$" + cliente.getDineroProximoPunto());
     }
     // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
     private void llenarTablaPuntos() {
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(new Object[]{"Puntos", "Viaje", "Bus","Empresa","Vlr Unit", "Cantidad Tiq","Fecha"});
         for (int i = 0; i < cp.getRegistroPuntos().size(); i++) {
-            RegistroPuntos regPunto = cp.getRegistroPuntos().get(i);
-            int vlrUnit = regPunto.getTiquete().getViaje().getVlrUnit();
+            RegistroCompra regPunto = cp.getRegistroPuntos().get(i);
+            int vlrUnit = regPunto.getViaje().getVlrUnit();
             model.addRow(new Object[]{
                 regPunto.getPuntos(),
-                regPunto.getTiquete().getViaje().getDestino() + " el " + regPunto.getTiquete().getViaje().getFechaSalidaStr(),
-                regPunto.getTiquete().getViaje().getBus().getPlaca(),
-                cp.getNombreEmpresaSegunViaje(regPunto.getTiquete().getViaje().getId()),
+                regPunto.getViaje().getDestino() + " el " + regPunto.getViaje().getFechaSalidaStr(),
+                regPunto.getViaje().getBus().getPlaca(),
+                cp.getNombreEmpresaSegunViaje(regPunto.getViaje().getId()),
                 vlrUnit,
-                Math.round(regPunto.getPuntos() / (3.0 * vlrUnit/ 10000.0 )), // Formula para saber la cantidad de esa venta
+                regPunto.getCantidadTiq(), // Formula para saber la cantidad de esa venta
                 regPunto.getFechaCreacionStr(),
             });
         }
         puntosGanadosTable.setModel(model);
     }
-
+// MÉTODOS PRIVADOS DEL TAB DE DEVOLUCIONES
+    private void llenarTablaDevoluciones() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID Tiquete", "Viaje", "Bus","Empresa","Vlr Unit","Fecha"});
+        for (int i = 0; i < cp.getRegistroPuntos().size(); i++) {
+            model.addRow(new Object[]{
+                
+            });
+        }
+        puntosGanadosTable.setModel(model);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,6 +93,10 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         telefonoLabel = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         puntosAcumuladosLabel = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        dineroInvertidoLabel = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        dineroFaltLabel = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         puntosGanadosTable = new javax.swing.JTable();
@@ -127,6 +143,14 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         puntosAcumuladosLabel.setText("jLabel13");
 
+        jLabel12.setText("Dinero Invertido");
+
+        dineroInvertidoLabel.setText("jLabel13");
+
+        jLabel13.setText("Dinero Faltante");
+
+        dineroFaltLabel.setText("jLabel14");
+
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
         informacionPanelLayout.setHorizontalGroup(
@@ -138,9 +162,13 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13))
                 .addGap(46, 46, 46)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dineroFaltLabel)
+                    .addComponent(dineroInvertidoLabel)
                     .addComponent(puntosAcumuladosLabel)
                     .addComponent(telefonoLabel)
                     .addComponent(emailLabel)
@@ -171,7 +199,15 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(puntosAcumuladosLabel))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(dineroInvertidoLabel))
+                .addGap(28, 28, 28)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(dineroFaltLabel))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -419,6 +455,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JButton cerrarSesionBtn;
     private javax.swing.JTabbedPane clienteTabbedPane;
     private javax.swing.JPanel devolucionesPanel;
+    private javax.swing.JLabel dineroFaltLabel;
+    private javax.swing.JLabel dineroInvertidoLabel;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JPanel informacionPanel;
     private javax.swing.JButton jButton1;
@@ -427,6 +465,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

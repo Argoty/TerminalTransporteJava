@@ -240,6 +240,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
                     this.dispose();
                 } else if (usuario instanceof Cliente) {
                     new VistaGestionCliente((Cliente) usuario).setVisible(true);
+                    this.dispose();
                 }
             } else {
                 JOptionPane.showMessageDialog(

@@ -6,7 +6,7 @@ package Modelos.Usuarios;
 
 import Modelos.Devolucion;
 import Modelos.Notificacion;
-import Modelos.RegistroPuntos;
+import Modelos.RegistroCompra;
 import Modelos.Reserva;
 import Modelos.Tiquete;
 import Utils.IList;
@@ -25,7 +25,7 @@ public class Cliente extends Usuario implements Serializable {
     
     private IList<Tiquete> tiquetes;
     private IList<Reserva> reservas;
-    private IList<RegistroPuntos> historialPuntos;
+    private IList<RegistroCompra> historialPuntos;
     private IList<Devolucion> devoluciones;
     private IList<Notificacion> notificaciones;
 
@@ -71,7 +71,7 @@ public class Cliente extends Usuario implements Serializable {
         return this.tiquetes;
     }
 
-    public IList<RegistroPuntos> getHistorialPuntos() {
+    public IList<RegistroCompra> getHistorialPuntos() {
         return historialPuntos;
     }
     public IList<Reserva> getReservas() {

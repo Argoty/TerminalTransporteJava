@@ -4,7 +4,7 @@
  */
 package Controladores;
 import Modelos.Devolucion;
-import Modelos.Viaje;
+import Modelos.Usuarios.Cliente;
 import Servicios.ServicioDevoluciones;
 import Utils.IList;
 /**
@@ -13,11 +13,13 @@ import Utils.IList;
  */
 public class ControladorDevolCliente {
     private ServicioDevoluciones sd;
-    public ControladorDevolCliente() {
-        
+    private Cliente cliente;
+    public ControladorDevolCliente(Cliente cliente) {
+        this.cliente = cliente;
+        this.sd = new ServicioDevoluciones();
     }
-    public IList<Devolucion> getDevoluciones(Viaje viaje) {
-        return sd.getDevoluciones(viaje);
+    public IList<Devolucion> getDevoluciones() {
+        return sd.getDevolucionesCli(cliente);
     }
     
     

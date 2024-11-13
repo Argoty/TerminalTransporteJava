@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Servicios/ServicioDevoluciones.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Controladores/ControladorDevolCliente.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Controladores/ControladorTiquetes.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Vistas/VistaGestionCliente.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Servicios/ServicioPuntos.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

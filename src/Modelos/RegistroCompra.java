@@ -8,7 +8,6 @@ package Modelos;
  *
  * @author PC
  */
-import Modelos.Usuarios.Cliente;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +23,7 @@ public class RegistroCompra implements Serializable {
         this.puntos = puntos;
         this.viaje = viaje;
         this.cantidadTiquetes = cantidad;
-        this.fechaCreacion = fecha; // Fecha de creación en el momento del registro
+        this.fechaCreacion = fecha; 
     }
 
     public int getPuntos() {

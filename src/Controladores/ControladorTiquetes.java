@@ -58,11 +58,11 @@ public class ControladorTiquetes {
     public void crearDevolucion(int idViaje, int idCliente, int idTiquete) {
         Viaje viaje = buscarViajePorId(idViaje);
         Tiquete tiqueteAEliminar = st.obtenerTiquete(viaje, idTiquete);
-        sd.crearDevolucion(viaje, tiqueteAEliminar);
         
         ServicioPuntos sp = new ServicioPuntos(tiqueteAEliminar.getCliente());
-        sp.disminuirPuntos(viaje);
+        int puntosPerdidos = sp.disminuirPuntos(tiqueteAEliminar.getViaje());
         
+        sd.crearDevolucion(viaje, tiqueteAEliminar, puntosPerdidos);
         // Guardo info
         scp.saveDataCasetas();
         su.saveDataUsuarios();

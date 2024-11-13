@@ -5,7 +5,9 @@
 package Vistas;
 
 import Controladores.ControladorPuntos;
+import Controladores.ControladorDevolCliente;
 import Modelos.RegistroCompra;
+import Modelos.Devolucion;
 import Modelos.Usuarios.Cliente;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +22,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
      */
     Cliente cliente;
     ControladorPuntos cp;
+    ControladorDevolCliente cdc;
 
     public VistaGestionCliente(Cliente cliente) {
         initComponents();
@@ -27,9 +30,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         
         this.cliente = cliente;
         cp = new ControladorPuntos(cliente);
+        cdc = new ControladorDevolCliente(cliente);
         
         mostrarInfo();
         llenarTablaPuntos();
+        llenarTablaDevoluciones();
     }
     
     // METODOS PRIVADOS DEL TAB DE INFO DE CLIENTE
@@ -40,7 +45,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         telefonoLabel.setText(cliente.getTelefono());
         puntosAcumuladosLabel.setText(cliente.getPuntosAcumulados() + "");
         dineroInvertidoLabel.setText("$" + cliente.getDineroInvertido() + "");
-        dineroFaltLabel.setText("$" + cliente.getDineroProximoPunto());
     }
     // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
     private void llenarTablaPuntos() {
@@ -61,16 +65,23 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         }
         puntosGanadosTable.setModel(model);
     }
-// MÉTODOS PRIVADOS DEL TAB DE DEVOLUCIONES
+    // MÉTODOS PRIVADOS DEL TAB DE DEVOLUCIONES
     private void llenarTablaDevoluciones() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID Tiquete", "Viaje", "Bus","Empresa","Vlr Unit","Fecha"});
-        for (int i = 0; i < cp.getRegistroPuntos().size(); i++) {
+        model.setColumnIdentifiers(new Object[]{"ID Tiquete", "Viaje", "Bus","Empresa","Vlr Unit","Fecha", "Resultado Puntos"});
+        for (int i = 0; i < cdc.getDevoluciones().size(); i++) {
+            Devolucion devolucion = cdc.getDevoluciones().get(i);
             model.addRow(new Object[]{
-                
+                devolucion.getTiquete().getId(),
+                devolucion.getTiquete().getViaje().getDestino() + " el " + devolucion.getTiquete().getViaje().getFechaSalidaStr(),
+                devolucion.getTiquete().getViaje().getBus().getPlaca(),
+                cp.getNombreEmpresaSegunViaje(devolucion.getTiquete().getViaje().getId()),
+                devolucion.getTiquete().getViaje().getVlrUnit(),
+                devolucion.getFechaDevolucion(),
+                devolucion.getResultadoPuntos()
             });
         }
-        puntosGanadosTable.setModel(model);
+        tablaDevoluciones1.setModel(model);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -95,30 +106,24 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         puntosAcumuladosLabel = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         dineroInvertidoLabel = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        dineroFaltLabel = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         puntosGanadosTable = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
-        devolucionesPanel = new javax.swing.JPanel();
+        puntosRedimidosPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        reservaTiqPanel = new javax.swing.JPanel();
+        tablaPuntosRedimidos = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        devolucionesPanel = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tablaDevoluciones1 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        cantidad = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
+        reservarTiqPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
+        notificacionesPanel = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTable5 = new javax.swing.JTable();
         cerrarSesionBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -147,10 +152,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         dineroInvertidoLabel.setText("jLabel13");
 
-        jLabel13.setText("Dinero Faltante");
-
-        dineroFaltLabel.setText("jLabel14");
-
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
         informacionPanelLayout.setHorizontalGroup(
@@ -163,11 +164,9 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13))
+                    .addComponent(jLabel12))
                 .addGap(46, 46, 46)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dineroFaltLabel)
                     .addComponent(dineroInvertidoLabel)
                     .addComponent(puntosAcumuladosLabel)
                     .addComponent(telefonoLabel)
@@ -203,11 +202,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(dineroInvertidoLabel))
-                .addGap(28, 28, 28)
-                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(dineroFaltLabel))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -225,34 +220,36 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         ));
         jScrollPane5.setViewportView(puntosGanadosTable);
 
-        jLabel11.setText("Puntos Ganados");
+        jLabel11.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel11.setText("Historial Puntos Ganados");
 
         javax.swing.GroupLayout puntosAcumuladosLayout = new javax.swing.GroupLayout(puntosAcumulados);
         puntosAcumulados.setLayout(puntosAcumuladosLayout);
         puntosAcumuladosLayout.setHorizontalGroup(
             puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(puntosAcumuladosLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(puntosAcumuladosLayout.createSequentialGroup()
-                .addGap(284, 284, 284)
-                .addComponent(jLabel11)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 714, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                        .addGap(285, 285, 285)
+                        .addComponent(jLabel11)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         puntosAcumuladosLayout.setVerticalGroup(
             puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        clienteTabbedPane.addTab("Puntos de Tiquetes", puntosAcumulados);
+        clienteTabbedPane.addTab("Puntos Ganados", puntosAcumulados);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tablaPuntosRedimidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -263,32 +260,38 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "Tiquete", "Cliente", "Fecha Devolucion", "Monto Devuelto"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tablaPuntosRedimidos);
 
-        javax.swing.GroupLayout devolucionesPanelLayout = new javax.swing.GroupLayout(devolucionesPanel);
-        devolucionesPanel.setLayout(devolucionesPanelLayout);
-        devolucionesPanelLayout.setHorizontalGroup(
-            devolucionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(devolucionesPanelLayout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(267, Short.MAX_VALUE))
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel3.setText("Historial Puntos Redimidos");
+
+        javax.swing.GroupLayout puntosRedimidosPanelLayout = new javax.swing.GroupLayout(puntosRedimidosPanel);
+        puntosRedimidosPanel.setLayout(puntosRedimidosPanelLayout);
+        puntosRedimidosPanelLayout.setHorizontalGroup(
+            puntosRedimidosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
+                .addGroup(puntosRedimidosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 692, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
+                        .addGap(282, 282, 282)
+                        .addComponent(jLabel3)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
-        devolucionesPanelLayout.setVerticalGroup(
-            devolucionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(devolucionesPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+        puntosRedimidosPanelLayout.setVerticalGroup(
+            puntosRedimidosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        clienteTabbedPane.addTab("Devoluciones", devolucionesPanel);
+        clienteTabbedPane.addTab("Puntos Redimidos", puntosRedimidosPanel);
 
-        jLabel3.setText("Viajes");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tablaDevoluciones1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -296,90 +299,38 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Destino", "Fecha", "Bus", "Title 4"
+                "Tiquete", "Cliente", "Fecha Devolucion", "Monto Devuelto"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane6.setViewportView(tablaDevoluciones1);
 
-        jLabel5.setText("LISTA DE VIAJES");
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel4.setText("Historial Devoluciones");
 
-        jLabel6.setText("Ordenar por:");
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Destino", "Ambos" }));
-
-        jButton1.setText("Generar Reserva");
-
-        jLabel7.setText("Cantidad");
-
-        javax.swing.GroupLayout reservaTiqPanelLayout = new javax.swing.GroupLayout(reservaTiqPanel);
-        reservaTiqPanel.setLayout(reservaTiqPanelLayout);
-        reservaTiqPanelLayout.setHorizontalGroup(
-            reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                        .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(36, 36, 36)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1))
-                        .addGap(16, 16, 16))
-                    .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(cantidad)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(16, 16, 16))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservaTiqPanelLayout.createSequentialGroup()
-                .addContainerGap(421, Short.MAX_VALUE)
-                .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservaTiqPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(134, 134, 134))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservaTiqPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                                .addGap(68, 68, 68)
-                                .addComponent(jLabel4))
-                            .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(166, 166, 166))))
-        );
-        reservaTiqPanelLayout.setVerticalGroup(
-            reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        javax.swing.GroupLayout devolucionesPanelLayout = new javax.swing.GroupLayout(devolucionesPanel);
+        devolucionesPanel.setLayout(devolucionesPanelLayout);
+        devolucionesPanelLayout.setHorizontalGroup(
+            devolucionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, devolucionesPanelLayout.createSequentialGroup()
+                .addContainerGap(53, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
+            .addGroup(devolucionesPanelLayout.createSequentialGroup()
+                .addGap(295, 295, 295)
                 .addComponent(jLabel4)
-                .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(reservaTiqPanelLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(reservaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservaTiqPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        devolucionesPanelLayout.setVerticalGroup(
+            devolucionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(devolucionesPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
-        clienteTabbedPane.addTab("Reservar Tiquetes", reservaTiqPanel);
+        clienteTabbedPane.addTab("Devoluciones", devolucionesPanel);
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -394,24 +345,56 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(jTable4);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(110, 110, 110)
+        javax.swing.GroupLayout reservarTiqPanelLayout = new javax.swing.GroupLayout(reservarTiqPanel);
+        reservarTiqPanel.setLayout(reservarTiqPanelLayout);
+        reservarTiqPanelLayout.setHorizontalGroup(
+            reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                .addGap(147, 147, 147)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(249, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
+        reservarTiqPanelLayout.setVerticalGroup(
+            reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservarTiqPanelLayout.createSequentialGroup()
+                .addContainerGap(67, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
+                .addGap(40, 40, 40))
         );
 
-        clienteTabbedPane.addTab("Notificaciones", jPanel1);
+        clienteTabbedPane.addTab("Reservar", reservarTiqPanel);
+
+        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Mensaje", "Fecha envío"
+            }
+        ));
+        jScrollPane7.setViewportView(jTable5);
+
+        javax.swing.GroupLayout notificacionesPanelLayout = new javax.swing.GroupLayout(notificacionesPanel);
+        notificacionesPanel.setLayout(notificacionesPanelLayout);
+        notificacionesPanelLayout.setHorizontalGroup(
+            notificacionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(notificacionesPanelLayout.createSequentialGroup()
+                .addGap(139, 139, 139)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(220, Short.MAX_VALUE))
+        );
+        notificacionesPanelLayout.setVerticalGroup(
+            notificacionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(notificacionesPanelLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(57, Short.MAX_VALUE))
+        );
+
+        clienteTabbedPane.addTab("Notificaciones", notificacionesPanel);
 
         cerrarSesionBtn.setText("Cerrar Sesión");
         cerrarSesionBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -451,44 +434,38 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField cantidad;
     private javax.swing.JButton cerrarSesionBtn;
     private javax.swing.JTabbedPane clienteTabbedPane;
     private javax.swing.JPanel devolucionesPanel;
-    private javax.swing.JLabel dineroFaltLabel;
     private javax.swing.JLabel dineroInvertidoLabel;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JPanel informacionPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTable jTable5;
     private javax.swing.JLabel nombreCliLabel;
+    private javax.swing.JPanel notificacionesPanel;
     private javax.swing.JLabel nroIdLabel;
     private javax.swing.JPanel puntosAcumulados;
     private javax.swing.JLabel puntosAcumuladosLabel;
     private javax.swing.JTable puntosGanadosTable;
-    private javax.swing.JPanel reservaTiqPanel;
+    private javax.swing.JPanel puntosRedimidosPanel;
+    private javax.swing.JPanel reservarTiqPanel;
+    private javax.swing.JTable tablaDevoluciones1;
+    private javax.swing.JTable tablaPuntosRedimidos;
     private javax.swing.JLabel telefonoLabel;
     // End of variables declaration//GEN-END:variables
 }

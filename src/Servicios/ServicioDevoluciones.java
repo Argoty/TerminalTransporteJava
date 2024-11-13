@@ -20,19 +20,21 @@ public class ServicioDevoluciones {
     public ServicioDevoluciones() {
     }
     
-    public void crearDevolucion(Viaje viaje, Tiquete tiquete) throws RuntimeException {
-        viaje.getTiquetes().remove(tiquete);
-        
+    public void crearDevolucion(Viaje viaje, Tiquete tiquete, int resultadoPuntos) throws RuntimeException {
         Cliente cliente = tiquete.getCliente();
-        cliente.getTiquetes().remove(tiquete);
+        Devolucion devolucion = new Devolucion(tiquete, -resultadoPuntos);
         
-        Devolucion devolucion = new Devolucion(tiquete);
         viaje.getDevoluciones().add(devolucion);
         cliente.getDevoluciones().add(devolucion);
+        
+        viaje.getTiquetes().remove(tiquete);
+        cliente.getTiquetes().remove(tiquete); 
     }
 
-    
-    public IList<Devolucion> getDevoluciones(Viaje viaje) {
+    public IList<Devolucion> getDevolucionesVia(Viaje viaje) {
         return viaje.getDevoluciones();
+    }
+    public IList<Devolucion> getDevolucionesCli(Cliente cliente) {
+        return cliente.getDevoluciones();
     }
 }

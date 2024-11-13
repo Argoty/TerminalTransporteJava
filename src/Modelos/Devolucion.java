@@ -14,11 +14,13 @@ import java.time.LocalDateTime;
 public class Devolucion implements Serializable{
     private Tiquete tiquete;
     private LocalDateTime fechaDevolucion;
+    private int resultadoPuntos;
 
     // Constructor
-    public Devolucion(Tiquete tiquete) {
+    public Devolucion(Tiquete tiquete, int resultadoPuntos) {
         this.tiquete = tiquete;
         this.fechaDevolucion = LocalDateTime.now();
+        this.resultadoPuntos = resultadoPuntos;
     }
 
     // Getters y Setters
@@ -36,6 +38,13 @@ public class Devolucion implements Serializable{
 
     public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
+    }
+    
+    public int getResultadoPuntos() {
+        return this.resultadoPuntos;
+    }
+    public void setResultadoPuntos(int resultadoPuntos) {
+        this.resultadoPuntos = resultadoPuntos;
     }
 
     // Método SUJETO A CAMBIOS para hacer la devolución

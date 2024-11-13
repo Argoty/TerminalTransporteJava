@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class Cliente extends Usuario implements Serializable {
     private int dineroInvertido;
     private int puntosAcumulados;
-    private int dineroParaProximoPunto; // Dinero acumulado para el próximo múltiplo de 10,000
+    private int dineroDespuesUltimoPunto; // Dinero acumulado para el próximo múltiplo de 10,000
     
     private IList<Tiquete> tiquetes;
     private IList<Reserva> reservas;
@@ -33,7 +33,7 @@ public class Cliente extends Usuario implements Serializable {
         super(name, nroId, email, tel, password);
         this.puntosAcumulados = 0;
         this.dineroInvertido = 0;
-        this.dineroParaProximoPunto = 0;
+        this.dineroDespuesUltimoPunto = 0;
         
         this.tiquetes = new Lista<>();
         this.reservas = new Lista<>();
@@ -55,11 +55,11 @@ public class Cliente extends Usuario implements Serializable {
     public void setDineroInvertido(int dinero) {
         this.dineroInvertido = dinero;
     }
-    public int getDineroProximoPunto() {
-        return this.dineroParaProximoPunto;
+    public int getDineroDespuesUltimoPunto() {
+        return this.dineroDespuesUltimoPunto;
     }
-    public void setDineroProximoPunto(int dineroProximoPunto) {
-        this.dineroParaProximoPunto = dineroProximoPunto;
+    public void setDineroDespuesUltimoPunto(int dineroProximoPunto) {
+        this.dineroDespuesUltimoPunto = dineroProximoPunto;
     }
 
 //    public void agregarDineroInvertido(int dineroInvertido) {
@@ -72,16 +72,16 @@ public class Cliente extends Usuario implements Serializable {
     }
 
     public IList<RegistroCompra> getHistorialPuntos() {
-        return historialPuntos;
+        return this.historialPuntos;
     }
     public IList<Reserva> getReservas() {
-        return reservas;
+        return this.reservas;
     }
     public IList<Devolucion> getDevoluciones() {
-        return devoluciones;
+        return this.devoluciones;
     }
     public IList<Notificacion> getNotificaciones() {
-        return notificaciones;
+        return this.notificaciones;
     }
 
 //    public void agregarRegistroPuntos(int puntos, Tiquete tiquete) {

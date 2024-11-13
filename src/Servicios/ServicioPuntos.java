@@ -19,21 +19,18 @@ public class ServicioPuntos {
     }
 
     public void actualizarPuntos(Viaje viaje, int cantidadTiquetes, LocalDateTime fecha) {
-        // Calcular el total invertido en la compra actual
         int totalInvertido = viaje.getVlrUnit() * cantidadTiquetes;
-
-        // Agregar dinero invertido
         cliente.setDineroInvertido(cliente.getDineroInvertido() + totalInvertido);
 
         // Sumar al acumulado de dinero para los próximos puntos
-        cliente.setDineroProximoPunto(cliente.getDineroProximoPunto() + totalInvertido);
+        cliente.setDineroDespuesUltimoPunto(cliente.getDineroDespuesUltimoPunto() + totalInvertido);
 
         int puntosGanados = 0;
 
         // Calcular los puntos ganados y ajustar el dinero acumulado
-        while (cliente.getDineroProximoPunto() >= 10000) {
+        while (cliente.getDineroDespuesUltimoPunto() >= 10000) {
             cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() + 3);
-            cliente.setDineroProximoPunto(cliente.getDineroProximoPunto() - 10000);
+            cliente.setDineroDespuesUltimoPunto(cliente.getDineroDespuesUltimoPunto() - 10000);
             puntosGanados += 3;
         }
 
@@ -41,11 +38,22 @@ public class ServicioPuntos {
         getHistorialCompras().add(new RegistroCompra(puntosGanados, viaje, cantidadTiquetes, fecha));
     }
 
-    public void disminuirPuntos(Viaje viaje) {
-        // Actualiza el dinero invertido, los puntos y el dinero que falta para proximo punto
-        cliente.setDineroInvertido(cliente.getDineroInvertido() - viaje.getVlrUnit());
-        cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() - (viaje.getVlrUnit() / 10000 *3));
-        cliente.setDineroProximoPunto(cliente.getDineroProximoPunto() - viaje.getVlrUnit());
+    public int disminuirPuntos(Viaje viaje) {
+        int dineroDevolucion = viaje.getVlrUnit();
+        cliente.setDineroInvertido(cliente.getDineroInvertido() - dineroDevolucion);
+
+        // Recalcular puntos basados en el dinero invertido y actualiza dinero restante
+        int nuevoTotalDinero = cliente.getDineroInvertido();
+        int puntosNuevos = (nuevoTotalDinero / 10000) * 3;
+        int dineroRestanteParaProximoPunto = nuevoTotalDinero % 10000;
+
+        int puntosPerdidos = cliente.getPuntosAcumulados() - puntosNuevos;
+
+        // Actualizar puntos y dinero para el próximo punto
+        cliente.setPuntosAcumulados(puntosNuevos);
+        cliente.setDineroDespuesUltimoPunto(dineroRestanteParaProximoPunto);
+
+        return puntosPerdidos; // Retorna la cantidad de puntos que perdió
     }
 
 }

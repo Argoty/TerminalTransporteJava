@@ -55,7 +55,7 @@ public class ControladorTiquetes {
         su.saveDataUsuarios();
     }
     
-    public void crearDevolucion(int idViaje, int idCliente, int idTiquete) {
+    public void crearDevolucion(int idViaje, int idTiquete) {
         Viaje viaje = buscarViajePorId(idViaje);
         Tiquete tiqueteAEliminar = st.obtenerTiquete(viaje, idTiquete);
         
@@ -88,4 +88,5 @@ public class ControladorTiquetes {
     public Viaje buscarViajePorId(int idViaje) {
         return sv.buscarViajePorId(idViaje);
     }
+   
 }

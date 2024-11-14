@@ -5,10 +5,12 @@
 package Vistas;
 
 import Controladores.ControladorBuses;
+import Controladores.ControladorDevolEmpresa;
 import Controladores.ControladorTiquetes;
 import Controladores.ControladorViajes;
 
 import Modelos.Bus;
+import Modelos.Devolucion;
 import Modelos.Tiquete;
 import Modelos.Usuarios.AdminFlota;
 import Modelos.Usuarios.Cliente;
@@ -27,10 +29,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     ControladorBuses cb;
     ControladorViajes cv;
     ControladorTiquetes ct;
-    
+    ControladorDevolEmpresa cde;
+
     int idViajeSeleccionado = -1;
     int idTiqueteSeleccionado = -1;
-    int idClienteSeleccionado = -1;
+    int idViajeDevolSeleccionado = -1;
 
     public VistaGestionAdminFlota(AdminFlota admin) {
         initComponents();
@@ -41,14 +44,17 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         this.cb = new ControladorBuses(idAdmin);
         this.cv = new ControladorViajes(idAdmin);
         this.ct = new ControladorTiquetes(idAdmin);
+        this.cde = new ControladorDevolEmpresa(idAdmin);
         // Refresco de las tablas
         llenarTablaBuses();
         llenarTablaViajes();
         llenarTablaViajesTiq();
+        llenarTablaViajesDevo();
 
         alistarPlacasBusesCombobox();
         configurarSeleccionTablaViajes();
         configurarSeleccionTablaTiquetes();
+        configurarSeleccionTablaViajesDevol();
     }
 
     // METODOS PRIVADOS DEL TAB BUSES
@@ -143,9 +149,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                     Object idViaje = viajesTablaTiq.getValueAt(filaSeleccionada, 0);
                     this.idViajeSeleccionado = Integer.parseInt(idViaje.toString());
                     actualizarTiquetes();
-                    
+
                     this.idTiqueteSeleccionado = -1;
-                    this.idClienteSeleccionado = -1;
                 }
             }
         });
@@ -167,10 +172,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         tablaTiquetes.setModel(model);
 
         Viaje viaje = ct.buscarViajePorId(idViajeSeleccionado);
-        tituloViajeLabel.setText("Tiquetes del Viaje a " + viaje.getDestino() + " en el bus '" + viaje.getBus().getPlaca() + "' para el " + viaje.getFechaSalidaStr() );
+        tituloViajeLabel.setText("Tiquetes del Viaje a " + viaje.getDestino() + " en el bus '" + viaje.getBus().getPlaca() + "' para el " + viaje.getFechaSalidaStr());
         puestosBusLabel.setText("Puestos Totales del bus: " + viaje.getBus().getPuestos());
         puestosDisLabel.setText("Puestos Disponibles del bus: " + (viaje.getBus().getPuestos() - viaje.getTiquetes().size()));
     }
+
     private void configurarSeleccionTablaTiquetes() {
         tablaTiquetes.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
@@ -178,15 +184,59 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
                 if (filaSeleccionada != -1) {
                     Object idTiquete = tablaTiquetes.getValueAt(filaSeleccionada, 0);
-                    Object idCliente = tablaTiquetes.getValueAt(filaSeleccionada, 1);
-                    
                     this.idTiqueteSeleccionado = Integer.parseInt(idTiquete.toString());
-                    this.idClienteSeleccionado = Integer.parseInt(idCliente.toString());
                 }
             }
         });
     }
 
+    // METODOS PRIVADOS DEL TAB DE DEVOLUCIONES
+    private void llenarTablaViajesDevo() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"});
+        for (int i = 0; i < cde.getViajesDevol().size(); i++) {
+            model.addRow(new Object[]{
+                cde.getViajesDevol().get(i).getId(),
+                cde.getViajesDevol().get(i).getDestino(),
+                cde.getViajesDevol().get(i).getFechaSalidaStr(),
+                cde.getViajesDevol().get(i).getFechaLlegadaStr(),
+                cde.getViajesDevol().get(i).getBus().getPlaca(),
+                cde.getViajesDevol().get(i).getVlrUnit()
+            });
+        }
+        tablaViajesDevol.setModel(model);
+    }
+
+    private void configurarSeleccionTablaViajesDevol() {
+        tablaViajesDevol.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                int filaSeleccionada = tablaViajesDevol.getSelectedRow();
+
+                if (filaSeleccionada != -1) {
+                    Object idViaje = tablaViajesDevol.getValueAt(filaSeleccionada, 0);
+                    this.idViajeDevolSeleccionado = Integer.parseInt(idViaje.toString());
+                    actualizarDevoluciones();
+                }
+            }
+        });
+    }
+
+    private void actualizarDevoluciones() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID Tiquete","ID Cliente", "Cliente", "Fecha", "Resultado Puntos"});
+        for (int i = 0; i < cde.getDevoluciones(idViajeDevolSeleccionado).size(); i++) {
+            Devolucion devolucion = cde.getDevoluciones(idViajeDevolSeleccionado).get(i);
+            model.addRow(new Object[]{
+                devolucion.getTiquete().getId(),
+                devolucion.getTiquete().getCliente().getNroId(),
+                devolucion.getTiquete().getCliente().getName(),
+                devolucion.getFechaDevolucion(),
+                devolucion.getResultadoPuntos()
+            });
+        }
+
+        tablaDevoluciones.setModel(model);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -257,6 +307,15 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         hacerDevolucionBtn = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaViajesDevol = new javax.swing.JTable();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tablaDevoluciones = new javax.swing.JTable();
         cerrarSesionBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -372,7 +431,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionBusesPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(64, Short.MAX_VALUE))
+                        .addContainerGap(58, Short.MAX_VALUE))
                     .addGroup(gestionBusesPanelLayout.createSequentialGroup()
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -531,7 +590,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(horaSalField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                         .addGroup(panelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fechaLlegField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelContainerLayout.createSequentialGroup()
@@ -556,7 +615,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addComponent(crearViajeBtn))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout gestionViajesPanelLayout = new javax.swing.GroupLayout(gestionViajesPanel);
@@ -646,6 +705,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(infoClienteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel12)
@@ -655,13 +715,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                                     .addComponent(idClienteField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(buscarClienteBtn)
-                                    .addComponent(venderTiquete))
-                                .addGap(55, 55, 55))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gestionVentaTiqPanelLayout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(infoClienteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(buscarClienteBtn)
+                                .addGap(57, 57, 57)))
                         .addGap(12, 12, 12))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -672,7 +727,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                             .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(hacerDevolucionBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(33, 33, 33))))
+                        .addGap(33, 33, 33))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                        .addComponent(venderTiquete)
+                        .addGap(68, 68, 68))))
             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
@@ -702,10 +760,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGap(3, 3, 3)
                         .addComponent(infoClienteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel14)
-                            .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
+                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addGap(26, 26, 26)
                         .addComponent(venderTiquete)))
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
@@ -724,10 +782,94 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(hacerDevolucionBtn)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         jTabbedPaneAdminFlota.addTab("Venta Tiquetes", gestionVentaTiqPanel);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 835, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 440, Short.MAX_VALUE)
+        );
+
+        jTabbedPaneAdminFlota.addTab("Reservas", jPanel1);
+
+        jLabel23.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel23.setText("HISTORIAL DE DEVOLUCIONES");
+
+        tablaViajesDevol.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tablaViajesDevol);
+
+        jLabel24.setText("Selecciona el viaje para ver sus devoluciones");
+
+        jLabel25.setText("Lista de Devoluciones");
+
+        tablaDevoluciones.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID Tiquete", "ID Cliente", "Cliente", "Fecha", "Resultado Puntos"
+            }
+        ));
+        jScrollPane6.setViewportView(tablaDevoluciones);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel24)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 753, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 753, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(300, 300, 300)
+                        .addComponent(jLabel23))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(329, 329, 329)
+                        .addComponent(jLabel25)))
+                .addContainerGap(54, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel23)
+                .addGap(4, 4, 4)
+                .addComponent(jLabel24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPaneAdminFlota.addTab("Devoluciones", jPanel2);
 
         cerrarSesionBtn.setText("Cerrar sesión");
         cerrarSesionBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -740,20 +882,20 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cerrarSesionBtn)
-                .addGap(72, 72, 72))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cerrarSesionBtn)
+                .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cerrarSesionBtn)
                 .addContainerGap(12, Short.MAX_VALUE))
         );
@@ -888,13 +1030,14 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private void hacerDevolucionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hacerDevolucionBtnActionPerformed
         try {
             if (idTiqueteSeleccionado != -1) {
-                ct.crearDevolucion(idViajeSeleccionado, idClienteSeleccionado, idTiqueteSeleccionado);
+                ct.crearDevolucion(idViajeSeleccionado, idTiqueteSeleccionado);
                 actualizarTiquetes();
+                llenarTablaViajesDevo();
                 JOptionPane.showMessageDialog(this, "Tiquete devuelto con éxito!", "Devolución", JOptionPane.INFORMATION_MESSAGE);
-            }else {
+            } else {
                 JOptionPane.showMessageDialog(this, "Por favor selecciona un Tiquete de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_hacerDevolucionBtnActionPerformed
@@ -936,6 +1079,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -943,10 +1089,14 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPaneAdminFlota;
     private javax.swing.JTextField marcaBusField;
     private javax.swing.JTextField nroPuestosBusField;
@@ -955,7 +1105,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel plazasDispLabel;
     private javax.swing.JLabel puestosBusLabel;
     private javax.swing.JLabel puestosDisLabel;
+    private javax.swing.JTable tablaDevoluciones;
     private javax.swing.JTable tablaTiquetes;
+    private javax.swing.JTable tablaViajesDevol;
     private javax.swing.JTextField tipoBusField;
     private javax.swing.JLabel tituloViajeLabel;
     private javax.swing.JButton venderTiquete;

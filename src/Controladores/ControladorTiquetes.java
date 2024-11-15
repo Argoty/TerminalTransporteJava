@@ -12,7 +12,7 @@ import Modelos.Viaje;
 
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioDevoluciones;
-import Servicios.ServicioPuntos;
+import Servicios.ServicioRegistrosCompras;
 import Servicios.ServicioTiquetes;
 import Servicios.ServicioViajes;
 import Servicios.ServicioUsuarios;
@@ -41,28 +41,34 @@ public class ControladorTiquetes {
         this.su = ServicioUsuarios.getInstance();
     }
 
-    public void venderTiquete(int idViaje, int idCliente, int cantidad) throws RuntimeException {
-        Viaje viaje = buscarViajePorId(idViaje);
+    public void venderTiquete(int idViaje, int idCliente, int cantidad, int metodoPago) throws RuntimeException {
         Cliente cliente = buscarClientePorId(idCliente);
-        LocalDateTime fechaCompra = st.crearTiquete(viaje, cliente, cantidad);
+        Viaje viaje = buscarViajePorId(idViaje);
+
+        LocalDateTime fechaCompra = st.crearTiquete(viaje, cliente, cantidad, metodoPago);
         
         // Agrega Puntos al usuario
-        ServicioPuntos sp = new ServicioPuntos(cliente);
-        sp.actualizarPuntos(viaje, cantidad, fechaCompra);
+        ServicioRegistrosCompras sp = new ServicioRegistrosCompras(cliente);
+        sp.actualizarPuntos(viaje, cantidad, fechaCompra, metodoPago);
         
         // Guarda informacion en binarios
         scp.saveDataCasetas();
         su.saveDataUsuarios();
     }
     
-    public void crearDevolucion(int idViaje, int idTiquete) {
+    public void crearDevolucion(int idViaje, int idTiquete) throws RuntimeException{
         Viaje viaje = buscarViajePorId(idViaje);
         Tiquete tiqueteAEliminar = st.obtenerTiquete(viaje, idTiquete);
+        if (tiqueteAEliminar.getViaje().getFechaSalida().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("El viaje ya ocurrió, no puedes hacer devolucion");
+        }
         
-        ServicioPuntos sp = new ServicioPuntos(tiqueteAEliminar.getCliente());
-        int puntosPerdidos = sp.disminuirPuntos(tiqueteAEliminar.getViaje());
+        Cliente cliente = buscarClientePorId(tiqueteAEliminar.getCliente().getNroId());
+
+        ServicioRegistrosCompras sp = new ServicioRegistrosCompras(cliente);
+        int puntosCambio = sp.actualizarPuntosDevolucion(viaje, tiqueteAEliminar.getMetodoPago());
         
-        sd.crearDevolucion(viaje, tiqueteAEliminar, puntosPerdidos);
+        sd.crearDevolucion(viaje, cliente, tiqueteAEliminar, puntosCambio);
         // Guardo info
         scp.saveDataCasetas();
         su.saveDataUsuarios();

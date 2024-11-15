@@ -45,6 +45,7 @@ public class ServicioCasetasPrincipal {
     public Caseta getCasetaPorAdminID(int idAdmin) {
         for (Caseta[] caseta : casetas) {
             for (Caseta caseta1 : caseta) {
+                if (caseta1.getEmpresa() == null) continue;
                 if (caseta1.getEmpresa().getAdmin().getNroId() == idAdmin) {
                     return caseta1;
                 }

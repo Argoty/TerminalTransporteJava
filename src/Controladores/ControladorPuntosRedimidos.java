@@ -3,30 +3,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Controladores;
-import Modelos.Devolucion;
+
+import Modelos.RegistroCompra;
 import Modelos.Usuarios.Cliente;
 import Servicios.ServicioCasetasPrincipal;
-import Servicios.ServicioDevoluciones;
+import Servicios.ServicioRegistrosCompras;
 import Utils.IList;
+
 /**
  *
  * @author PC
  */
-public class ControladorDevolCliente {
-    private ServicioDevoluciones sd;
-    private Cliente cliente;
+public class ControladorPuntosRedimidos {
+    private ServicioRegistrosCompras src;
     private ServicioCasetasPrincipal scp;
-    public ControladorDevolCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public ControladorPuntosRedimidos(Cliente cliente) {
+        this.src = new ServicioRegistrosCompras(cliente);
         this.scp = ServicioCasetasPrincipal.getInstance();
-        this.sd = new ServicioDevoluciones();
     }
-    public IList<Devolucion> getDevoluciones() {
-        return sd.getDevolucionesCli(cliente);
+    public IList<RegistroCompra> getRegistroPuntos() {
+        return src.getHistorialCompra("puntos");
     }
     public String getNombreEmpresaSegunViaje(int idViaje) {
         return scp.getCasetaPorViajeID(idViaje).getEmpresa().getNombre();
     }
-    
-    
 }

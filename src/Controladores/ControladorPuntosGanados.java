@@ -7,22 +7,22 @@ package Controladores;
 import Modelos.RegistroCompra;
 import Modelos.Usuarios.Cliente;
 import Servicios.ServicioCasetasPrincipal;
-import Servicios.ServicioPuntos;
+import Servicios.ServicioRegistrosCompras;
 import Utils.IList;
 
 /**
  *
  * @author PC
  */
-public class ControladorPuntos {
-    private ServicioPuntos sp;
+public class ControladorPuntosGanados {
+    private ServicioRegistrosCompras src;
     private ServicioCasetasPrincipal scp;
-    public ControladorPuntos(Cliente cliente) {
-        this.sp = new ServicioPuntos(cliente);
+    public ControladorPuntosGanados(Cliente cliente) {
+        this.src = new ServicioRegistrosCompras(cliente);
         this.scp = ServicioCasetasPrincipal.getInstance();
     }
     public IList<RegistroCompra> getRegistroPuntos() {
-        return sp.getHistorialCompras();
+        return src.getHistorialCompra("efectivo");
     }
     public String getNombreEmpresaSegunViaje(int idViaje) {
         return scp.getCasetaPorViajeID(idViaje).getEmpresa().getNombre();

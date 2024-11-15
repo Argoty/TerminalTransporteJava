@@ -10,6 +10,7 @@ package Modelos;
  */
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Devolucion implements Serializable{
     private Tiquete tiquete;
@@ -34,6 +35,10 @@ public class Devolucion implements Serializable{
 
     public LocalDateTime getFechaDevolucion() {
         return fechaDevolucion;
+    }
+    
+    public String getFechaDevolucionStr() {
+        return fechaDevolucion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public void setFechaDevolucion(LocalDateTime fechaDevolucion) {

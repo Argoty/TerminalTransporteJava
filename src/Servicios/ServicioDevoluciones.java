@@ -9,6 +9,7 @@ import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
 import Utils.IList;
+import java.time.LocalDateTime;
 
 
 /**
@@ -20,9 +21,9 @@ public class ServicioDevoluciones {
     public ServicioDevoluciones() {
     }
     
-    public void crearDevolucion(Viaje viaje, Tiquete tiquete, int resultadoPuntos) throws RuntimeException {
-        Cliente cliente = tiquete.getCliente();
-        Devolucion devolucion = new Devolucion(tiquete, -resultadoPuntos);
+    public void crearDevolucion(Viaje viaje, Cliente cliente, Tiquete tiquete, int resultadoPuntos) throws RuntimeException {
+        Tiquete tiqueteEliminarCopy = new Tiquete(viaje, tiquete.getCliente(), tiquete.getFechaCompra(), tiquete.getMetodoPago());
+        Devolucion devolucion = new Devolucion(tiqueteEliminarCopy, resultadoPuntos);
         
         viaje.getDevoluciones().add(devolucion);
         cliente.getDevoluciones().add(devolucion);

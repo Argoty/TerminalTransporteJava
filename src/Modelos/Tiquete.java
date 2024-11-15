@@ -19,12 +19,14 @@ public class Tiquete implements Serializable{
     private Viaje viaje;
     private Cliente cliente;
     private LocalDateTime fechaCompra;
+    private String metodoPago;
 
-    public Tiquete(Viaje viaje, Cliente cliente, LocalDateTime fecha) {
+    public Tiquete(Viaje viaje, Cliente cliente, LocalDateTime fecha, String metodoPago) {
         this.id = cont++; 
         this.viaje = viaje;
         this.cliente = cliente;
         this.fechaCompra =fecha;
+        this.metodoPago = metodoPago;
     }
     public int getId() {
         return id;
@@ -54,6 +56,13 @@ public class Tiquete implements Serializable{
 
     public void setFechaCompra(LocalDateTime fechaCompra) {
         this.fechaCompra = fechaCompra;
+    }
+    
+    public String getMetodoPago() {
+        return this.metodoPago;
+    }
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
     }
     public static void ajustarContadorPersistencia(int numeroDeTiquetes) {
         cont = numeroDeTiquetes;

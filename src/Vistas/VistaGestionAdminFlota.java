@@ -158,13 +158,13 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
     private void actualizarTiquetes() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID", "Id Cliente", "Nombre Cliente", "Fecha Compra"});
+        model.setColumnIdentifiers(new Object[]{"ID", "Cliente","Metodo Pago", "Fecha Compra"});
         for (int i = 0; i < ct.getTiquetes(idViajeSeleccionado).size(); i++) {
             Tiquete tiquete = ct.getTiquetes(idViajeSeleccionado).get(i);
             model.addRow(new Object[]{
                 tiquete.getId(),
-                tiquete.getCliente().getNroId(),
-                tiquete.getCliente().getName(),
+                tiquete.getCliente().getNroId() + ". " + tiquete.getCliente().getName(),
+                tiquete.getMetodoPago(),
                 tiquete.getFechaCompraStr()
             });
         }
@@ -223,14 +223,15 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
     private void actualizarDevoluciones() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID Tiquete","ID Cliente", "Cliente", "Fecha", "Resultado Puntos"});
+        model.setColumnIdentifiers(new Object[]{"ID Tiquete","ID Cliente", "Cliente", "Fecha", "Tipo", "Resultado Puntos"});
         for (int i = 0; i < cde.getDevoluciones(idViajeDevolSeleccionado).size(); i++) {
             Devolucion devolucion = cde.getDevoluciones(idViajeDevolSeleccionado).get(i);
             model.addRow(new Object[]{
                 devolucion.getTiquete().getId(),
                 devolucion.getTiquete().getCliente().getNroId(),
                 devolucion.getTiquete().getCliente().getName(),
-                devolucion.getFechaDevolucion(),
+                devolucion.getFechaDevolucionStr(),
+                devolucion.getTiquete().getMetodoPago(),
                 devolucion.getResultadoPuntos()
             });
         }
@@ -307,6 +308,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         hacerDevolucionBtn = new javax.swing.JButton();
+        metodoPagoCombo = new javax.swing.JComboBox<>();
+        jLabel26 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
@@ -638,7 +641,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jLabel12.setText("ID de Cliente");
 
-        jLabel14.setText("Cantidad");
+        jLabel14.setText("Método Pago");
 
         venderTiquete.setText("Vender Tiquete");
         venderTiquete.addActionListener(new java.awt.event.ActionListener() {
@@ -692,6 +695,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        metodoPagoCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Puntos" }));
+
+        jLabel26.setText("Cantidad");
+
         javax.swing.GroupLayout gestionVentaTiqPanelLayout = new javax.swing.GroupLayout(gestionVentaTiqPanel);
         gestionVentaTiqPanel.setLayout(gestionVentaTiqPanelLayout);
         gestionVentaTiqPanelLayout.setHorizontalGroup(
@@ -709,14 +716,18 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel12)
-                                    .addComponent(jLabel14))
+                                    .addComponent(jLabel26))
                                 .addGap(18, 18, 18)
                                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(idClienteField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                                 .addComponent(buscarClienteBtn)
-                                .addGap(57, 57, 57)))
+                                .addGap(57, 57, 57))
+                            .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel14)))
                         .addGap(12, 12, 12))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -730,7 +741,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGap(33, 33, 33))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addComponent(venderTiquete)
-                        .addGap(68, 68, 68))))
+                        .addGap(67, 67, 67))))
             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
@@ -744,7 +755,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         gestionVentaTiqPanelLayout.setVerticalGroup(
             gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel13)
@@ -762,25 +773,29 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel26))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel14))
-                        .addGap(26, 26, 26)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(venderTiquete)))
-                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(6, 6, 6)
                         .addComponent(tituloViajeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addComponent(puestosBusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(puestosDisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(26, 26, 26)
                         .addComponent(jLabel21)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel22)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(hacerDevolucionBtn)))
                 .addContainerGap(9, Short.MAX_VALUE))
         );
@@ -999,8 +1014,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             if (idViajeSeleccionado != -1) {
                 int idCliente = Integer.parseInt(idClienteField.getText());
                 int cantidad = Integer.parseInt(cantidadTiquete.getText());
+                int metodoPago = Integer.parseInt(metodoPagoCombo.getSelectedIndex() + "");
 
-                ct.venderTiquete(idViajeSeleccionado, idCliente, cantidad);
+                ct.venderTiquete(idViajeSeleccionado, idCliente, cantidad, metodoPago);
                 actualizarTiquetes();
                 JOptionPane.showMessageDialog(this, "Tiquete vendido con éxito!", "Venta", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -1017,7 +1033,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         try {
             int idCliente = Integer.parseInt(idClienteField.getText());
             Cliente cliente = ct.buscarClientePorId(idCliente);
-            infoClienteLabel.setText("ID: " + cliente.getNroId() + " | Nombre: " + cliente.getName());
+            infoClienteLabel.setText("ID: " + cliente.getNroId() + " | Nombre: " + cliente.getName() + " | Puntos: " + cliente.getPuntosAcumulados());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El id debe ser un número valido", "Error de formato", JOptionPane.ERROR_MESSAGE);
             infoClienteLabel.setText("");
@@ -1082,6 +1098,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1099,6 +1116,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPaneAdminFlota;
     private javax.swing.JTextField marcaBusField;
+    private javax.swing.JComboBox<String> metodoPagoCombo;
     private javax.swing.JTextField nroPuestosBusField;
     private javax.swing.JPanel panelContainer;
     private javax.swing.JTextField placaBusField;

@@ -21,11 +21,10 @@ import java.io.Serializable;
 public class Cliente extends Usuario implements Serializable {
     private int dineroInvertido;
     private int puntosAcumulados;
-    private int dineroDespuesUltimoPunto; // Dinero acumulado para el próximo múltiplo de 10,000
     
     private IList<Tiquete> tiquetes;
     private IList<Reserva> reservas;
-    private IList<RegistroCompra> historialPuntos;
+    private IList<RegistroCompra> historialCompras;
     private IList<Devolucion> devoluciones;
     private IList<Notificacion> notificaciones;
 
@@ -33,11 +32,10 @@ public class Cliente extends Usuario implements Serializable {
         super(name, nroId, email, tel, password);
         this.puntosAcumulados = 0;
         this.dineroInvertido = 0;
-        this.dineroDespuesUltimoPunto = 0;
         
         this.tiquetes = new Lista<>();
         this.reservas = new Lista<>();
-        this.historialPuntos = new Lista<>();
+        this.historialCompras = new Lista<>();
         this.devoluciones = new Lista<>();
         this.notificaciones = new Lista<>();
     }
@@ -55,24 +53,15 @@ public class Cliente extends Usuario implements Serializable {
     public void setDineroInvertido(int dinero) {
         this.dineroInvertido = dinero;
     }
-    public int getDineroDespuesUltimoPunto() {
-        return this.dineroDespuesUltimoPunto;
-    }
-    public void setDineroDespuesUltimoPunto(int dineroProximoPunto) {
-        this.dineroDespuesUltimoPunto = dineroProximoPunto;
-    }
-
 //    public void agregarDineroInvertido(int dineroInvertido) {
 //        this.dineroInvertido += dineroInvertido;
-//    }
-    
-    
+//    }    
     public IList<Tiquete> getTiquetes() {
         return this.tiquetes;
     }
 
-    public IList<RegistroCompra> getHistorialPuntos() {
-        return this.historialPuntos;
+    public IList<RegistroCompra> getHistorialCompras() {
+        return this.historialCompras;
     }
     public IList<Reserva> getReservas() {
         return this.reservas;
@@ -83,27 +72,4 @@ public class Cliente extends Usuario implements Serializable {
     public IList<Notificacion> getNotificaciones() {
         return this.notificaciones;
     }
-
-//    public void agregarRegistroPuntos(int puntos, Tiquete tiquete) {
-//        RegistroPuntos registro = new RegistroPuntos(puntos, tiquete);
-//        historialPuntos.add(registro);
-//    }
-//
-//    public void actualizarPuntos(int dineroInvertidoViaje, Tiquete tiquete) {
-//        this.dineroParaProximoPunto += dineroInvertidoViaje;
-//
-//        while (this.dineroParaProximoPunto >= 10000) {
-//            this.puntosAcumulados += 3;
-//            this.dineroParaProximoPunto -= 10000;
-//            agregarRegistroPuntos(3, tiquete);
-//        }
-//    }
-    
-//    public void redimirPuntos(int puntos) {
-//        if (puntos <= this.puntosAcumulados) {
-//            this.puntosAcumulados -= puntos;
-//        } else {
-//            System.out.println("No tienes suficientes puntos para redimir.");
-//        }
-//    }
 }

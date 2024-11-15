@@ -16,14 +16,16 @@ public class RegistroCompra implements Serializable {
     private int puntos;
     private Viaje viaje;
 //    private Cliente cliente;
+    private String metodoPago; // "efectivo" ó "puntos"
     private int cantidadTiquetes;
     private LocalDateTime fechaCreacion;
 
-    public RegistroCompra(int puntos, Viaje viaje, int cantidad, LocalDateTime fecha) {
+    public RegistroCompra(int puntos, Viaje viaje, int cantidad, LocalDateTime fecha, String metodoPago) {
         this.puntos = puntos;
         this.viaje = viaje;
         this.cantidadTiquetes = cantidad;
         this.fechaCreacion = fecha; 
+        this.metodoPago = metodoPago;
     }
 
     public int getPuntos() {
@@ -49,6 +51,12 @@ public class RegistroCompra implements Serializable {
     }
     public String getFechaCreacionStr() {
         return this.fechaCreacion.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
     }
 }
        

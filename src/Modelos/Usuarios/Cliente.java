@@ -6,7 +6,7 @@ package Modelos.Usuarios;
 
 import Modelos.Devolucion;
 import Modelos.Notificacion;
-import Modelos.RegistroCompra;
+import Modelos.MovimientoTransaccion;
 import Modelos.Reserva;
 import Modelos.Tiquete;
 import Utils.IList;
@@ -20,18 +20,19 @@ import java.io.Serializable;
 
 public class Cliente extends Usuario implements Serializable {
     private int dineroInvertido;
+    private int dineroRestante;
     private int puntosAcumulados;
     
     private IList<Tiquete> tiquetes;
     private IList<Reserva> reservas;
-    private IList<RegistroCompra> historialCompras;
+    private IList<MovimientoTransaccion> historialCompras;
     private IList<Devolucion> devoluciones;
     private IList<Notificacion> notificaciones;
 
     public Cliente(String name, int nroId, String email, String tel, String password) {
         super(name, nroId, email, tel, password);
         this.puntosAcumulados = 0;
-        this.dineroInvertido = 0;
+        this.dineroRestante = 0;
         
         this.tiquetes = new Lista<>();
         this.reservas = new Lista<>();
@@ -47,20 +48,26 @@ public class Cliente extends Usuario implements Serializable {
         this.puntosAcumulados = puntos;
     }
 
+    public int getDineroRestante() {
+        return dineroRestante;
+    }
+    public void setDineroRestante(int dinero) {
+        this.dineroRestante = dinero;
+    }
     public int getDineroInvertido() {
         return dineroInvertido;
     }
     public void setDineroInvertido(int dinero) {
         this.dineroInvertido = dinero;
     }
-//    public void agregarDineroInvertido(int dineroInvertido) {
-//        this.dineroInvertido += dineroInvertido;
+//    public void agregarDineroRestante(int DineroRestante) {
+//        this.DineroRestante += DineroRestante;
 //    }    
     public IList<Tiquete> getTiquetes() {
         return this.tiquetes;
     }
 
-    public IList<RegistroCompra> getHistorialCompras() {
+    public IList<MovimientoTransaccion> getHistorialCompras() {
         return this.historialCompras;
     }
     public IList<Reserva> getReservas() {
@@ -72,4 +79,5 @@ public class Cliente extends Usuario implements Serializable {
     public IList<Notificacion> getNotificaciones() {
         return this.notificaciones;
     }
+    
 }

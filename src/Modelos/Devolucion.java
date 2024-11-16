@@ -13,24 +13,24 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Devolucion implements Serializable{
-    private Tiquete tiquete;
+    private MovimientoTransaccion movimiento;
     private LocalDateTime fechaDevolucion;
     private int resultadoPuntos;
 
     // Constructor
-    public Devolucion(Tiquete tiquete, int resultadoPuntos) {
-        this.tiquete = tiquete;
+    public Devolucion(MovimientoTransaccion movimiento, int resultadoPuntos) {
+        this.movimiento = movimiento;
         this.fechaDevolucion = LocalDateTime.now();
         this.resultadoPuntos = resultadoPuntos;
     }
 
     // Getters y Setters
-    public Tiquete getTiquete() {
-        return tiquete;
+    public MovimientoTransaccion getMovimiento() {
+        return movimiento;
     }
 
-    public void setTiquete(Tiquete tiquete) {
-        this.tiquete = tiquete;
+    public void setTiquete(MovimientoTransaccion movimiento) {
+        this.movimiento = movimiento;
     }
 
     public LocalDateTime getFechaDevolucion() {
@@ -44,24 +44,9 @@ public class Devolucion implements Serializable{
     public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
-    
     public int getResultadoPuntos() {
-        return this.resultadoPuntos;
+        return resultadoPuntos;
     }
-    public void setResultadoPuntos(int resultadoPuntos) {
-        this.resultadoPuntos = resultadoPuntos;
-    }
-
-    // Método SUJETO A CAMBIOS para hacer la devolución
-//    public void realizarDevolucion() {
-//        // Liberar el tiquete del viaje
-//        //tiquete.getViaje().getBus().setPuestosDisponibles(tiquete.getViaje().getBus().getPuestosDisponibles() + tiquete.getCantidad());
-//
-//        // Descontar los puntos acumulados por el cliente
-//        int puntosADescontar = (int) (montoDevuelto / 10000) * 3; // Regla de 3 puntos por cada $10,000
-////        cliente.redimirPuntos(puntosADescontar);
-//
-//        System.out.println("Devolución realizada. Monto devuelto: " + montoDevuelto + ". Puntos descontados: " + puntosADescontar);
-//    }
+   
 }
 

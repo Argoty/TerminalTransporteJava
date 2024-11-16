@@ -27,6 +27,7 @@ public class Viaje implements Serializable{
  
     private IList<Tiquete> tiquetes;
     private IList<Devolucion> devoluciones;
+    private IList<Reserva> reservas;
     // Constructor
     public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int vlrUnit, Bus bus) {
         this.id = cont++; 
@@ -39,6 +40,7 @@ public class Viaje implements Serializable{
         
         this.tiquetes = new Lista<>();
         this.devoluciones = new Lista<>();
+        this.reservas = new Lista<>();
     }
 
     // Getters y Setters
@@ -57,7 +59,7 @@ public class Viaje implements Serializable{
         return fechaSalida;
     }
     public String getFechaSalidaStr() {
-        return this.fechaSalida.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        return fechaSalida.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public void setFechaSalida(LocalDateTime fechaSalida) {
@@ -68,7 +70,7 @@ public class Viaje implements Serializable{
         return fechaLlegada;
     }
     public String getFechaLlegadaStr() {
-        return this.fechaLlegada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        return fechaLlegada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public void setFechaLlegada(LocalDateTime fechaLlegada) {
@@ -88,7 +90,7 @@ public class Viaje implements Serializable{
     }
 
     public Bus getBus() {
-        return this.bus;
+        return bus;
     }
 
     public void setBus(Bus bus) {
@@ -104,6 +106,9 @@ public class Viaje implements Serializable{
     }
     public IList<Devolucion> getDevoluciones(){
         return this.devoluciones;
+    }
+    public IList<Reserva> getReservas(){
+        return this.reservas;
     }
 }
 

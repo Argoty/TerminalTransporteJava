@@ -4,23 +4,27 @@
  */
 package Servicios;
 
-import Modelos.Tiquete;
+import Modelos.Reserva;
 import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
 import Utils.IList;
-import Utils.Lista;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author PC
  */
-public class ServicioTiquetes {
-
-    public ServicioTiquetes() {
+public class ServicioReservas {
+    public ServicioReservas() {
+        
     }
-    
-    public IList<Tiquete> crearTiquete(Viaje viaje, Cliente cliente, int cantidad, int metodoPago) throws RuntimeException {
+    public IList<Reserva> getReservasCli(Cliente cliente) {
+        return cliente.getReservas();
+    }
+    public IList<Reserva> getReservasViaje(Viaje viaje) {
+        return viaje.getReservas();
+    }
+    public void crearReserva(Cliente cliente, Viaje viaje, int cantidad, int metodoPago) {
         if (viaje == null) throw new RuntimeException("Selecciona bien el viaje");
         if (viaje.getFechaSalida().isBefore(LocalDateTime.now())) throw new RuntimeException("Este viaje ya ocurrió");
 
@@ -33,30 +37,16 @@ public class ServicioTiquetes {
             if (viaje.getVlrUnit() > 30000)throw new RuntimeException("Solo se pueden redimir 90 puntos por un tiquete de máximo 30k");
             if (cliente.getPuntosAcumulados() < 90 * cantidad) throw new RuntimeException("El cliente no tiene suficientes puntos para canjear");
         }
-
-        LocalDateTime fechaVenta = LocalDateTime.now();
-        IList<Tiquete> tiquetesVentas = new Lista<>();
+        // Agrega la cantidad de tiquetes que se pidieron con un for y se les pone la misma
+        // fecha, luego se retorna para usarla como "id" de los registrosPuntos
         for (int i = 0; i < cantidad; i++) {
-            Tiquete tiquete = new Tiquete(viaje, cliente, fechaVenta, metodoPago == 0 ? "efectivo" : "puntos");
-            viaje.getTiquetes().add(tiquete);
-            cliente.getTiquetes().add(tiquete);
-            
-            tiquetesVentas.add(tiquete);
+            Reserva reserva = new Reserva(cliente, viaje, metodoPago == 0 ? "efectivo" : "puntos");
+            viaje.getReservas().add(reserva);
+            cliente.getReservas().add(reserva);
         }
-        return tiquetesVentas;
     }
-    
-    public IList<Tiquete> getTiquetes(Viaje viaje) {
-        return viaje.getTiquetes();
+    public void cancelarReserva(Cliente cliente, Viaje viaje, Reserva reserva) {
+        cliente.getReservas().remove(reserva);
+        viaje.getReservas().remove(reserva);
     }
-    
-    public Tiquete obtenerTiquete(Viaje viaje, int idTiquete) {
-        for (int i=0; i< viaje.getTiquetes().size();i++) {
-            if (viaje.getTiquetes().get(i).getId() == idTiquete) {
-                return viaje.getTiquetes().get(i);
-            }
-        }
-        return null;
-    }
-    
 }

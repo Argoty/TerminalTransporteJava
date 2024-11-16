@@ -6,36 +6,40 @@ package Modelos;
 import Modelos.Usuarios.Cliente;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author Javier Argoty
  */
 public class Reserva implements Serializable{
-    private Cliente cliente;       // Cliente que realiza la reserva
-    private Viaje viaje;           // Viaje asociado a la reserva
-    private int cantidad;          // Cantidad de tiquetes reservados
-    private LocalDateTime fechaReserva;     // Fecha de la reserva
-    private boolean activa;        // Estado de la reserva (activa o cancelada)
+    private static int cont = 1;
+    private int id;
+    private Cliente cliente;       
+    private Viaje viaje; 
+    private String metodoPago;
+    private LocalDateTime fechaReserva;
+    private boolean efectiva;
 
-    public Reserva(Cliente cliente, Viaje viaje, int cantidad) {
+    public Reserva(Cliente cliente, Viaje viaje, String metodoPago) {
+        this.id = cont++; 
         this.cliente = cliente;
         this.viaje = viaje;
-        this.cantidad = cantidad;
+        this.metodoPago = metodoPago;
         this.fechaReserva = LocalDateTime.now(); // Fecha actual
-        this.activa = true;             // Por defecto, la reserva está activa
+        this.efectiva = false;             
     }
 
     // Método para hacer efectiva la reserva
 //    public void hacerEfectiva() {
-//        if (activa && viaje.getBus().getPuestos() >= cantidad) {
+//        if (Efectiva && viaje.getBus().getPuestos() >= cantidad) {
 //            // Disminuir los puestos disponibles en el bus
 //            viaje.getBus().setPuestos(viaje.getBus().getPuestos() - cantidad);
 //            // Crear un tiquete para el cliente
 //            Tiquete tiquete = new Tiquete(viaje, cliente);
 //            // Agregar el tiquete al cliente (podría ser a una lista de tiquetes)
 //            System.out.println("Reserva hecha efectiva. Tiquete emitido.");
-//            this.activa = false; // Marca la reserva como inactiva
+//            this.Efectiva = false; // Marca la reserva como inEfectiva
 //        } else {
 //            System.out.println("No se puede hacer efectiva la reserva. El viaje no tiene suficientes puestos disponibles.");
 //        }
@@ -43,11 +47,14 @@ public class Reserva implements Serializable{
 
     // Método para cancelar la reserva
     public void cancelar() {
-        this.activa = false; // Marca la reserva como inactiva
+        this.efectiva = false; // Marca la reserva como inEfectiva
         System.out.println("Reserva cancelada.");
     }
 
     // Getters y Setters
+    public int getId() {
+        return id;
+    }
     public Cliente getCliente() {
         return cliente;
     }
@@ -55,21 +62,32 @@ public class Reserva implements Serializable{
     public Viaje getViaje() {
         return viaje;
     }
-
-    public int getCantidad() {
-        return cantidad;
+    public String getMetodoPago() {
+        return metodoPago;
     }
+//    public int getCantidad() {
+//        return cantidad;
+//    }
 
     public LocalDateTime getFechaReserva() {
         return fechaReserva;
     }
-
-    public boolean isActiva() {
-        return activa;
+    public String getFechaReservaStr() {
+        return fechaReserva.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
-    public void setActiva(boolean activa) {
-        this.activa = activa;
+    public boolean isEfectiva() {
+        return efectiva;
+    }
+
+    public void setEfectiva(boolean efectiva) {
+        this.efectiva = efectiva;
+    }
+    public static void ajustarContadorPersistencia(int numeroDeReservas) {
+        cont = numeroDeReservas;
+    }
+    public static int getContador() {
+        return cont;
     }
 }
 

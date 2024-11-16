@@ -6,6 +6,7 @@ package DataPersistencia;
 
 import Modelos.Caseta;
 import Modelos.EmpresaTransporte;
+import Modelos.Reserva;
 import Modelos.Tiquete;
 import Modelos.Usuarios.AdminFlota;
 import Modelos.Viaje;
@@ -35,8 +36,8 @@ public class DataCasetas {
             oos.writeObject(casetas);
             System.out.println("Casetas guardadass en: " + filePath);
 
-            // Guardar el contador de tiquetes
-            guardarContadorTiquetes(Tiquete.getContador());
+            // Guardar el contador de tiquetes y reservas
+            guardarContadorTiquetesReservas(new int[]{Tiquete.getContador(), Reserva.getContador()});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,8 +66,11 @@ public class DataCasetas {
             int contViajes = contarViajesEnCasetas(casetas);
             Viaje.ajustarContadorPersistencia(contViajes);
 
-            int contadorTiquetes = cargarContadorTiquetes();
+            int contadorTiquetes = cargarContadorTiquetesReservas()[0];
             Tiquete.ajustarContadorPersistencia(contadorTiquetes);
+            
+            int contadorReservas = cargarContadorTiquetesReservas()[1];
+            Reserva.ajustarContadorPersistencia(contadorReservas);
 
             return casetas;
         } catch (IOException | ClassNotFoundException e) {
@@ -76,25 +80,25 @@ public class DataCasetas {
         }
     }
 
-    private void guardarContadorTiquetes(int contadorTiquetes) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("contadorTiquetes.bin"))) {
-            oos.writeInt(contadorTiquetes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void guardarContadorTiquetesReservas(int[] contadorTiquetesReservas) {
+    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("contadorTiquetesReservas.bin"))) {
+        oos.writeObject(contadorTiquetesReservas); // Guardar el arreglo de enteros en el archivo
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
 
-    private int cargarContadorTiquetes() {
-        File file = new File("contadorTiquetes.bin");
+    private int[] cargarContadorTiquetesReservas() {
+        File file = new File("contadorTiquetesReservas.bin");
         if (!file.exists()) {
-            return 1; // Si el archivo no existe, empieza desde 1
+            return new int[]{1, 1}; // Si el archivo no existe, empieza desde 1
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            return ois.readInt();
-        } catch (IOException e) {
+            return (int[]) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return 1;
+            return new int[]{1, 1}; // Valor por defecto en caso de error
         }
     }
 

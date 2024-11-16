@@ -5,6 +5,7 @@
 package Controladores;
 
 import Modelos.EmpresaTransporte;
+import Modelos.MovimientoTransaccion;
 import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Modelos.Usuarios.Usuario;
@@ -12,7 +13,7 @@ import Modelos.Viaje;
 
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioDevoluciones;
-import Servicios.ServicioRegistrosCompras;
+import Servicios.ServicioMovimientos;
 import Servicios.ServicioTiquetes;
 import Servicios.ServicioViajes;
 import Servicios.ServicioUsuarios;
@@ -45,11 +46,13 @@ public class ControladorTiquetes {
         Cliente cliente = buscarClientePorId(idCliente);
         Viaje viaje = buscarViajePorId(idViaje);
 
-        LocalDateTime fechaCompra = st.crearTiquete(viaje, cliente, cantidad, metodoPago);
+        IList<Tiquete> tiquetesVenta = st.crearTiquete(viaje, cliente, cantidad, metodoPago);
         
-        // Agrega Puntos al usuario
-        ServicioRegistrosCompras sp = new ServicioRegistrosCompras(cliente);
-        sp.actualizarPuntos(viaje, cantidad, fechaCompra, metodoPago);
+        // Agrega Puntos al usuario segun tiquetes creados
+        ServicioMovimientos sm = new ServicioMovimientos(cliente);
+        for (int i =0; i < tiquetesVenta.size(); i++) {
+            sm.actualizarPuntos(tiquetesVenta.get(i));
+        }
         
         // Guarda informacion en binarios
         scp.saveDataCasetas();
@@ -65,10 +68,11 @@ public class ControladorTiquetes {
         
         Cliente cliente = buscarClientePorId(tiqueteAEliminar.getCliente().getNroId());
 
-        ServicioRegistrosCompras sp = new ServicioRegistrosCompras(cliente);
-        int puntosCambio = sp.actualizarPuntosDevolucion(viaje, tiqueteAEliminar.getMetodoPago());
+        ServicioMovimientos sm = new ServicioMovimientos(cliente);
+        MovimientoTransaccion movimiento = sm.getMovimientoPorIdTiquete(tiqueteAEliminar.getId());
+        int puntosResultado = sm.actualizarPuntosDevolucion(movimiento);
         
-        sd.crearDevolucion(viaje, cliente, tiqueteAEliminar, puntosCambio);
+        sd.crearDevolucion(viaje, cliente, movimiento, puntosResultado);
         // Guardo info
         scp.saveDataCasetas();
         su.saveDataUsuarios();

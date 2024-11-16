@@ -4,12 +4,17 @@
  */
 package Vistas;
 
-import Controladores.ControladorPuntosGanados;
+import Controladores.ControladorPuntos;
 import Controladores.ControladorDevolCliente;
-import Controladores.ControladorPuntosRedimidos;
-import Modelos.RegistroCompra;
+import Controladores.ControladorReservar;
+import Modelos.MovimientoTransaccion;
 import Modelos.Devolucion;
+import Modelos.Reserva;
+import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
+import Modelos.Viaje;
+import Utils.IList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,25 +27,33 @@ public class VistaGestionCliente extends javax.swing.JFrame {
      * Creates new form VistaGestionCliente
      */
     Cliente cliente;
-    ControladorPuntosGanados cpg;
-    ControladorPuntosRedimidos cpr;
+    ControladorPuntos cp;
     ControladorDevolCliente cdc;
+    ControladorReservar cr;
+
+    int idViajeSeleccionado = -1;
+    int idReservaSeleccionado = -1;
 
     public VistaGestionCliente(Cliente cliente) {
         initComponents();
         setLocationRelativeTo(this);
-        
+
         this.cliente = cliente;
-        cpg = new ControladorPuntosGanados(cliente);
-        cpr = new ControladorPuntosRedimidos(cliente);
+        cp = new ControladorPuntos(cliente);
         cdc = new ControladorDevolCliente(cliente);
-        
+        cr = new ControladorReservar(cliente);
+
         mostrarInfo();
-        llenarTablaPuntosGanados();
-        llenarTablaPuntosRedimidos();
+        llenarTablaPuntos("efectivo");
+        llenarTablaPuntos("puntos");
         llenarTablaDevoluciones();
+        llenarTablaViajesRes(cr.getViajesAll());
+        llenarTablaReservas();
+
+        configurarSeleccionTablaViajes();
+        configurarSeleccionTablaReservas();
     }
-    
+
     // METODOS PRIVADOS DEL TAB DE INFO DE CLIENTE
     private void mostrarInfo() {
         nombreCliLabel.setText(cliente.getName());
@@ -48,65 +61,131 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         emailLabel.setText(cliente.getEmail());
         telefonoLabel.setText(cliente.getTelefono());
         puntosAcumuladosLabel.setText(cliente.getPuntosAcumulados() + "");
-        dineroInvertidoLabel.setText("$" + cliente.getDineroInvertido() + "");
+        dineroRestanteLabel.setText("$" + cliente.getDineroRestante());
+        dineroInvertidoLabel.setText("$" + cliente.getDineroInvertido());
     }
+
     // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
-    private void llenarTablaPuntosGanados() {
+    private void llenarTablaPuntos(String criterio) {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"Puntos", "Viaje", "Bus","Empresa","Vlr Unit", "Cantidad Tiq","Fecha"});
-        for (int i = 0; i < cpg.getRegistroPuntos().size(); i++) {
-            RegistroCompra regPunto = cpg.getRegistroPuntos().get(i);
-            int vlrUnit = regPunto.getViaje().getVlrUnit();
+
+        model.setColumnIdentifiers(new Object[]{"Puntos", "Viaje", "Bus", "Empresa", "Vlr Unit", "Fecha"});
+        for (int i = 0; i < cp.getRegistroPuntos(criterio).size(); i++) {
+            MovimientoTransaccion regPunto = cp.getRegistroPuntos(criterio).get(i);
+            Tiquete tiquete = regPunto.getTiquete();
+            int vlrUnit = regPunto.getTiquete().getViaje().getVlrUnit();
             model.addRow(new Object[]{
                 regPunto.getPuntos(),
-                regPunto.getViaje().getDestino() + " el " + regPunto.getViaje().getFechaSalidaStr(),
-                regPunto.getViaje().getBus().getPlaca(),
-                cpg.getNombreEmpresaSegunViaje(regPunto.getViaje().getId()),
+                tiquete.getViaje().getDestino() + " el " + tiquete.getViaje().getFechaSalidaStr(),
+                tiquete.getViaje().getBus().getPlaca(),
+                cp.getNombreEmpresaSegunViaje(tiquete.getViaje().getId()),
                 vlrUnit,
-                regPunto.getCantidadTiq(), 
-                regPunto.getFechaCreacionStr(),
-            });
+                tiquete.getFechaCompraStr(),});
         }
-        puntosGanadosTable.setModel(model);
-    }
-    // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
-    private void llenarTablaPuntosRedimidos() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"Puntos", "Viaje", "Bus","Empresa","Vlr Unit", "Cantidad Tiq","Fecha"});
-        for (int i = 0; i < cpr.getRegistroPuntos().size(); i++) {
-            RegistroCompra regPunto = cpr.getRegistroPuntos().get(i);
-            int vlrUnit = regPunto.getViaje().getVlrUnit();
-            model.addRow(new Object[]{
-                "-" + regPunto.getPuntos(),
-                regPunto.getViaje().getDestino() + " el " + regPunto.getViaje().getFechaSalidaStr(),
-                regPunto.getViaje().getBus().getPlaca(),
-                cpr.getNombreEmpresaSegunViaje(regPunto.getViaje().getId()),
-                vlrUnit,
-                regPunto.getCantidadTiq(), 
-                regPunto.getFechaCreacionStr(),
-            });
+        if (criterio.equals("efectivo")) {
+            puntosGanadosTable.setModel(model);
+        } else {
+            tablaPuntosRedimidos.setModel(model);
         }
-        tablaPuntosRedimidos.setModel(model);
     }
-    // MÉTODOS PRIVADOS DEL TAB DE PUNTOS REDIMIDOS
+    // MÉTODOS PRIVADOS DEL TAB DE DEVOLUCIONES
     private void llenarTablaDevoluciones() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID Tiquete", "Viaje", "Bus","Empresa","Vlr Unit","Fecha", "Tipo", "Resultado Puntos"});
+        model.setColumnIdentifiers(new Object[]{"ID Tiquete", "Viaje", "Bus", "Empresa", "Vlr Unit", "Fecha", "Tipo", "Resultado Puntos"});
         for (int i = 0; i < cdc.getDevoluciones().size(); i++) {
             Devolucion devolucion = cdc.getDevoluciones().get(i);
+            Tiquete tiquete = devolucion.getMovimiento().getTiquete();
             model.addRow(new Object[]{
-                devolucion.getTiquete().getId(),
-                devolucion.getTiquete().getViaje().getDestino() + " el " + devolucion.getTiquete().getViaje().getFechaSalidaStr(),
-                devolucion.getTiquete().getViaje().getBus().getPlaca(),
-                cdc.getNombreEmpresaSegunViaje(devolucion.getTiquete().getViaje().getId()),
-                devolucion.getTiquete().getViaje().getVlrUnit(),
+                tiquete.getId(),
+                tiquete.getViaje().getDestino() + " el " + tiquete.getViaje().getFechaSalidaStr(),
+                tiquete.getViaje().getBus().getPlaca(),
+                cdc.getNombreEmpresaSegunViaje(tiquete.getViaje().getId()),
+                tiquete.getViaje().getVlrUnit(),
                 devolucion.getFechaDevolucionStr(),
-                devolucion.getTiquete().getMetodoPago(),
+                tiquete.getMetodoPago(),
                 devolucion.getResultadoPuntos()
             });
         }
-        tablaDevoluciones1.setModel(model);
+        tablaDevoluciones.setModel(model);
     }
+
+    // MÉTODOS PRIVADOS DEL TAB DE RESERVAS
+    private void llenarTablaViajesRes(IList<Viaje> viajes) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "Destino", "Empresa", "Fecha Salida", "Bus", "Vlr Unit", "Puestos Disponibles"});
+        for (int i = 0; i < viajes.size(); i++) {
+            Viaje viaje = viajes.get(i);
+            model.addRow(new Object[]{
+                viaje.getId(),
+                viaje.getDestino(),
+                cr.getNombreEmpresaSegunViaje(viaje.getId()),
+                viaje.getFechaSalidaStr(),
+                viaje.getBus().getPlaca(),
+                viaje.getVlrUnit(),
+                (viaje.getBus().getPuestos() - (viaje.getTiquetes().size() + viaje.getReservas().size())) + "/" + viaje.getBus().getPuestos()
+            });
+        }
+
+        viajesTablaRese.setModel(model);
+        // Ajustar el ancho de las columnas
+        viajesTablaRese.getColumnModel().getColumn(0).setPreferredWidth(30);  // ID
+        viajesTablaRese.getColumnModel().getColumn(1).setPreferredWidth(100); // Destino (más pequeño)
+        viajesTablaRese.getColumnModel().getColumn(2).setPreferredWidth(120); // Empresa (reducido ligeramente)
+        viajesTablaRese.getColumnModel().getColumn(3).setPreferredWidth(165); // Fecha Salida
+        viajesTablaRese.getColumnModel().getColumn(4).setPreferredWidth(90);  // Bus
+        viajesTablaRese.getColumnModel().getColumn(5).setPreferredWidth(120); // Vlr Unit
+        viajesTablaRese.getColumnModel().getColumn(6).setPreferredWidth(150); // Puestos Disponibles
+    }
+
+    private void configurarSeleccionTablaViajes() {
+        viajesTablaRese.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                int filaSeleccionada = viajesTablaRese.getSelectedRow();
+
+                if (filaSeleccionada != -1) {
+                    Object idViaje = viajesTablaRese.getValueAt(filaSeleccionada, 0);
+                    this.idViajeSeleccionado = Integer.parseInt(idViaje.toString());
+                }
+            }
+        });
+    }
+
+    private void llenarTablaReservas() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "Viaje", "Bus", "Vlr Unit", "Fecha", "Metodo Pago", "Fecha Reserva"});
+        for (int i = 0; i < cr.getReservas().size(); i++) {
+            Reserva reserva = cr.getReservas().get(i);
+            model.addRow(new Object[]{
+                reserva.getId(),
+                reserva.getViaje().getId() + ". " + reserva.getViaje().getDestino(),
+                reserva.getViaje().getBus().getPlaca(),
+                reserva.getViaje().getVlrUnit(),
+                reserva.getViaje().getFechaSalidaStr(),
+                reserva.getMetodoPago(),
+                reserva.getFechaReservaStr(),});
+        }
+
+        tablaReservas.setModel(model);
+
+//        Viaje viaje = ct.buscarViajePorId(idViajeSeleccionado);
+//        tituloViajeLabel.setText("Tiquetes del Viaje a " + viaje.getDestino() + " en el bus '" + viaje.getBus().getPlaca() + "' para el " + viaje.getFechaSalidaStr());
+//        puestosBusLabel.setText("Puestos Totales del bus: " + viaje.getBus().getPuestos());
+//        puestosDisLabel.setText("Puestos Disponibles del bus: " + (viaje.getBus().getPuestos() - viaje.getTiquetes().size()));
+    }
+
+    private void configurarSeleccionTablaReservas() {
+        tablaReservas.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                int filaSeleccionada = tablaReservas.getSelectedRow();
+
+                if (filaSeleccionada != -1) {
+                    Object idReserva = tablaReservas.getValueAt(filaSeleccionada, 0);
+                    this.idReservaSeleccionado = Integer.parseInt(idReserva.toString());
+                }
+            }
+        });
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -129,32 +208,40 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         puntosAcumuladosLabel = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        dineroRestanteLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         dineroInvertidoLabel = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         puntosGanadosTable = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
-        puntosRedimidosPanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
         tablaPuntosRedimidos = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         devolucionesPanel = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        tablaDevoluciones1 = new javax.swing.JTable();
+        tablaDevoluciones = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         reservarTiqPanel = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        viajesTablaTiq = new javax.swing.JTable();
+        viajesTablaRese = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
         metodoPagoCombo = new javax.swing.JComboBox<>();
         reservarBtn = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
         filtroOpcionesCombo = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        filtroDestinoField = new javax.swing.JTextField();
         tituloViajeLabel = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        tablaTiquetes = new javax.swing.JTable();
+        tablaReservas = new javax.swing.JTable();
+        filtrarBtn = new javax.swing.JButton();
+        filtroFechaField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        cantidadReserField = new javax.swing.JTextField();
+        cancelarReservaBtn = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
         notificacionesPanel = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         jTable5 = new javax.swing.JTable();
@@ -182,9 +269,13 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         puntosAcumuladosLabel.setText("jLabel13");
 
-        jLabel12.setText("Dinero Invertido");
+        jLabel12.setText("Dinero Restante");
 
-        dineroInvertidoLabel.setText("jLabel13");
+        dineroRestanteLabel.setText("jLabel13");
+
+        jLabel3.setText("Dinero Invertido");
+
+        dineroInvertidoLabel.setText("jLabel17");
 
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
@@ -198,10 +289,12 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel3))
                 .addGap(46, 46, 46)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dineroInvertidoLabel)
+                    .addComponent(dineroRestanteLabel)
                     .addComponent(puntosAcumuladosLabel)
                     .addComponent(telefonoLabel)
                     .addComponent(emailLabel)
@@ -235,8 +328,12 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
+                    .addComponent(dineroRestanteLabel))
+                .addGap(18, 18, 18)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
                     .addComponent(dineroInvertidoLabel))
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -257,32 +354,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel11.setText("Historial Puntos Ganados");
 
-        javax.swing.GroupLayout puntosAcumuladosLayout = new javax.swing.GroupLayout(puntosAcumulados);
-        puntosAcumulados.setLayout(puntosAcumuladosLayout);
-        puntosAcumuladosLayout.setHorizontalGroup(
-            puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(puntosAcumuladosLayout.createSequentialGroup()
-                .addGroup(puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(puntosAcumuladosLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 714, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(puntosAcumuladosLayout.createSequentialGroup()
-                        .addGap(285, 285, 285)
-                        .addComponent(jLabel11)))
-                .addContainerGap(23, Short.MAX_VALUE))
-        );
-        puntosAcumuladosLayout.setVerticalGroup(
-            puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
-        );
-
-        clienteTabbedPane.addTab("Puntos Ganados", puntosAcumulados);
-
         tablaPuntosRedimidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -294,38 +365,48 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "Tiquete", "Cliente", "Fecha Devolucion", "Monto Devuelto"
             }
         ));
-        jScrollPane2.setViewportView(tablaPuntosRedimidos);
+        jScrollPane3.setViewportView(tablaPuntosRedimidos);
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jLabel3.setText("Historial Puntos Redimidos");
+        jLabel16.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel16.setText("Historial Puntos Redimidos");
 
-        javax.swing.GroupLayout puntosRedimidosPanelLayout = new javax.swing.GroupLayout(puntosRedimidosPanel);
-        puntosRedimidosPanel.setLayout(puntosRedimidosPanelLayout);
-        puntosRedimidosPanelLayout.setHorizontalGroup(
-            puntosRedimidosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
-                .addGroup(puntosRedimidosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 692, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
-                        .addGap(282, 282, 282)
-                        .addComponent(jLabel3)))
-                .addContainerGap(24, Short.MAX_VALUE))
+        javax.swing.GroupLayout puntosAcumuladosLayout = new javax.swing.GroupLayout(puntosAcumulados);
+        puntosAcumulados.setLayout(puntosAcumuladosLayout);
+        puntosAcumuladosLayout.setHorizontalGroup(
+            puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addGroup(puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addGap(20, 20, 20))
+            .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                .addGroup(puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                        .addGap(285, 285, 285)
+                        .addComponent(jLabel11))
+                    .addGroup(puntosAcumuladosLayout.createSequentialGroup()
+                        .addGap(292, 292, 292)
+                        .addComponent(jLabel16)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        puntosRedimidosPanelLayout.setVerticalGroup(
-            puntosRedimidosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(puntosRedimidosPanelLayout.createSequentialGroup()
+        puntosAcumuladosLayout.setVerticalGroup(
+            puntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, puntosAcumuladosLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(jLabel3)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        clienteTabbedPane.addTab("Puntos Redimidos", puntosRedimidosPanel);
+        clienteTabbedPane.addTab("Puntos Ganados", puntosAcumulados);
 
-        tablaDevoluciones1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaDevoluciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -336,7 +417,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "Tiquete", "Cliente", "Fecha Devolucion", "Monto Devuelto"
             }
         ));
-        jScrollPane6.setViewportView(tablaDevoluciones1);
+        jScrollPane6.setViewportView(tablaDevoluciones);
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel4.setText("Historial Devoluciones");
@@ -351,25 +432,25 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                         .addGap(295, 295, 295)
                         .addComponent(jLabel4))
                     .addGroup(devolucionesPanelLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
+                        .addGap(21, 21, 21)
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         devolucionesPanelLayout.setVerticalGroup(
             devolucionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(devolucionesPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel4)
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Devoluciones", devolucionesPanel);
 
         jLabel13.setText("Selecciona Viaje en la tabla");
 
-        viajesTablaTiq.setModel(new javax.swing.table.DefaultTableModel(
+        viajesTablaRese.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -380,7 +461,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"
             }
         ));
-        jScrollPane4.setViewportView(viajesTablaTiq);
+        jScrollPane4.setViewportView(viajesTablaRese);
 
         jLabel14.setText("Método Pago");
 
@@ -393,15 +474,13 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("FILTRAR POR:");
+        filtroOpcionesCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Destino", "Fecha", "Ambos" }));
 
-        filtroOpcionesCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Destino", "Ambos" }));
-
-        jTextField1.setText("filtroField");
+        filtroDestinoField.setToolTipText("Fecha");
 
         tituloViajeLabel.setText("Reservas Activas");
 
-        tablaTiquetes.setModel(new javax.swing.table.DefaultTableModel(
+        tablaReservas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -409,7 +488,33 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "ID", "Cliente", "Fecha Compra"
             }
         ));
-        jScrollPane8.setViewportView(tablaTiquetes);
+        jScrollPane8.setViewportView(tablaReservas);
+
+        filtrarBtn.setText("Filtrar");
+        filtrarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrarBtnActionPerformed(evt);
+            }
+        });
+
+        filtroFechaField.setToolTipText("Destino");
+
+        jLabel5.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+        jLabel5.setText("Destino");
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+        jLabel6.setText("Fecha Salida (dd/MM/aaaa)");
+
+        jLabel7.setText("Cantidad");
+
+        cancelarReservaBtn.setText("Cancelar Reserva");
+        cancelarReservaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarReservaBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Selecciona Reserva en la tabla");
 
         javax.swing.GroupLayout reservarTiqPanelLayout = new javax.swing.GroupLayout(reservarTiqPanel);
         reservarTiqPanel.setLayout(reservarTiqPanelLayout);
@@ -418,59 +523,94 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             .addGroup(reservarTiqPanelLayout.createSequentialGroup()
                 .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                        .addGap(181, 181, 181)
-                        .addComponent(tituloViajeLabel))
-                    .addGroup(reservarTiqPanelLayout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, reservarTiqPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(56, 56, 56)
                                 .addComponent(filtroOpcionesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(73, 73, 73)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane4))
-                        .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(jLabel13))
-                            .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel14)
+                                .addGap(42, 42, 42)
+                                .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(filtroDestinoField, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addComponent(reservarBtn)))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                                .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE))
+                                    .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(filtroFechaField, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(filtrarBtn)))))
+                        .addGap(18, 18, 18)
+                        .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel13)
+                                .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, reservarTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cantidadReserField))
+                                    .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservarTiqPanelLayout.createSequentialGroup()
+                                    .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(cancelarReservaBtn)
+                                        .addComponent(reservarBtn))
+                                    .addGap(35, 35, 35)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservarTiqPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addGap(9, 9, 9))))
+                    .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                        .addGap(180, 180, 180)
+                        .addComponent(tituloViajeLabel)))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         reservarTiqPanelLayout.setVerticalGroup(
             reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                .addGap(11, 11, 11)
                 .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                        .addGap(74, 74, 74)
                         .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(11, 11, 11)
+                        .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(cantidadReserField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel14)
                             .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(reservarBtn)
-                        .addGap(113, 113, 113))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(filtroDestinoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(filtroFechaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(filtroOpcionesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(tituloViajeLabel)
+                            .addComponent(filtrarBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addComponent(tituloViajeLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(reservarTiqPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservarTiqPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(14, 14, 14)
+                        .addComponent(cancelarReservaBtn)
+                        .addGap(85, 85, 85))))
         );
 
         clienteTabbedPane.addTab("Reservar", reservarTiqPanel);
@@ -502,7 +642,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             .addGroup(notificacionesPanelLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Notificaciones", notificacionesPanel);
@@ -530,9 +670,9 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(clienteTabbedPane)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cerrarSesionBtn)
-                .addContainerGap())
+                .addGap(12, 12, 12))
         );
 
         pack();
@@ -544,16 +684,40 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_cerrarSesionBtnActionPerformed
 
+    private void cancelarReservaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarReservaBtnActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (idReservaSeleccionado != -1) {
+                cr.cancelarReserva(idReservaSeleccionado);
+                llenarTablaViajesRes(cr.getViajesAll());
+                JOptionPane.showMessageDialog(this, "Reserva cancelada correctamente", "Cancelación Reserva", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor selecciona una reserva de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cancelarReservaBtnActionPerformed
+
+    private void filtrarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarBtnActionPerformed
+        try {
+            llenarTablaViajesRes(cr.filtrarViajes(filtroOpcionesCombo.getSelectedItem() + "", filtroDestinoField.getText(), filtroFechaField.getText()));
+        } catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+            llenarTablaViajesRes(cr.getViajesAll());
+        }
+    }//GEN-LAST:event_filtrarBtnActionPerformed
+
     private void reservarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservarBtnActionPerformed
         try {
             if (idViajeSeleccionado != -1) {
-                int idCliente = Integer.parseInt(idClienteField.getText());
-                int cantidad = Integer.parseInt(cantidadTiquete.getText());
+                int cantidad = Integer.parseInt(cantidadReserField.getText());
                 int metodoPago = Integer.parseInt(metodoPagoCombo.getSelectedIndex() + "");
 
-                ct.venderTiquete(idViajeSeleccionado, idCliente, cantidad, metodoPago);
-                actualizarTiquetes();
-                JOptionPane.showMessageDialog(this, "Tiquete vendido con éxito!", "Venta", JOptionPane.INFORMATION_MESSAGE);
+                cr.realizarReserva(idViajeSeleccionado, cantidad, metodoPago);
+                llenarTablaReservas();
+                llenarTablaViajesRes(cr.getViajesAll());
+                JOptionPane.showMessageDialog(this, "Reserva hecha con éxito!", "Reserva", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor selecciona un viaje de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
@@ -565,11 +729,17 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_reservarBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelarReservaBtn;
+    private javax.swing.JTextField cantidadReserField;
     private javax.swing.JButton cerrarSesionBtn;
     private javax.swing.JTabbedPane clienteTabbedPane;
     private javax.swing.JPanel devolucionesPanel;
     private javax.swing.JLabel dineroInvertidoLabel;
+    private javax.swing.JLabel dineroRestanteLabel;
     private javax.swing.JLabel emailLabel;
+    private javax.swing.JButton filtrarBtn;
+    private javax.swing.JTextField filtroDestinoField;
+    private javax.swing.JTextField filtroFechaField;
     private javax.swing.JComboBox<String> filtroOpcionesCombo;
     private javax.swing.JPanel informacionPanel;
     private javax.swing.JLabel jLabel1;
@@ -578,20 +748,23 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTable jTable5;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> metodoPagoCombo;
     private javax.swing.JLabel nombreCliLabel;
     private javax.swing.JPanel notificacionesPanel;
@@ -599,14 +772,13 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JPanel puntosAcumulados;
     private javax.swing.JLabel puntosAcumuladosLabel;
     private javax.swing.JTable puntosGanadosTable;
-    private javax.swing.JPanel puntosRedimidosPanel;
     private javax.swing.JButton reservarBtn;
     private javax.swing.JPanel reservarTiqPanel;
-    private javax.swing.JTable tablaDevoluciones1;
+    private javax.swing.JTable tablaDevoluciones;
     private javax.swing.JTable tablaPuntosRedimidos;
-    private javax.swing.JTable tablaTiquetes;
+    private javax.swing.JTable tablaReservas;
     private javax.swing.JLabel telefonoLabel;
     private javax.swing.JLabel tituloViajeLabel;
-    private javax.swing.JTable viajesTablaTiq;
+    private javax.swing.JTable viajesTablaRese;
     // End of variables declaration//GEN-END:variables
 }

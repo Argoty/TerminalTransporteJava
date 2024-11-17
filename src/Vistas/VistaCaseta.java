@@ -99,12 +99,16 @@ public class VistaCaseta extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Dialog", 3, 12)); // NOI18N
         jLabel6.setText("EMPRESA");
 
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel7.setText("NIT");
 
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel8.setText("Nombre");
 
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel9.setText("Canon Arrendamiento");
 
+        jLabel10.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel10.setText("Plazas estacionamiento");
 
         guardarFlotaBtn.setBackground(new java.awt.Color(102, 255, 102));
@@ -115,19 +119,25 @@ public class VistaCaseta extends javax.swing.JFrame {
             }
         });
 
+        jLabel13.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel13.setText("Email");
 
+        jLabel14.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel14.setText("Telefono");
 
         jLabel15.setFont(new java.awt.Font("Dialog", 3, 12)); // NOI18N
         jLabel15.setText("ADMIN FLOTA");
 
+        jLabel16.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel16.setText("Nombre");
 
+        jLabel17.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel17.setText("Numero de Identificacion");
 
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setText("Contraseña");
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel2.setText("Sueldo");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -247,7 +257,7 @@ public class VistaCaseta extends javax.swing.JFrame {
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(85, 85, 85)))
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

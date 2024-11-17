@@ -5,7 +5,7 @@
 package Controladores;
 
 import Modelos.EmpresaTransporte;
-import Modelos.MovimientoTransaccion;
+import Modelos.RegistroPuntos;
 import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Modelos.Usuarios.Usuario;
@@ -13,7 +13,7 @@ import Modelos.Viaje;
 
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioDevoluciones;
-import Servicios.ServicioMovimientos;
+import Servicios.ServicioPuntos;
 import Servicios.ServicioTiquetes;
 import Servicios.ServicioViajes;
 import Servicios.ServicioUsuarios;
@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
  * @author PC
  */
 public class ControladorTiquetes {
+    private EmpresaTransporte empresa;
     private ServicioCasetasPrincipal scp;
     private ServicioTiquetes st;
     private ServicioViajes sv;
@@ -34,9 +35,9 @@ public class ControladorTiquetes {
 
     public ControladorTiquetes(int idAdmin) {
         this.scp = ServicioCasetasPrincipal.getInstance();
-        EmpresaTransporte empr = scp.getCasetaPorAdminID(idAdmin)
+        this.empresa = scp.getCasetaPorAdminID(idAdmin)
                 .getEmpresa();
-        this.sv = new ServicioViajes(empr);
+        this.sv = new ServicioViajes(empresa);
         this.st = new ServicioTiquetes();
         this.sd = new ServicioDevoluciones();
         this.su = ServicioUsuarios.getInstance();
@@ -49,9 +50,9 @@ public class ControladorTiquetes {
         IList<Tiquete> tiquetesVenta = st.crearTiquete(viaje, cliente, cantidad, metodoPago);
         
         // Agrega Puntos al usuario segun tiquetes creados
-        ServicioMovimientos sm = new ServicioMovimientos(cliente);
+        ServicioPuntos sp = new ServicioPuntos(cliente);
         for (int i =0; i < tiquetesVenta.size(); i++) {
-            sm.actualizarPuntos(tiquetesVenta.get(i));
+            sp.actualizarPuntos(tiquetesVenta.get(i));
         }
         
         // Guarda informacion en binarios
@@ -68,11 +69,11 @@ public class ControladorTiquetes {
         
         Cliente cliente = buscarClientePorId(tiqueteAEliminar.getCliente().getNroId());
 
-        ServicioMovimientos sm = new ServicioMovimientos(cliente);
-        MovimientoTransaccion movimiento = sm.getMovimientoPorIdTiquete(tiqueteAEliminar.getId());
-        int puntosResultado = sm.actualizarPuntosDevolucion(movimiento);
+        ServicioPuntos sp = new ServicioPuntos(cliente);
+        RegistroPuntos registroPuntos = sp.getRegistroPorIdTiquete(tiqueteAEliminar.getId());
+        int puntosResultado = sp.actualizarPuntosDevolucion(registroPuntos);
         
-        sd.crearDevolucion(viaje, cliente, movimiento, puntosResultado);
+        sd.crearDevolucion(this.empresa, viaje, cliente, registroPuntos, puntosResultado);
         // Guardo info
         scp.saveDataCasetas();
         su.saveDataUsuarios();

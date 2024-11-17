@@ -28,7 +28,11 @@
               <Component id="jTabbedPaneAdminFlota" min="-2" pref="837" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+              <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="nombreAdminLabel" min="-2" pref="189" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="cerrarSesionBtn" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
@@ -40,7 +44,13 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jTabbedPaneAdminFlota" min="-2" pref="466" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="cerrarSesionBtn" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="nombreAdminLabel" alignment="0" min="-2" pref="24" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cerrarSesionBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace pref="12" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -81,13 +91,15 @@
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
                                               <Group type="102" attributes="0">
                                                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                                               </Group>
+                                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
-                                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -120,7 +132,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="112" max="32767" attributes="0"/>
+                      <EmptySpace pref="111" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   </Group>
@@ -184,6 +196,9 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Plazas Ocupadas:"/>
               </Properties>
             </Component>
@@ -194,11 +209,17 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Placa"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Numero de "/>
               </Properties>
             </Component>
@@ -208,6 +229,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Puestos"/>
               </Properties>
             </Component>
@@ -266,6 +290,9 @@
             </Container>
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Marca"/>
               </Properties>
             </Component>
@@ -273,6 +300,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Tipo"/>
               </Properties>
             </Component>
@@ -444,6 +474,9 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Destino"/>
                   </Properties>
                 </Component>
@@ -483,11 +516,17 @@
                 </Container>
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Hora Salida"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Fecha llegada"/>
                   </Properties>
                 </Component>
@@ -495,6 +534,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Hora llegada"/>
                   </Properties>
                 </Component>
@@ -505,6 +547,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Bus"/>
                   </Properties>
                 </Component>
@@ -525,6 +570,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel11">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Valor Unitario"/>
                   </Properties>
                 </Component>
@@ -532,6 +580,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel17">
                   <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Dialog" size="12" style="1"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Fecha Salida"/>
                   </Properties>
                 </Component>
@@ -591,7 +642,7 @@
                           <Component id="jScrollPane5" pref="568" max="32767" attributes="0"/>
                           <Component id="jScrollPane4" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="11" max="32767" attributes="0"/>
+                      <EmptySpace pref="12" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -716,11 +767,17 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="ID de Cliente"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="M&#xe9;todo Pago"/>
               </Properties>
             </Component>
@@ -760,11 +817,17 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="SELECCIONAR VIAJE"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tituloViajeLabel">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Tiquetes del Viaje"/>
               </Properties>
             </Component>
@@ -778,9 +841,10 @@
                 <Component class="javax.swing.JTable" name="tablaTiquetes">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="0">
+                      <Table columnCount="4" rowCount="0">
                         <Column editable="true" title="ID" type="java.lang.Object"/>
                         <Column editable="true" title="Cliente" type="java.lang.Object"/>
+                        <Column editable="true" title="Metodo Pago" type="java.lang.Object"/>
                         <Column editable="true" title="Fecha Compra" type="java.lang.Object"/>
                       </Table>
                     </Property>
@@ -804,11 +868,17 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel21">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Selecciona el tiquete para"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel22">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="hacer su Devoluci&#xf3;n"/>
               </Properties>
             </Component>
@@ -835,6 +905,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel26">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Cantidad"/>
               </Properties>
             </Component>
@@ -855,23 +928,6 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane7" min="-2" pref="757" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="jScrollPane8" min="-2" pref="524" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
-                                              <Component id="hacerEfectivaBtn" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
                               <Component id="tituloViajeLabel1" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -880,11 +936,34 @@
                               <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="238" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="309" max="-2" attributes="0"/>
                               <Component id="jLabel29" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jScrollPane7" min="-2" pref="790" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jScrollPane8" min="-2" pref="524" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
+                                              <Component id="hacerEfectivaBtn" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="jLabel30" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="20" max="32767" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -904,9 +983,11 @@
                           <Component id="jScrollPane8" pref="0" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel30" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                               <Component id="hacerEfectivaBtn" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="107" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="82" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -917,6 +998,9 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel27">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Ebrima" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Seleccionar Viaje para ver sus reservas activas"/>
               </Properties>
             </Component>
@@ -957,10 +1041,12 @@
                 <Component class="javax.swing.JTable" name="tablaReservas">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="0">
+                      <Table columnCount="5" rowCount="0">
                         <Column editable="true" title="ID" type="java.lang.Object"/>
                         <Column editable="true" title="Cliente" type="java.lang.Object"/>
-                        <Column editable="true" title="Fecha Compra" type="java.lang.Object"/>
+                        <Column editable="true" title="Metodo Pago" type="java.lang.Object"/>
+                        <Column editable="true" title="Fecha Reserva" type="java.lang.Object"/>
+                        <Column editable="true" title="Estado" type="java.lang.Object"/>
                       </Table>
                     </Property>
                   </Properties>
@@ -969,17 +1055,34 @@
             </Container>
             <Component class="javax.swing.JLabel" name="jLabel28">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Selecciona la reserva que quiere hacer efectiva"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Selecciona la reserva"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel29">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="HACER EFECTIVA UNA RESERVA"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="hacerEfectivaBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hacer efectiva"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hacerEfectivaBtnActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel30">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="que quiere hacer efectiva"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -999,23 +1102,17 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane3" min="-2" pref="753" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane6" alignment="0" min="-2" pref="753" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="300" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
                               <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="329" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Component id="jScrollPane6" min="-2" pref="793" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="54" max="32767" attributes="0"/>
+                      <EmptySpace pref="21" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1023,15 +1120,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" min="-2" pref="162" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane6" pref="196" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel25" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jScrollPane6" pref="400" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -1046,37 +1140,6 @@
                 <Property name="text" type="java.lang.String" value="HISTORIAL DE DEVOLUCIONES"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane3">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTable" name="tablaViajesDevol">
-                  <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                        <Column editable="true" title="Title 4" type="java.lang.Object"/>
-                      </Table>
-                    </Property>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JLabel" name="jLabel24">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Selecciona el viaje para ver sus devoluciones"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel25">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Lista de Devoluciones"/>
-              </Properties>
-            </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane6">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -1087,18 +1150,25 @@
                 <Component class="javax.swing.JTable" name="tablaDevoluciones">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="5" rowCount="4">
+                      <Table columnCount="7" rowCount="0">
                         <Column editable="true" title="ID Tiquete" type="java.lang.Object"/>
-                        <Column editable="true" title="ID Cliente" type="java.lang.Object"/>
+                        <Column editable="true" title="Viaje" type="java.lang.Object"/>
+                        <Column editable="true" title="Fecha Salida" type="java.lang.Object"/>
                         <Column editable="true" title="Cliente" type="java.lang.Object"/>
-                        <Column editable="true" title="Fecha" type="java.lang.Object"/>
-                        <Column editable="true" title="Resultado Puntos" type="java.lang.Object"/>
+                        <Column editable="true" title="Fecha Devolucion" type="java.lang.Object"/>
+                        <Column editable="true" title="Tipo" type="java.lang.Object"/>
+                        <Column editable="true" title="Resultado Puntos " type="java.lang.Object"/>
                       </Table>
                     </Property>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JLabel" name="jLabel25">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="(Si desea hacer devolucion, es en la pesta&#xf1;a de tiquetes)"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
@@ -1110,6 +1180,21 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cerrarSesionBtnActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel24">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Lucida Sans" size="12" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Admin Flota:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nombreAdminLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Lucida Sans" size="12" style="0"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

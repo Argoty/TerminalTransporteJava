@@ -12,13 +12,16 @@ import Controladores.ControladorViajes;
 
 import Modelos.Bus;
 import Modelos.Devolucion;
+import Modelos.Reserva;
 import Modelos.Tiquete;
 import Modelos.Usuarios.AdminFlota;
 import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
+import Utils.IList;
 import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,7 +29,6 @@ import javax.swing.table.DefaultTableModel;
  * @author PC
  */
 public class VistaGestionAdminFlota extends javax.swing.JFrame {
-
     ControladorBuses cb;
     ControladorViajes cv;
     ControladorTiquetes ct;
@@ -35,14 +37,15 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
     int idViajeSeleccionado = -1;
     int idTiqueteSeleccionado = -1;
-    int idViajeDevolSeleccionado = -1;
     int idViajeReservaSeleccionado = -1;
+    int idReservaSeleccionado = -1;
 
     public VistaGestionAdminFlota(AdminFlota admin) {
         initComponents();
         setLocationRelativeTo(this);
 
         int idAdmin = admin.getNroId();
+        nombreAdminLabel.setText(admin.getName());
         // Creacion de controladores de cada tab
         this.cb = new ControladorBuses(idAdmin);
         this.cv = new ControladorViajes(idAdmin);
@@ -51,15 +54,17 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         this.cre = new ControladorReservasEmpr(idAdmin);
         // Refresco de las tablas
         llenarTablaBuses();
-        llenarTablaViajes();
-        llenarTablaViajesTiq();
-        llenarTablaViajesDevo();
-        llenarTablaViajesReserva();
+        llenarTablaViajesSegunControlador("viajes");
+        llenarTablaViajesSegunControlador("tiquetes");
+        llenarTablaViajesSegunControlador("reservas");
+        llenarTablaDevoluciones();
 
         alistarPlacasBusesCombobox();
+
         configurarSeleccionTablaViajes();
         configurarSeleccionTablaTiquetes();
-        configurarSeleccionTablaViajesDevol();
+        configurarSeleccionTablaViajesRese();
+        configurarSeleccionTablaReservas();
     }
 
     // METODOS PRIVADOS DEL TAB BUSES
@@ -69,7 +74,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         tipoBusField.setText("");
         nroPuestosBusField.setText("");
     }
-
     private void llenarTablaBuses() {
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(new Object[]{"Placa", "Marca", "Tipo", "Nro Puestos"});
@@ -86,7 +90,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         busesTabla.setModel(model);
         plazasDispLabel.setText(cb.getBuses().size() + "/" + cb.getPlazasEstacionamiento());
     }
-
     // METODOS PRIVADOS DEL TAB DE VIAJES
     private void alistarPlacasBusesCombobox() {
         DefaultComboBoxModel<String> comboBoxPlacasBuses = new DefaultComboBoxModel<>();
@@ -96,55 +99,36 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         busesCoBox.setModel(comboBoxPlacasBuses);
     }
-
-    private void llenarTablaViajes() {
+    private void llenarTablaViajesSegunControlador(String tipoControlador) {
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(new Object[]{"ID", "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"});
-        for (int i = 0; i < cv.getViajes().size(); i++) {
+        
+        IList<Viaje> viajes = tipoControlador.equals("viajes") ? cv.getViajes() : 
+                tipoControlador.equals("tiquetes") ? ct.getViajes() : tipoControlador.equals("reservas") ?
+                cre.getViajesReservas() : null;
+        for (int i = 0; i < viajes.size(); i++) {
             model.addRow(new Object[]{
-                cv.getViajes().get(i).getId(),
-                cv.getViajes().get(i).getDestino(),
-                cv.getViajes().get(i).getFechaSalidaStr(),
-                cv.getViajes().get(i).getFechaLlegadaStr(),
-                cv.getViajes().get(i).getBus().getPlaca(),
-                cv.getViajes().get(i).getVlrUnit()
+                viajes.get(i).getId(),
+                viajes.get(i).getDestino(),
+                viajes.get(i).getFechaSalidaStr(),
+                viajes.get(i).getFechaLlegadaStr(),
+                viajes.get(i).getBus().getPlaca(),
+                viajes.get(i).getVlrUnit()
             });
         }
-        viajesTabla.setModel(model);
+        JTable viajesTablaGeneral = tipoControlador.equals("viajes") ? this.viajesTabla : 
+                tipoControlador.equals("tiquetes") ? this.viajesTablaTiq : tipoControlador.equals("reservas") ?
+                this.viajesTablaRes : null;
+        viajesTablaGeneral.setModel(model);
         // Ajustar el ancho de las columnas
-        viajesTabla.getColumnModel().getColumn(0).setPreferredWidth(30);  // Ancho más pequeño para la columna N°
-        viajesTabla.getColumnModel().getColumn(1).setPreferredWidth(150); // Ancho estándar para "Destino"
-        viajesTabla.getColumnModel().getColumn(2).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Salida"
-        viajesTabla.getColumnModel().getColumn(3).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Llegada"
-        viajesTabla.getColumnModel().getColumn(4).setPreferredWidth(90); // Ancho estándar para "Bus"
-        viajesTabla.getColumnModel().getColumn(5).setPreferredWidth(120);  // Ancho estándar para "Vlr Unit"
+        viajesTablaGeneral.getColumnModel().getColumn(0).setPreferredWidth(30);  // Ancho más pequeño para la columna N°
+        viajesTablaGeneral.getColumnModel().getColumn(1).setPreferredWidth(150); // Ancho estándar para "Destino"
+        viajesTablaGeneral.getColumnModel().getColumn(2).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Salida"
+        viajesTablaGeneral.getColumnModel().getColumn(3).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Llegada"
+        viajesTablaGeneral.getColumnModel().getColumn(4).setPreferredWidth(90); // Ancho estándar para "Bus"
+        viajesTablaGeneral.getColumnModel().getColumn(5).setPreferredWidth(120);  // Ancho estándar para "Vlr Unit"
     }
-
-    // METODOS PRIVADOS DEL TAB DE TIQUETES
-    private void llenarTablaViajesTiq() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID", "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"});
-        for (int i = 0; i < ct.getViajes().size(); i++) {
-            Viaje viaje = ct.getViajes().get(i);
-            model.addRow(new Object[]{
-                viaje.getId(),
-                viaje.getDestino(),
-                viaje.getFechaSalidaStr(),
-                viaje.getFechaLlegadaStr(),
-                viaje.getBus().getPlaca(),
-                viaje.getVlrUnit(),});
-        }
-
-        viajesTablaTiq.setModel(model);
-        // Ajustar el ancho de las columnas
-        viajesTablaTiq.getColumnModel().getColumn(0).setPreferredWidth(30);  // Ancho más pequeño para la columna N°
-        viajesTablaTiq.getColumnModel().getColumn(1).setPreferredWidth(150); // Ancho estándar para "Destino"
-        viajesTablaTiq.getColumnModel().getColumn(2).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Salida"
-        viajesTablaTiq.getColumnModel().getColumn(3).setPreferredWidth(165); // Ancho ligeramente mayor para "Fecha Llegada"
-        viajesTablaTiq.getColumnModel().getColumn(4).setPreferredWidth(90); // Ancho estándar para "Bus"
-        viajesTablaTiq.getColumnModel().getColumn(5).setPreferredWidth(120);  // Ancho estándar para "Vlr Unit"
-    }
-
+    //------------------------- METODOS PRIVADOS DEL TAB DE TIQUETES -------------------------------------------------
     private void configurarSeleccionTablaViajes() {
         viajesTablaTiq.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
@@ -160,10 +144,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
     }
-
     private void actualizarTiquetes() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID", "Cliente","Metodo Pago", "Fecha Compra"});
+        model.setColumnIdentifiers(new Object[]{"ID", "Cliente", "Metodo Pago", "Fecha Compra"});
         for (int i = 0; i < ct.getTiquetes(idViajeSeleccionado).size(); i++) {
             Tiquete tiquete = ct.getTiquetes(idViajeSeleccionado).get(i);
             model.addRow(new Object[]{
@@ -179,9 +162,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         Viaje viaje = ct.buscarViajePorId(idViajeSeleccionado);
         tituloViajeLabel.setText("Tiquetes del Viaje a " + viaje.getDestino() + " en el bus '" + viaje.getBus().getPlaca() + "' para el " + viaje.getFechaSalidaStr());
         puestosBusLabel.setText("Puestos Totales del bus: " + viaje.getBus().getPuestos());
-        puestosDisLabel.setText("Puestos Disponibles del bus: " + (viaje.getBus().getPuestos() - (viaje.getTiquetes().size() + viaje.getReservas().size())));
+        puestosDisLabel.setText("Puestos Disponibles del bus: " + (viaje.getBus().getPuestos() - viaje.getPuestosOcupados()));
     }
-
     private void configurarSeleccionTablaTiquetes() {
         tablaTiquetes.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
@@ -194,71 +176,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
     }
-
-    // METODOS PRIVADOS DEL TAB DE DEVOLUCIONES
-    private void llenarTablaViajesDevo() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID", "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"});
-        for (int i = 0; i < cde.getViajesDevol().size(); i++) {
-            model.addRow(new Object[]{
-                cde.getViajesDevol().get(i).getId(),
-                cde.getViajesDevol().get(i).getDestino(),
-                cde.getViajesDevol().get(i).getFechaSalidaStr(),
-                cde.getViajesDevol().get(i).getFechaLlegadaStr(),
-                cde.getViajesDevol().get(i).getBus().getPlaca(),
-                cde.getViajesDevol().get(i).getVlrUnit()
-            });
-        }
-        tablaViajesDevol.setModel(model);
-    }
-
-    private void configurarSeleccionTablaViajesDevol() {
-        tablaViajesDevol.getSelectionModel().addListSelectionListener(event -> {
-            if (!event.getValueIsAdjusting()) {
-                int filaSeleccionada = tablaViajesDevol.getSelectedRow();
-
-                if (filaSeleccionada != -1) {
-                    Object idViaje = tablaViajesDevol.getValueAt(filaSeleccionada, 0);
-                    this.idViajeDevolSeleccionado = Integer.parseInt(idViaje.toString());
-                    actualizarDevoluciones();
-                }
-            }
-        });
-    }
-
-    private void actualizarDevoluciones() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID Tiquete","ID Cliente", "Cliente", "Fecha", "Tipo", "Resultado Puntos"});
-        for (int i = 0; i < cde.getDevoluciones(idViajeDevolSeleccionado).size(); i++) {
-            Devolucion devolucion = cde.getDevoluciones(idViajeDevolSeleccionado).get(i);
-            model.addRow(new Object[]{
-                devolucion.getMovimiento().getTiquete().getId(),
-                devolucion.getMovimiento().getTiquete().getCliente().getNroId(),
-                devolucion.getMovimiento().getTiquete().getCliente().getName(),
-                devolucion.getFechaDevolucionStr(),
-                devolucion.getMovimiento().getTiquete().getMetodoPago(),
-                devolucion.getResultadoPuntos()
-            });
-        }
-
-        tablaDevoluciones.setModel(model);
-    }
-    //METODOS PRIVADOS DEL TAB DE RESERVAS
-    private void llenarTablaViajesReserva() {
-        DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID", "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"});
-        for (int i = 0; i < cde.getViajesDevol().size(); i++) {
-            model.addRow(new Object[]{
-                cde.getViajesDevol().get(i).getId(),
-                cde.getViajesDevol().get(i).getDestino(),
-                cde.getViajesDevol().get(i).getFechaSalidaStr(),
-                cde.getViajesDevol().get(i).getFechaLlegadaStr(),
-                cde.getViajesDevol().get(i).getBus().getPlaca(),
-                cde.getViajesDevol().get(i).getVlrUnit()
-            });
-        }
-        viajesTablaRes.setModel(model);
-    }
+    //------------------------- METODOS PRIVADOS DEL TAB DE RESERVAS -------------------------
     private void configurarSeleccionTablaViajesRese() {
         viajesTablaRes.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
@@ -267,9 +185,58 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 if (filaSeleccionada != -1) {
                     Object idViaje = viajesTablaRes.getValueAt(filaSeleccionada, 0);
                     this.idViajeReservaSeleccionado = Integer.parseInt(idViaje.toString());
+                    llenarTablaReservas();
                 }
             }
         });
+    }
+    private void llenarTablaReservas() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "Cliente", "Metodo Pago", "Fecha Reserva", "Estado"});
+        for (int i = 0; i < cre.getReservas(idViajeReservaSeleccionado).size(); i++) {
+            Reserva reserva = cre.getReservas(idViajeReservaSeleccionado).get(i);
+            model.addRow(new Object[]{
+                reserva.getId(),
+                reserva.getCliente().getNroId() + ". " + reserva.getCliente().getName(),
+                reserva.getMetodoPago(),
+                reserva.getFechaReservaStr(),
+                reserva.getEstado()
+            });
+        }
+
+        tablaReservas.setModel(model);
+    }
+    private void configurarSeleccionTablaReservas() {
+        tablaReservas.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                int filaSeleccionada = tablaReservas.getSelectedRow();
+
+                if (filaSeleccionada != -1) {
+                    Object idReserva = tablaReservas.getValueAt(filaSeleccionada, 0);
+                    this.idReservaSeleccionado = Integer.parseInt(idReserva.toString());
+                }
+            }
+        });
+    }
+    // ------------------------- METODOS PRIVADOS DEL TAB DE DEVOLUCIONES -------------------------
+    private void llenarTablaDevoluciones() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID Tiquete", "Viaje", "Fecha Salida", "Cliente", "Fecha Devolucion", "Tipo", "Resultado Puntos"});
+        for (int i = 0; i < cde.getDevoluciones().size(); i++) {
+            Devolucion devolucion = cde.getDevoluciones().get(i);
+            Tiquete tiquete = devolucion.getMovimiento().getTiquete();
+            model.addRow(new Object[]{
+                tiquete.getId(),
+                tiquete.getViaje().getId() + ". " + tiquete.getViaje().getDestino(),
+                tiquete.getViaje().getFechaSalidaStr(),
+                tiquete.getCliente().getNroId() + ". " + tiquete.getCliente().getName(),
+                devolucion.getFechaDevolucionStr(),
+                tiquete.getMetodoPago(),
+                devolucion.getResultadoPuntos()
+            });
+        }
+
+        tablaDevoluciones.setModel(model);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -353,26 +320,30 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
         hacerEfectivaBtn = new javax.swing.JButton();
+        jLabel30 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tablaViajesDevol = new javax.swing.JTable();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
         tablaDevoluciones = new javax.swing.JTable();
+        jLabel25 = new javax.swing.JLabel();
         cerrarSesionBtn = new javax.swing.JButton();
+        jLabel24 = new javax.swing.JLabel();
+        nombreAdminLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel1.setText("Plazas Ocupadas:");
 
         plazasDispLabel.setText("0/0");
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel3.setText("Placa");
 
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel4.setText("Numero de ");
 
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setText("Puestos");
 
         agregarBusBtn.setText("Agregar");
@@ -416,8 +387,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(busesTabla);
 
+        jLabel15.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel15.setText("Marca");
 
+        jLabel16.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel16.setText("Tipo");
 
         javax.swing.GroupLayout gestionBusesPanelLayout = new javax.swing.GroupLayout(gestionBusesPanel);
@@ -440,11 +413,12 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                             .addGroup(gestionBusesPanelLayout.createSequentialGroup()
                                 .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(gestionBusesPanelLayout.createSequentialGroup()
                                             .addComponent(jLabel15)
-                                            .addGap(32, 32, 32)))
-                                    .addComponent(jLabel5)
+                                            .addGap(32, 32, 32))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel4)))
                                     .addComponent(jLabel16))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -465,7 +439,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(eliminarBusBtn)
                             .addComponent(buscarBusBtn))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45))
         );
@@ -513,6 +487,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jTabbedPaneAdminFlota.addTab("Gestion Buses", gestionBusesPanel);
 
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel8.setText("Destino");
 
         crearViajeBtn.setText("Crear Viaje");
@@ -535,20 +510,26 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(viajesTabla);
 
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel6.setText("Hora Salida");
 
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel7.setText("Fecha llegada");
 
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel9.setText("Hora llegada");
 
         horaLlegField.setName(""); // NOI18N
 
+        jLabel10.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel10.setText("Bus");
 
         busesCoBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel11.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel11.setText("Valor Unitario");
 
+        jLabel17.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel17.setText("Fecha Salida");
 
         jLabel2.setFont(new java.awt.Font("Ebrima", 0, 10)); // NOI18N
@@ -681,8 +662,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jTabbedPaneAdminFlota.addTab("Gestion Viajes", gestionViajesPanel);
 
+        jLabel12.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel12.setText("ID de Cliente");
 
+        jLabel14.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel14.setText("Método Pago");
 
         venderTiquete.setText("Vender Tiquete");
@@ -705,8 +688,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(viajesTablaTiq);
 
+        jLabel13.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel13.setText("SELECCIONAR VIAJE");
 
+        tituloViajeLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         tituloViajeLabel.setText("Tiquetes del Viaje");
 
         tablaTiquetes.setModel(new javax.swing.table.DefaultTableModel(
@@ -714,7 +699,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Cliente", "Fecha Compra"
+                "ID", "Cliente", "Metodo Pago", "Fecha Compra"
             }
         ));
         jScrollPane5.setViewportView(tablaTiquetes);
@@ -726,8 +711,10 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        jLabel21.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel21.setText("Selecciona el tiquete para");
 
+        jLabel22.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel22.setText("hacer su Devolución");
 
         hacerDevolucionBtn.setText("Hacer Devolución");
@@ -739,6 +726,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         metodoPagoCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Puntos" }));
 
+        jLabel26.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel26.setText("Cantidad");
 
         javax.swing.GroupLayout gestionVentaTiqPanelLayout = new javax.swing.GroupLayout(gestionVentaTiqPanel);
@@ -750,7 +738,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                     .addComponent(jScrollPane4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -844,6 +832,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jTabbedPaneAdminFlota.addTab("Venta Tiquetes", gestionVentaTiqPanel);
 
+        jLabel27.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
         jLabel27.setText("Seleccionar Viaje para ver sus reservas activas");
 
         viajesTablaRes.setModel(new javax.swing.table.DefaultTableModel(
@@ -866,16 +855,26 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Cliente", "Fecha Compra"
+                "ID", "Cliente", "Metodo Pago", "Fecha Reserva", "Estado"
             }
         ));
         jScrollPane8.setViewportView(tablaReservas);
 
-        jLabel28.setText("Selecciona la reserva que quiere hacer efectiva");
+        jLabel28.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel28.setText("Selecciona la reserva");
 
+        jLabel29.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel29.setText("HACER EFECTIVA UNA RESERVA");
 
         hacerEfectivaBtn.setText("Hacer efectiva");
+        hacerEfectivaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hacerEfectivaBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel30.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel30.setText("que quiere hacer efectiva");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -884,27 +883,31 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel28)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(88, 88, 88)
-                                        .addComponent(hacerEfectivaBtn))))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(67, 67, 67)
                         .addComponent(tituloViajeLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(jLabel27))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(238, 238, 238)
-                        .addComponent(jLabel29)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addGap(309, 309, 309)
+                        .addComponent(jLabel29))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 790, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(98, 98, 98)
+                                        .addComponent(hacerEfectivaBtn))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel30)
+                                            .addComponent(jLabel28))
+                                        .addGap(58, 58, 58)))))))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -922,9 +925,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel28)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel30)
+                        .addGap(15, 15, 15)
                         .addComponent(hacerEfectivaBtn)
-                        .addGap(0, 107, Short.MAX_VALUE)))
+                        .addGap(0, 82, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -933,35 +938,17 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel23.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel23.setText("HISTORIAL DE DEVOLUCIONES");
 
-        tablaViajesDevol.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane3.setViewportView(tablaViajesDevol);
-
-        jLabel24.setText("Selecciona el viaje para ver sus devoluciones");
-
-        jLabel25.setText("Lista de Devoluciones");
-
         tablaDevoluciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "ID Tiquete", "ID Cliente", "Cliente", "Fecha", "Resultado Puntos"
+                "ID Tiquete", "Viaje", "Fecha Salida", "Cliente", "Fecha Devolucion", "Tipo", "Resultado Puntos "
             }
         ));
         jScrollPane6.setViewportView(tablaDevoluciones);
+
+        jLabel25.setText("(Si desea hacer devolucion, es en la pestaña de tiquetes)");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -970,32 +957,24 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel24)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 753, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 753, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(140, 140, 140)
+                        .addComponent(jLabel23)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel25))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(300, 300, 300)
-                        .addComponent(jLabel23))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(329, 329, 329)
-                        .addComponent(jLabel25)))
-                .addContainerGap(54, Short.MAX_VALUE))
+                        .addGap(21, 21, 21)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 793, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel23)
-                .addGap(4, 4, 4)
-                .addComponent(jLabel24)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel25)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel25))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1008,6 +987,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        jLabel24.setFont(new java.awt.Font("Lucida Sans", 1, 12)); // NOI18N
+        jLabel24.setText("Admin Flota:");
+
+        nombreAdminLabel.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1016,8 +1000,12 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(nombreAdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cerrarSesionBtn)
                 .addGap(42, 42, 42))
         );
@@ -1026,7 +1014,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cerrarSesionBtn)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nombreAdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cerrarSesionBtn)
+                        .addComponent(jLabel24)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -1056,7 +1048,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_agregarBusBtnActionPerformed
-
     private void eliminarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBusBtnActionPerformed
         try {
             String placa = placaBusField.getText();
@@ -1068,7 +1059,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_eliminarBusBtnActionPerformed
-
     private void editarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBusBtnActionPerformed
         try {
             String placa = placaBusField.getText();
@@ -1086,7 +1076,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_editarBusBtnActionPerformed
-
     private void buscarBusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBusBtnActionPerformed
 
         String placa = placaBusField.getText();
@@ -1099,8 +1088,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             tipoBusField.setText(bus.getTipo());
             nroPuestosBusField.setText(bus.getPuestos() + "");
         }
-
-
     }//GEN-LAST:event_buscarBusBtnActionPerformed
     // ------------------- METODOS PERFORMED DEL TAB VIAJES ----------------------
     private void crearViajeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearViajeBtnActionPerformed
@@ -1114,8 +1101,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             int vlrUnit = Integer.parseInt(vlrUnitField.getText());
 
             cv.agregarViaje(destino, fechaSal, horaSal, fechaLle, horaLle, placaBus, vlrUnit);
-            llenarTablaViajes();
-            llenarTablaViajesTiq();
+            llenarTablaViajesSegunControlador("viajes");
+            llenarTablaViajesSegunControlador("tiquetes");
             JOptionPane.showMessageDialog(this, "Viaje agregado correctamente");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El valor unitario debe ser un número valido", "Error de formato", JOptionPane.ERROR_MESSAGE);
@@ -1123,7 +1110,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_crearViajeBtnActionPerformed
-
+    // ------------------- METODOS PERFORMED DEL TAB DE VENTA DE TIQUETES ----------------------
     private void venderTiqueteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_venderTiqueteActionPerformed
         try {
             if (idViajeSeleccionado != -1) {
@@ -1143,7 +1130,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_venderTiqueteActionPerformed
-
     private void buscarClienteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarClienteBtnActionPerformed
         try {
             int idCliente = Integer.parseInt(idClienteField.getText());
@@ -1157,13 +1143,12 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             infoClienteLabel.setText("");
         }
     }//GEN-LAST:event_buscarClienteBtnActionPerformed
-
     private void hacerDevolucionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hacerDevolucionBtnActionPerformed
         try {
             if (idTiqueteSeleccionado != -1) {
                 ct.crearDevolucion(idViajeSeleccionado, idTiqueteSeleccionado);
                 actualizarTiquetes();
-                llenarTablaViajesDevo();
+                llenarTablaDevoluciones();
                 JOptionPane.showMessageDialog(this, "Tiquete devuelto con éxito!", "Devolución", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor selecciona un Tiquete de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -1172,7 +1157,20 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_hacerDevolucionBtnActionPerformed
-
+    // ------------------- METODOS PERFORMED DEL TAB DE RESERVAS ----------------------
+    private void hacerEfectivaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hacerEfectivaBtnActionPerformed
+        try {
+            if (idReservaSeleccionado != -1) {
+                cre.hacerEfectiva(idReservaSeleccionado, idViajeReservaSeleccionado);
+                llenarTablaReservas();
+                JOptionPane.showMessageDialog(this, "Reserva efectiva correctamente, ya tiene asegurado el tiquete!", "Reserva efectiva", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor selecciona una Reserva de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        }catch (RuntimeException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_hacerEfectivaBtnActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarBusBtn;
     private javax.swing.JButton buscarBusBtn;
@@ -1219,6 +1217,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1229,7 +1228,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
@@ -1238,6 +1236,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPaneAdminFlota;
     private javax.swing.JTextField marcaBusField;
     private javax.swing.JComboBox<String> metodoPagoCombo;
+    private javax.swing.JLabel nombreAdminLabel;
     private javax.swing.JTextField nroPuestosBusField;
     private javax.swing.JPanel panelContainer;
     private javax.swing.JTextField placaBusField;
@@ -1247,7 +1246,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
     private javax.swing.JTable tablaDevoluciones;
     private javax.swing.JTable tablaReservas;
     private javax.swing.JTable tablaTiquetes;
-    private javax.swing.JTable tablaViajesDevol;
     private javax.swing.JTextField tipoBusField;
     private javax.swing.JLabel tituloViajeLabel;
     private javax.swing.JLabel tituloViajeLabel1;

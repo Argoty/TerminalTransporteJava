@@ -13,23 +13,23 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Devolucion implements Serializable{
-    private MovimientoTransaccion movimiento;
+    private RegistroPuntos movimiento;
     private LocalDateTime fechaDevolucion;
     private int resultadoPuntos;
 
     // Constructor
-    public Devolucion(MovimientoTransaccion movimiento, int resultadoPuntos) {
+    public Devolucion(RegistroPuntos movimiento, int resultadoPuntos) {
         this.movimiento = movimiento;
         this.fechaDevolucion = LocalDateTime.now();
         this.resultadoPuntos = resultadoPuntos;
     }
 
     // Getters y Setters
-    public MovimientoTransaccion getMovimiento() {
+    public RegistroPuntos getMovimiento() {
         return movimiento;
     }
 
-    public void setTiquete(MovimientoTransaccion movimiento) {
+    public void setTiquete(RegistroPuntos movimiento) {
         this.movimiento = movimiento;
     }
 

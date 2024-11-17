@@ -5,12 +5,11 @@
 package Servicios;
 
 import Modelos.Devolucion;
-import Modelos.MovimientoTransaccion;
-import Modelos.Tiquete;
+import Modelos.EmpresaTransporte;
+import Modelos.RegistroPuntos;
 import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
 import Utils.IList;
-import java.time.LocalDateTime;
 
 
 /**
@@ -22,18 +21,18 @@ public class ServicioDevoluciones {
     public ServicioDevoluciones() {
     }
     
-    public void crearDevolucion(Viaje viaje, Cliente cliente, MovimientoTransaccion movimiento, int puntos) throws RuntimeException {
-        Devolucion devolucion = new Devolucion(movimiento, puntos);
+    public void crearDevolucion(EmpresaTransporte empresa, Viaje viaje, Cliente cliente, RegistroPuntos registro, int puntos) throws RuntimeException {
+        Devolucion devolucion = new Devolucion(registro, puntos);
         
-        viaje.getDevoluciones().add(devolucion);
+        empresa.getDevoluciones().add(devolucion);
         cliente.getDevoluciones().add(devolucion);
         
-        viaje.getTiquetes().remove(movimiento.getTiquete());
-        cliente.getTiquetes().remove(movimiento.getTiquete()); 
+        viaje.getTiquetes().remove(registro.getTiquete());
+        cliente.getTiquetes().remove(registro.getTiquete()); 
     }
 
-    public IList<Devolucion> getDevolucionesVia(Viaje viaje) {
-        return viaje.getDevoluciones();
+    public IList<Devolucion> getDevolucionesEmpr(EmpresaTransporte empresa) {
+        return empresa.getDevoluciones();
     }
     public IList<Devolucion> getDevolucionesCli(Cliente cliente) {
         return cliente.getDevoluciones();

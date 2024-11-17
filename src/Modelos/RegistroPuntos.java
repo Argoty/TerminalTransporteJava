@@ -11,11 +11,11 @@ import java.io.Serializable;
  *
  * @author PC
  */
-public class MovimientoTransaccion implements Serializable {
+public class RegistroPuntos implements Serializable {
     private int puntos;
     private Tiquete tiquete;
 
-    public MovimientoTransaccion(int puntos, Tiquete tiquete) {
+    public RegistroPuntos(int puntos, Tiquete tiquete) {
         this.puntos = puntos;
         this.tiquete = tiquete;
     }

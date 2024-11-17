@@ -4,10 +4,10 @@
  */
 package Controladores;
 
-import Modelos.MovimientoTransaccion;
+import Modelos.RegistroPuntos;
 import Modelos.Usuarios.Cliente;
 import Servicios.ServicioCasetasPrincipal;
-import Servicios.ServicioMovimientos;
+import Servicios.ServicioPuntos;
 import Utils.IList;
 
 /**
@@ -15,13 +15,13 @@ import Utils.IList;
  * @author PC
  */
 public class ControladorPuntos {
-    private ServicioMovimientos src;
+    private ServicioPuntos src;
     private ServicioCasetasPrincipal scp;
     public ControladorPuntos(Cliente cliente) {
-        this.src = new ServicioMovimientos(cliente);
+        this.src = new ServicioPuntos(cliente);
         this.scp = ServicioCasetasPrincipal.getInstance();
     }
-    public IList<MovimientoTransaccion> getRegistroPuntos(String criterio) {
+    public IList<RegistroPuntos> getRegistroPuntos(String criterio) {
         return src.getHistorialCompra(criterio);
     }
     public String getNombreEmpresaSegunViaje(int idViaje) {

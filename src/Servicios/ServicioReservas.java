@@ -49,4 +49,18 @@ public class ServicioReservas {
         cliente.getReservas().remove(reserva);
         viaje.getReservas().remove(reserva);
     }
+    public void hacerEfectiva(Reserva reserva) {
+        if (reserva.isEfectiva()) throw new RuntimeException("La Reserva ya está efectiva");
+        reserva.hacerEfectiva();
+        
+    }
+    public Reserva getReservaPorId(int idReserva, Viaje viaje) {
+        for (int i=0; i < getReservasViaje(viaje).size(); i++) {
+            if (getReservasViaje(viaje).get(i).getId() == idReserva) {
+                return getReservasViaje(viaje).get(i);
+            }
+        }
+        return null;
+    }
+    
 }

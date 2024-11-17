@@ -88,8 +88,11 @@ public class ControladorReservar {
         scp.saveDataCasetas();
         su.saveDataUsuarios();
     }
-    public void cancelarReserva(int idReserva) {
+    public void cancelarReserva(int idReserva) throws RuntimeException{
         Reserva reserva = buscarReservaPorId(idReserva);
+        if (reserva.isEfectiva()) {
+            throw new RuntimeException("Esta reserva ya está efectiva, no se puede cancelar");
+        }
         Viaje viaje = buscarViajePorIdAll(reserva.getViaje().getId());
         sr.cancelarReserva(cliente, viaje, reserva);
         

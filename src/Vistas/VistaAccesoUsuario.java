@@ -30,7 +30,13 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
         this.cl = new ControladorLogin();
         this.cr = new ControladorRegistro();
     }
-
+    private void limpiarCamposRegistro() {
+        nombreCliField.setText("");
+        nroIdCliField.setText("");
+        emailCliField.setText("");
+        telefoCliField.setText("");
+        passwordCliField.setText("");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,6 +46,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPasswordField1 = new javax.swing.JPasswordField();
         tabbedPaneAcceso = new javax.swing.JTabbedPane();
         VistaPanelLogin = new javax.swing.JPanel();
         nroIdField = new javax.swing.JTextField();
@@ -61,12 +68,17 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
         emailCliField = new javax.swing.JTextField();
         telefoCliField = new javax.swing.JTextField();
 
+        jPasswordField1.setText("jPasswordField1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel2.setText("Número de identificacion");
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel3.setText("Contraseña");
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI Semibold", 3, 18)); // NOI18N
         jLabel4.setText("LOGIN DE USUARIO");
 
         loginBtn.setText("LOGIN");
@@ -84,9 +96,6 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
             .addGroup(VistaPanelLoginLayout.createSequentialGroup()
                 .addGroup(VistaPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(VistaPanelLoginLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(jLabel4))
-                    .addGroup(VistaPanelLoginLayout.createSequentialGroup()
                         .addGap(114, 114, 114)
                         .addComponent(jLabel3)
                         .addGap(27, 27, 27)
@@ -98,15 +107,18 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
                         .addGap(45, 45, 45)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(nroIdField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(91, Short.MAX_VALUE))
+                        .addComponent(nroIdField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(VistaPanelLoginLayout.createSequentialGroup()
+                        .addGap(129, 129, 129)
+                        .addComponent(jLabel4)))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         VistaPanelLoginLayout.setVerticalGroup(
             VistaPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(VistaPanelLoginLayout.createSequentialGroup()
-                .addContainerGap(47, Short.MAX_VALUE)
+                .addContainerGap(40, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addGap(34, 34, 34)
+                .addGap(32, 32, 32)
                 .addGroup(VistaPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(nroIdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -121,6 +133,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
 
         tabbedPaneAcceso.addTab("Login", VistaPanelLogin);
 
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setText("Número de identificacion");
 
         registroCliBtn.setText("Registrar");
@@ -131,6 +144,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel7.setText("Nombre de Cliente");
 
         nombreCliField.addActionListener(new java.awt.event.ActionListener() {
@@ -139,10 +153,13 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel1.setText("Email");
 
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel8.setText("Telefono");
 
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel6.setText("Contraseña");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -269,6 +286,8 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
             String password = passwordCliField.getText();
             
             cr.registrarUsuario(new Cliente(nombreCli, idCli, email, telefo, password));
+            JOptionPane.showMessageDialog(this, "¡Nuevo Cliente Registrado!", "Registro", JOptionPane.INFORMATION_MESSAGE);
+            limpiarCamposRegistro();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(
                     this,
@@ -332,6 +351,7 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JButton loginBtn;
     private javax.swing.JTextField nombreCliField;
     private javax.swing.JTextField nroIdCliField;

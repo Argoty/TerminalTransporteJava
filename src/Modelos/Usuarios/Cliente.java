@@ -6,7 +6,7 @@ package Modelos.Usuarios;
 
 import Modelos.Devolucion;
 import Modelos.Notificacion;
-import Modelos.MovimientoTransaccion;
+import Modelos.RegistroPuntos;
 import Modelos.Reserva;
 import Modelos.Tiquete;
 import Utils.IList;
@@ -25,7 +25,7 @@ public class Cliente extends Usuario implements Serializable {
     
     private IList<Tiquete> tiquetes;
     private IList<Reserva> reservas;
-    private IList<MovimientoTransaccion> historialCompras;
+    private IList<RegistroPuntos> historialCompras;
     private IList<Devolucion> devoluciones;
     private IList<Notificacion> notificaciones;
 
@@ -33,6 +33,7 @@ public class Cliente extends Usuario implements Serializable {
         super(name, nroId, email, tel, password);
         this.puntosAcumulados = 0;
         this.dineroRestante = 0;
+        this.dineroInvertido =0;
         
         this.tiquetes = new Lista<>();
         this.reservas = new Lista<>();
@@ -67,7 +68,7 @@ public class Cliente extends Usuario implements Serializable {
         return this.tiquetes;
     }
 
-    public IList<MovimientoTransaccion> getHistorialCompras() {
+    public IList<RegistroPuntos> getHistorialCompras() {
         return this.historialCompras;
     }
     public IList<Reserva> getReservas() {

@@ -26,7 +26,6 @@ public class Viaje implements Serializable{
     private Bus bus;
  
     private IList<Tiquete> tiquetes;
-    private IList<Devolucion> devoluciones;
     private IList<Reserva> reservas;
     // Constructor
     public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int vlrUnit, Bus bus) {
@@ -39,7 +38,6 @@ public class Viaje implements Serializable{
         this.bus = bus;
         
         this.tiquetes = new Lista<>();
-        this.devoluciones = new Lista<>();
         this.reservas = new Lista<>();
     }
 
@@ -96,6 +94,15 @@ public class Viaje implements Serializable{
     public void setBus(Bus bus) {
         this.bus = bus;
     }
+    public int getPuestosOcupados() {
+        int contReservasNoEfectivas= 0;
+        for (int i =0; i < reservas.size(); i++) {
+            if (!reservas.get(i).isEfectiva()) {
+                contReservasNoEfectivas++;
+            }
+        }
+        return tiquetes.size() + contReservasNoEfectivas;
+    }
     // Método para ajustar contador en la persistencia
     public static void ajustarContadorPersistencia(int numeroDeViajes) {
         cont = numeroDeViajes + 1;
@@ -103,9 +110,6 @@ public class Viaje implements Serializable{
     
     public IList<Tiquete> getTiquetes() {
         return this.tiquetes;
-    }
-    public IList<Devolucion> getDevoluciones(){
-        return this.devoluciones;
     }
     public IList<Reserva> getReservas(){
         return this.reservas;

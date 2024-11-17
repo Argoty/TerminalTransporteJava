@@ -73,7 +73,7 @@
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace pref="14" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -144,21 +144,33 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="NIT"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Nombre"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Canon Arrendamiento"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Plazas estacionamiento"/>
       </Properties>
     </Component>
@@ -264,6 +276,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel13">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Email"/>
           </Properties>
         </Component>
@@ -271,6 +286,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel14">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Telefono"/>
           </Properties>
         </Component>
@@ -286,16 +304,25 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel16">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Nombre"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel17">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Numero de Identificacion"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Contrase&#xf1;a"/>
           </Properties>
         </Component>
@@ -303,6 +330,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Sueldo"/>
           </Properties>
         </Component>

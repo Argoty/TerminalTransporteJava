@@ -21,6 +21,7 @@ public class EmpresaTransporte implements Serializable {
 
     private IList<Bus> buses;
     private IList<Viaje> viajes;
+    private IList<Devolucion> devoluciones;
 
     public EmpresaTransporte(int nit, String nombre, AdminFlota admin) {
         this.nit = nit;
@@ -29,6 +30,7 @@ public class EmpresaTransporte implements Serializable {
 
         this.buses = new Lista<>();
         this.viajes = new Lista<>();
+        this.devoluciones = new Lista<>();
     }
 
     public int getNit() {
@@ -57,5 +59,8 @@ public class EmpresaTransporte implements Serializable {
 
     public IList<Viaje> getViajes() {
         return this.viajes;
+    }
+    public IList<Devolucion> getDevoluciones() {
+        return this.devoluciones;
     }
 }

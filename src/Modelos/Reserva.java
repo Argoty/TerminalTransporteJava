@@ -45,10 +45,9 @@ public class Reserva implements Serializable{
 //        }
 //    }
 
-    // Método para cancelar la reserva
-    public void cancelar() {
-        this.efectiva = false; // Marca la reserva como inEfectiva
-        System.out.println("Reserva cancelada.");
+    // Método para hacer efectiva
+    public void hacerEfectiva() {
+        this.efectiva = true;
     }
 
     // Getters y Setters
@@ -78,6 +77,9 @@ public class Reserva implements Serializable{
 
     public boolean isEfectiva() {
         return efectiva;
+    }
+    public String getEstado() {
+        return efectiva ? "efectiva" : "no efectiva";
     }
 
     public void setEfectiva(boolean efectiva) {

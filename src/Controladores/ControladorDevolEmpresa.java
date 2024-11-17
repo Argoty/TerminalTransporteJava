@@ -6,43 +6,28 @@ package Controladores;
 
 import Modelos.Devolucion;
 import Modelos.EmpresaTransporte;
-import Modelos.Viaje;
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioDevoluciones;
 import Servicios.ServicioViajes;
 import Utils.IList;
-import Utils.Lista;
 
 /**
  *
  * @author PC
  */
 public class ControladorDevolEmpresa {
+    private EmpresaTransporte empresa;
     private ServicioViajes sv;
     private ServicioDevoluciones sd;
 
     public ControladorDevolEmpresa(int idAdmin) {
-        EmpresaTransporte empr = ServicioCasetasPrincipal.getInstance().getCasetaPorAdminID(idAdmin)
+        this.empresa = ServicioCasetasPrincipal.getInstance().getCasetaPorAdminID(idAdmin)
                 .getEmpresa();
-        this.sv = new ServicioViajes(empr);
+        this.sv = new ServicioViajes(empresa);
         this.sd = new ServicioDevoluciones();
     }
 
-    public IList<Viaje> getViajesDevol() {
-        IList<Viaje> viajesConDevoluciones = new Lista<>();
-
-        for (int i = 0; i < sv.getViajes().size(); i++) {
-            Viaje viaje = sv.getViajes().get(i);
-            if (viaje.getDevoluciones() != null && !viaje.getDevoluciones().isEmpty()) {
-                viajesConDevoluciones.add(viaje);
-            }
-        }
-
-        return viajesConDevoluciones;
-    }
-
-    public IList<Devolucion> getDevoluciones(int idViaje) {
-        Viaje viaje = sv.buscarViajePorId(idViaje);
-        return sd.getDevolucionesVia(viaje);
+    public IList<Devolucion> getDevoluciones() {
+        return sd.getDevolucionesEmpr(empresa);
     }
 }

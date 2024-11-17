@@ -1,21 +1,21 @@
 package Servicios;
 
-import Modelos.MovimientoTransaccion;
+import Modelos.RegistroPuntos;
 import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Utils.IList;
 import Utils.Lista;
 
-public class ServicioMovimientos {
+public class ServicioPuntos {
 
     private Cliente cliente;
 
-    public ServicioMovimientos(Cliente cliente) {
+    public ServicioPuntos(Cliente cliente) {
         this.cliente = cliente;
     }
 
-    public IList<MovimientoTransaccion> getHistorialCompra(String tipo) {
-        IList<MovimientoTransaccion> historialCompra = new Lista<>();
+    public IList<RegistroPuntos> getHistorialCompra(String tipo) {
+        IList<RegistroPuntos> historialCompra = new Lista<>();
         for (int i = 0; i < cliente.getHistorialCompras().size(); i++) {
             if (cliente.getHistorialCompras().get(i).getTiquete().getMetodoPago().equals(tipo)) {
                 historialCompra.add(cliente.getHistorialCompras().get(i));
@@ -39,29 +39,26 @@ public class ServicioMovimientos {
             }
 
             cliente.setDineroInvertido(cliente.getDineroInvertido() + tiquete.getViaje().getVlrUnit());
-            cliente.getHistorialCompras().add(new MovimientoTransaccion(puntosGanados, tiquete));
+            cliente.getHistorialCompras().add(new RegistroPuntos(puntosGanados, tiquete));
         } else { // Pago con puntos
             cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() - 90);
-            cliente.getHistorialCompras().add(new MovimientoTransaccion(-90, tiquete));
+            cliente.getHistorialCompras().add(new RegistroPuntos(-90, tiquete));
         }
     }
 
-    public int actualizarPuntosDevolucion(MovimientoTransaccion movimiento) {
-        Tiquete tiquete = movimiento.getTiquete();
+    public int actualizarPuntosDevolucion(RegistroPuntos registro) {
+        Tiquete tiquete = registro.getTiquete();
 
         if (tiquete.getMetodoPago().equals("efectivo")) {
-            // Restar el valor del tiquete devuelto del dinero invertido
             int precioTiquete = tiquete.getViaje().getVlrUnit();
+            int puntosADevolver = registro.getPuntos(); // Puntos obtenidos por esta compra
             cliente.setDineroInvertido(cliente.getDineroInvertido() - precioTiquete);
 
-            int puntosActualizados = (cliente.getDineroInvertido() / 10000) * 3;
-            int puntosPerdidos = cliente.getPuntosAcumulados() - puntosActualizados;
+            cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() - puntosADevolver);
 
-            cliente.setPuntosAcumulados(puntosActualizados);
-            cliente.setDineroRestante(cliente.getDineroInvertido() % 10000);
+            cliente.setDineroRestante(cliente.getDineroRestante() - precioTiquete % 10000);
 
-            // Retornar los puntos perdidos para registro en devoluciones
-            return -puntosPerdidos;
+            return -puntosADevolver;
         } else {
             // Devolución de una compra realizada con puntos
             cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() + 90);
@@ -69,7 +66,7 @@ public class ServicioMovimientos {
         }
     }
 
-    public MovimientoTransaccion getMovimientoPorIdTiquete(int idTiquete) {
+    public RegistroPuntos getRegistroPorIdTiquete(int idTiquete) {
         for (int i = 0; i < cliente.getHistorialCompras().size(); i++) {
             if (cliente.getHistorialCompras().get(i).getTiquete().getId() == idTiquete) {
                 return cliente.getHistorialCompras().get(i);

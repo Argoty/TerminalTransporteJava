@@ -5,7 +5,6 @@
 package Vistas;
 
 import Controladores.ControladorCasetasPrincipal;
-import Controladores.ControladorUsuario;
 import Modelos.Caseta;
 
 //import java.awt.Color;

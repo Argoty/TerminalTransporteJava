@@ -5,11 +5,13 @@
 package Controladores;
 
 import Modelos.Caseta;
+import Modelos.Notificacion;
 import Modelos.Reserva;
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioUsuarios;
 
 import Modelos.Usuarios.Cliente;
+import Modelos.Usuarios.Usuario;
 import Modelos.Viaje;
 import Servicios.ServicioReservas;
 import Utils.IList;
@@ -80,15 +82,15 @@ public class ControladorReservar {
         return viajesFiltrados;
     }
 
-    public void realizarReserva(int idViajeSeleccionado, int cantidad, int metodoPago) {
+    public void realizarReserva(int idViajeSeleccionado, int cantidad) {
         Viaje viaje = buscarViajePorIdAll(idViajeSeleccionado);
-        sr.crearReserva(cliente, viaje, cantidad, metodoPago);
+        sr.crearReserva(cliente, viaje, cantidad);
         
         // Guarda informacion en binarios
         scp.saveDataCasetas();
         su.saveDataUsuarios();
     }
-    public void cancelarReserva(int idReserva) throws RuntimeException{
+    public boolean cancelarReserva(int idReserva) throws RuntimeException{
         Reserva reserva = buscarReservaPorId(idReserva);
         if (reserva.isEfectiva()) {
             throw new RuntimeException("Esta reserva ya está efectiva, no se puede cancelar");
@@ -96,9 +98,24 @@ public class ControladorReservar {
         Viaje viaje = buscarViajePorIdAll(reserva.getViaje().getId());
         sr.cancelarReserva(cliente, viaje, reserva);
         
+        boolean esMismoClienteCola = false;
+        // Si estaba lleno saca de la cola al cliente que estaba esperando y le crea su reserva
+        if (!viaje.getColaEspera().isEmpty() && viaje.getPuestosDesocupados() == 1) {
+            Cliente clienteDesencolado = buscarClientePorId(viaje.getColaEspera().dequeue().getNroId());
+
+            // Crear una nueva reserva para el cliente desencolado
+            Reserva nuevaReserva = new Reserva(clienteDesencolado, viaje);
+            viaje.getReservas().add(nuevaReserva);
+            clienteDesencolado.getReservas().add(nuevaReserva);
+            clienteDesencolado.getNotificaciones().add(new Notificacion(clienteDesencolado, "Posible tiquete para viaje a " + viaje.getDestino() + " el " + viaje.getFechaSalidaStr() + " en el bus " + viaje.getBus().getPlaca() ));
+            esMismoClienteCola = cliente.equals(clienteDesencolado);
+        }
+        
         // Guarda informacion en binarios
         scp.saveDataCasetas();
         su.saveDataUsuarios();
+
+        return esMismoClienteCola;
     }
     
     public Reserva buscarReservaPorId(int idReserva){
@@ -127,5 +144,12 @@ public class ControladorReservar {
 
     public String getNombreEmpresaSegunViaje(int idViaje) {
         return scp.getCasetaPorViajeID(idViaje).getEmpresa().getNombre();
+    }
+    public Cliente buscarClientePorId(int idCliente) throws RuntimeException {
+        Usuario usuario = su.buscarUsuarioPorId(idCliente);
+        if (!(usuario instanceof Cliente)) {
+            throw new RuntimeException("EL CLIENTE NO SE ENCUENTRA CON ESTE ID");
+        }
+        return (Cliente) usuario;
     }
 }

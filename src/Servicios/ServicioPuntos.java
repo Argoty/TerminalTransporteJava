@@ -46,11 +46,24 @@ public class ServicioPuntos {
         }
     }
 
+    // AUN NADA
+    public int puntosResultado(int precioTiquete) {
+        cliente.setDineroRestante(cliente.getDineroRestante() + precioTiquete);
+//        while() {
+//            
+//        }
+        return 0;
+    }
+
     public int actualizarPuntosDevolucion(RegistroPuntos registro) {
         Tiquete tiquete = registro.getTiquete();
 
         if (tiquete.getMetodoPago().equals("efectivo")) {
             int precioTiquete = tiquete.getViaje().getVlrUnit();
+
+//            while(cliente.getDineroRestante() >= 10000) {
+//                
+//            }
             int puntosADevolver = registro.getPuntos(); // Puntos obtenidos por esta compra
             cliente.setDineroInvertido(cliente.getDineroInvertido() - precioTiquete);
 

@@ -5,7 +5,9 @@
 package Controladores;
 
 import Modelos.EmpresaTransporte;
+import Modelos.Notificacion;
 import Modelos.RegistroPuntos;
+import Modelos.Reserva;
 import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Modelos.Usuarios.Usuario;
@@ -19,6 +21,7 @@ import Servicios.ServicioViajes;
 import Servicios.ServicioUsuarios;
 
 import Utils.IList;
+import Utils.IQueue;
 import java.time.LocalDateTime;
 
 /**
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
  * @author PC
  */
 public class ControladorTiquetes {
+
     private EmpresaTransporte empresa;
     private ServicioCasetasPrincipal scp;
     private ServicioTiquetes st;
@@ -42,53 +46,92 @@ public class ControladorTiquetes {
         this.sd = new ServicioDevoluciones();
         this.su = ServicioUsuarios.getInstance();
     }
+    public void guardarBinarios() {
+        scp.saveDataCasetas();
+        su.saveDataUsuarios();
+    }
 
-    public void venderTiquete(int idViaje, int idCliente, int cantidad, int metodoPago) throws RuntimeException {
+    public boolean venderTiquete(int idViaje, int idCliente, int cantidad, int metodoPago) throws RuntimeException {
         Cliente cliente = buscarClientePorId(idCliente);
         Viaje viaje = buscarViajePorId(idViaje);
 
         IList<Tiquete> tiquetesVenta = st.crearTiquete(viaje, cliente, cantidad, metodoPago);
-        
+
         // Agrega Puntos al usuario segun tiquetes creados
-        ServicioPuntos sp = new ServicioPuntos(cliente);
-        for (int i =0; i < tiquetesVenta.size(); i++) {
-            sp.actualizarPuntos(tiquetesVenta.get(i));
+        if (tiquetesVenta != null) {
+            ServicioPuntos sp = new ServicioPuntos(cliente);
+            for (int i = 0; i < tiquetesVenta.size(); i++) {
+                sp.actualizarPuntos(tiquetesVenta.get(i));
+            }
+            guardarBinarios();
+            return false;
+        } else {
+            guardarBinarios();
+            return true;
         }
-        
-        // Guarda informacion en binarios
-        scp.saveDataCasetas();
-        su.saveDataUsuarios();
     }
-    
-    public void crearDevolucion(int idViaje, int idTiquete) throws RuntimeException{
+
+    public boolean crearDevolucion(int idViaje, int idTiquete) throws RuntimeException {
         Viaje viaje = buscarViajePorId(idViaje);
+        
         Tiquete tiqueteAEliminar = st.obtenerTiquete(viaje, idTiquete);
         if (tiqueteAEliminar.getViaje().getFechaSalida().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("El viaje ya ocurrió, no puedes hacer devolucion");
         }
-        
+
         Cliente cliente = buscarClientePorId(tiqueteAEliminar.getCliente().getNroId());
 
         ServicioPuntos sp = new ServicioPuntos(cliente);
         RegistroPuntos registroPuntos = sp.getRegistroPorIdTiquete(tiqueteAEliminar.getId());
         int puntosResultado = sp.actualizarPuntosDevolucion(registroPuntos);
-        
+
         sd.crearDevolucion(this.empresa, viaje, cliente, registroPuntos, puntosResultado);
+        
+        boolean desencolo = false;
+        // Actualizar los puestos disponibles y verificar la cola de espera
+        if (!viaje.getColaEspera().isEmpty() && viaje.getPuestosDesocupados() == 1) {
+            Cliente clienteDesencolado = buscarClientePorId(viaje.getColaEspera().dequeue().getNroId());
+
+            // Crear una nueva reserva para el cliente desencolado
+            Reserva nuevaReserva = new Reserva(clienteDesencolado, viaje);
+            viaje.getReservas().add(nuevaReserva);
+            clienteDesencolado.getReservas().add(nuevaReserva);
+            
+            clienteDesencolado.getNotificaciones().add(new Notificacion(clienteDesencolado, "Posible tiquete para viaje a " + viaje.getDestino() + " el " + viaje.getFechaSalidaStr() + " en el bus " + viaje.getBus().getPlaca() ));
+            desencolo = true;
+        }
         // Guardo info
         scp.saveDataCasetas();
         su.saveDataUsuarios();
+        return desencolo;
     }
-    public IList<Tiquete> getTiquetes(int idViaje){
+
+    public IList<Tiquete> getTiquetes(int idViaje) {
         Viaje viaje = buscarViajePorId(idViaje);
         return st.getTiquetes(viaje);
+    }
+
+    public String getColaEspera(int idViaje) {
+        Viaje viaje = buscarViajePorId(idViaje);
+        IQueue<Cliente> colaAux = st.getColaEspera(viaje).clone();
+        String resultadoCola = "";
+        int cont = 1;
+        while (!colaAux.isEmpty()) {
+            Cliente cliente = colaAux.dequeue();
+            resultadoCola += cont + ". " + cliente.getName() + "/ ID: " + cliente.getNroId() + "\n";
+            cont++;
+        }
+        return resultadoCola;
     }
 
     public IList<Viaje> getViajesFuturos() {
         return sv.getViajesFuturos();
     }
+
     public IList<Viaje> getViajes() {
         return sv.getViajes();
     }
+
     public Cliente buscarClientePorId(int idCliente) throws RuntimeException {
         Usuario usuario = su.buscarUsuarioPorId(idCliente);
         if (!(usuario instanceof Cliente)) {
@@ -96,8 +139,9 @@ public class ControladorTiquetes {
         }
         return (Cliente) usuario;
     }
+
     public Viaje buscarViajePorId(int idViaje) {
         return sv.buscarViajePorId(idViaje);
     }
-   
+
 }

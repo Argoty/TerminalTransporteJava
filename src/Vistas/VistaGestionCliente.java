@@ -6,6 +6,8 @@ package Vistas;
 
 import Controladores.ControladorPuntos;
 import Controladores.ControladorDevolCliente;
+import Controladores.ControladorInfoCliente;
+import Controladores.ControladorNotificaciones;
 import Controladores.ControladorReservar;
 import Modelos.RegistroPuntos;
 import Modelos.Devolucion;
@@ -27,9 +29,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
      * Creates new form VistaGestionCliente
      */
     Cliente cliente;
+    ControladorInfoCliente cic;
     ControladorPuntos cp;
     ControladorDevolCliente cdc;
     ControladorReservar cr;
+    ControladorNotificaciones cn;
 
     int idViajeSeleccionado = -1;
     int idReservaSeleccionado = -1;
@@ -39,9 +43,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         setLocationRelativeTo(this);
 
         this.cliente = cliente;
+        cic = new ControladorInfoCliente(cliente);
         cp = new ControladorPuntos(cliente);
         cdc = new ControladorDevolCliente(cliente);
         cr = new ControladorReservar(cliente);
+        cn = new ControladorNotificaciones(cliente);
 
         mostrarInfo();
         llenarTablaPuntos("efectivo");
@@ -49,6 +55,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         llenarTablaDevoluciones();
         llenarTablaViajesRes(cr.getViajesAll());
         llenarTablaReservas();
+        llenarTablaNotificaciones();
 
         configurarSeleccionTablaViajes();
         configurarSeleccionTablaReservas();
@@ -56,12 +63,13 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
     // METODOS PRIVADOS DEL TAB DE INFO DE CLIENTE
     private void mostrarInfo() {
-        nombreCliLabel.setText(cliente.getName());
-        nroIdLabel.setText(cliente.getNroId() + "");
-        emailLabel.setText(cliente.getEmail());
-        telefonoLabel.setText(cliente.getTelefono());
-        puntosAcumuladosLabel.setText(cliente.getPuntosAcumulados() + "");
-        dineroInvertidoLabel.setText("$" + cliente.getDineroInvertido());
+        nombreCliLabel.setText(cic.getName());
+        nroIdLabel.setText(cic.getNroId() + "");
+        emailLabel.setText(cic.getEmail());
+        telefonoLabel.setText(cic.getTelefono());
+        puntosAcumuladosLabel.setText(cic.getPuntosAcumulados() + "");
+        dineroInvertidoLabel.setText("$" + cic.getDineroInvertido());
+        dineroContador.setText("$" + cliente.getDineroRestante());
     }
 
     // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
@@ -88,6 +96,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             tablaPuntosRedimidos.setModel(model);
         }
     }
+
     // MÉTODOS PRIVADOS DEL TAB DE DEVOLUCIONES
     private void llenarTablaDevoluciones() {
         DefaultTableModel model = new DefaultTableModel();
@@ -122,7 +131,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 viaje.getFechaSalidaStr(),
                 viaje.getBus().getPlaca(),
                 viaje.getVlrUnit(),
-                (viaje.getBus().getPuestos() - (viaje.getPuestosOcupados())) + "/" + viaje.getBus().getPuestos()
+                viaje.getPuestosDesocupados() + "/" + viaje.getBus().getPuestos()
             });
         }
 
@@ -152,26 +161,21 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
     private void llenarTablaReservas() {
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new Object[]{"ID", "Viaje", "Bus", "Vlr Unit", "Fecha", "Metodo Pago", "Fecha Reserva", "Estado"});
+        model.setColumnIdentifiers(new Object[]{"ID", "Viaje", "Fecha", "Bus", "Vlr Unit", "Fecha Reserva", "Estado"});
         for (int i = 0; i < cr.getReservas().size(); i++) {
             Reserva reserva = cr.getReservas().get(i);
             model.addRow(new Object[]{
                 reserva.getId(),
                 reserva.getViaje().getId() + ". " + reserva.getViaje().getDestino(),
+                reserva.getViaje().getFechaSalidaStr(),
                 reserva.getViaje().getBus().getPlaca(),
                 reserva.getViaje().getVlrUnit(),
-                reserva.getViaje().getFechaSalidaStr(),
-                reserva.getMetodoPago(),
                 reserva.getFechaReservaStr(),
                 reserva.getEstado()
             });
         }
 
         tablaReservas.setModel(model);
-//        Viaje viaje = ct.buscarViajePorId(idViajeSeleccionado);
-//        tituloViajeLabel.setText("Tiquetes del Viaje a " + viaje.getDestino() + " en el bus '" + viaje.getBus().getPlaca() + "' para el " + viaje.getFechaSalidaStr());
-//        puestosBusLabel.setText("Puestos Totales del bus: " + viaje.getBus().getPuestos());
-//        puestosDisLabel.setText("Puestos Disponibles del bus: " + (viaje.getBus().getPuestos() - viaje.getTiquetes().size()));
     }
 
     private void configurarSeleccionTablaReservas() {
@@ -185,6 +189,18 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 }
             }
         });
+    }
+    // MÉTODOS PRIVADOS DEL TAB DE DEVOLUCIONES
+    private void llenarTablaNotificaciones() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"Mensaje", "Fecha Envío"});
+        for (int i = 0; i < cn.getNotificaciones().size(); i++) {
+            model.addRow(new Object[]{
+                cn.getNotificaciones().get(i).getMensaje(),
+                cn.getNotificaciones().get(i).getFechaEnvioStr(),
+            });
+        }
+        tablaNotificaciones.setModel(model);
     }
 
     /**
@@ -210,6 +226,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         puntosAcumuladosLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         dineroInvertidoLabel = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        dineroContador = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         puntosGanadosTable = new javax.swing.JTable();
@@ -225,8 +243,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         viajesTablaRese = new javax.swing.JTable();
-        jLabel14 = new javax.swing.JLabel();
-        metodoPagoCombo = new javax.swing.JComboBox<>();
         reservarBtn = new javax.swing.JButton();
         filtroOpcionesCombo = new javax.swing.JComboBox<>();
         filtroDestinoField = new javax.swing.JTextField();
@@ -245,7 +261,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         notificacionesPanel = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTable5 = new javax.swing.JTable();
+        tablaNotificaciones = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
         cerrarSesionBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -276,6 +293,10 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         dineroInvertidoLabel.setText("jLabel17");
 
+        jLabel14.setText("Dinero Contador");
+
+        dineroContador.setText("jLabel19");
+
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
         informacionPanelLayout.setHorizontalGroup(
@@ -288,9 +309,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel14))
                 .addGap(46, 46, 46)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dineroContador)
                     .addComponent(dineroInvertidoLabel)
                     .addComponent(puntosAcumuladosLabel)
                     .addComponent(telefonoLabel)
@@ -329,7 +352,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dineroInvertidoLabel)
                     .addComponent(jLabel3))
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(dineroContador))
+                .addContainerGap(147, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -460,11 +487,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(viajesTablaRese);
 
-        jLabel14.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jLabel14.setText("Método Pago");
-
-        metodoPagoCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Puntos" }));
-
         reservarBtn.setText("Reservar Viaje");
         reservarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -565,15 +587,9 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                                 .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
                                         .addGap(18, 18, 18)
-                                        .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                                                .addComponent(jLabel7)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cantidadReserField, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(reservarTiqPanelLayout.createSequentialGroup()
-                                                .addComponent(jLabel14)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cantidadReserField, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
                                         .addGap(51, 51, 51)
                                         .addComponent(jLabel13))
@@ -583,7 +599,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
                         .addGap(179, 179, 179)
                         .addComponent(tituloViajeLabel)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         reservarTiqPanelLayout.setVerticalGroup(
             reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -609,10 +625,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(cantidadReserField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(reservarTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel14)
-                            .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
                         .addComponent(reservarBtn)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(reservarTiqPanelLayout.createSequentialGroup()
@@ -635,7 +647,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         clienteTabbedPane.addTab("Reservar", reservarTiqPanel);
 
-        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+        tablaNotificaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -646,23 +658,33 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "Mensaje", "Fecha envío"
             }
         ));
-        jScrollPane7.setViewportView(jTable5);
+        jScrollPane7.setViewportView(tablaNotificaciones);
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel12.setText("HISTORIAL DE NOTIFICACIONES DE POSIBLES TIQUETES");
 
         javax.swing.GroupLayout notificacionesPanelLayout = new javax.swing.GroupLayout(notificacionesPanel);
         notificacionesPanel.setLayout(notificacionesPanelLayout);
         notificacionesPanelLayout.setHorizontalGroup(
             notificacionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificacionesPanelLayout.createSequentialGroup()
-                .addGap(139, 139, 139)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addGroup(notificacionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(notificacionesPanelLayout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(jLabel12))
+                    .addGroup(notificacionesPanelLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 682, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         notificacionesPanelLayout.setVerticalGroup(
             notificacionesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificacionesPanelLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addGap(16, 16, 16)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Notificaciones", notificacionesPanel);
@@ -679,7 +701,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(clienteTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+                .addComponent(clienteTabbedPane)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -707,9 +729,12 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private void cancelarReservaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarReservaBtnActionPerformed
         try {
             if (idReservaSeleccionado != -1) {
-                cr.cancelarReserva(idReservaSeleccionado);
+                boolean desencoloMismo = cr.cancelarReserva(idReservaSeleccionado);
                 llenarTablaViajesRes(cr.getViajesAll());
                 llenarTablaReservas();
+                if (desencoloMismo) {
+                    llenarTablaNotificaciones();
+                }
                 JOptionPane.showMessageDialog(this, "Reserva cancelada correctamente", "Cancelación Reserva", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor selecciona una reserva de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -732,9 +757,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         try {
             if (idViajeSeleccionado != -1) {
                 int cantidad = Integer.parseInt(cantidadReserField.getText());
-                int metodoPago = Integer.parseInt(metodoPagoCombo.getSelectedIndex() + "");
 
-                cr.realizarReserva(idViajeSeleccionado, cantidad, metodoPago);
+                cr.realizarReserva(idViajeSeleccionado, cantidad);
                 llenarTablaReservas();
                 llenarTablaViajesRes(cr.getViajesAll());
                 JOptionPane.showMessageDialog(this, "Reserva hecha con éxito!", "Reserva", JOptionPane.INFORMATION_MESSAGE);
@@ -754,6 +778,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JButton cerrarSesionBtn;
     private javax.swing.JTabbedPane clienteTabbedPane;
     private javax.swing.JPanel devolucionesPanel;
+    private javax.swing.JLabel dineroContador;
     private javax.swing.JLabel dineroInvertidoLabel;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JButton filtrarBtn;
@@ -764,6 +789,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -784,8 +810,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTable jTable5;
-    private javax.swing.JComboBox<String> metodoPagoCombo;
     private javax.swing.JLabel nombreCliLabel;
     private javax.swing.JPanel notificacionesPanel;
     private javax.swing.JLabel nroIdLabel;
@@ -795,6 +819,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JButton reservarBtn;
     private javax.swing.JPanel reservarTiqPanel;
     private javax.swing.JTable tablaDevoluciones;
+    private javax.swing.JTable tablaNotificaciones;
     private javax.swing.JTable tablaPuntosRedimidos;
     private javax.swing.JTable tablaReservas;
     private javax.swing.JLabel telefonoLabel;

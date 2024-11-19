@@ -4,7 +4,9 @@
  */
 package Servicios;
 
+import Modelos.Notificacion;
 import Modelos.Reserva;
+import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
 import Utils.IList;
@@ -24,40 +26,55 @@ public class ServicioReservas {
     public IList<Reserva> getReservasViaje(Viaje viaje) {
         return viaje.getReservas();
     }
-    public void crearReserva(Cliente cliente, Viaje viaje, int cantidad, int metodoPago) {
+    public void crearReserva(Cliente cliente, Viaje viaje, int cantidad) {
         if (viaje == null) throw new RuntimeException("Selecciona bien el viaje");
         if (viaje.getFechaSalida().isBefore(LocalDateTime.now())) throw new RuntimeException("Este viaje ya ocurrió");
 
-        int puestosDesocupados = viaje.getBus().getPuestos() - viaje.getTiquetes().size();
-        if (cantidad > puestosDesocupados) {
-            throw new RuntimeException("Lo siento, este viaje tiene solo " + puestosDesocupados + " puestos disponibles");
+        if (cantidad > viaje.getPuestosDesocupados()) {
+            throw new RuntimeException("Lo siento, este viaje tiene solo " + viaje.getPuestosDesocupados() + " puestos disponibles");
         }
-        // Validaciones por si el metodo de pago es por puntos
-        if (metodoPago == 1) {
-            if (viaje.getVlrUnit() > 30000)throw new RuntimeException("Solo se pueden redimir 90 puntos por un tiquete de máximo 30k");
-            if (cliente.getPuntosAcumulados() < 90 * cantidad) throw new RuntimeException("El cliente no tiene suficientes puntos para canjear");
-        }
+        
         // Agrega la cantidad de tiquetes que se pidieron con un for y se les pone la misma
         // fecha, luego se retorna para usarla como "id" de los registrosPuntos
         for (int i = 0; i < cantidad; i++) {
-            Reserva reserva = new Reserva(cliente, viaje, metodoPago == 0 ? "efectivo" : "puntos");
+            Reserva reserva = new Reserva(cliente, viaje);
             viaje.getReservas().add(reserva);
             cliente.getReservas().add(reserva);
         }
     }
     public void cancelarReserva(Cliente cliente, Viaje viaje, Reserva reserva) {
-        cliente.getReservas().remove(reserva);
-        viaje.getReservas().remove(reserva);
+        boolean reservaEliminadoViaje = eliminarReservaDeLista(viaje.getReservas(), reserva.getId());
+        boolean reservaEliminadoCliente = eliminarReservaDeLista(cliente.getReservas(), reserva.getId());
+
+        if (!reservaEliminadoCliente || !reservaEliminadoViaje) {
+            throw new RuntimeException("No se pudo eliminar el tiquete de las listas correspondientes.");
+        }
     }
-    public void hacerEfectiva(Reserva reserva) {
-        if (reserva.isEfectiva()) throw new RuntimeException("La Reserva ya está efectiva");
+    private boolean eliminarReservaDeLista(IList<Reserva> lista, int idReserva) {
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getId() == idReserva) {
+                lista.remove(i); // Usa el método remove de tu lista personalizada
+                return true;
+            }
+        }
+        return false; // No se encontró la Reserva
+    }
+
+    public void hacerEfectiva(Reserva reserva) throws RuntimeException{
         reserva.hacerEfectiva();
-        
     }
-    public Reserva getReservaPorId(int idReserva, Viaje viaje) {
+    public Reserva getReservaPorIdViaje(int idReserva, Viaje viaje) {
         for (int i=0; i < getReservasViaje(viaje).size(); i++) {
             if (getReservasViaje(viaje).get(i).getId() == idReserva) {
                 return getReservasViaje(viaje).get(i);
+            }
+        }
+        return null;
+    }
+    public Reserva getReservaPorIdCliente(int idReserva, Cliente cliente) {
+        for (int i=0; i < getReservasCli(cliente).size(); i++) {
+            if (getReservasCli(cliente).get(i).getId() == idReserva) {
+                return getReservasCli(cliente).get(i);
             }
         }
         return null;

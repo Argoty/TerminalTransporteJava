@@ -17,15 +17,13 @@ public class Reserva implements Serializable{
     private int id;
     private Cliente cliente;       
     private Viaje viaje; 
-    private String metodoPago;
     private LocalDateTime fechaReserva;
     private boolean efectiva;
 
-    public Reserva(Cliente cliente, Viaje viaje, String metodoPago) {
+    public Reserva(Cliente cliente, Viaje viaje) {
         this.id = cont++; 
         this.cliente = cliente;
         this.viaje = viaje;
-        this.metodoPago = metodoPago;
         this.fechaReserva = LocalDateTime.now(); // Fecha actual
         this.efectiva = false;             
     }
@@ -60,9 +58,6 @@ public class Reserva implements Serializable{
 
     public Viaje getViaje() {
         return viaje;
-    }
-    public String getMetodoPago() {
-        return metodoPago;
     }
 //    public int getCantidad() {
 //        return cantidad;

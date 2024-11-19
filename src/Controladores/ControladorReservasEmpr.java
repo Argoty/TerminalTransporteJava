@@ -6,6 +6,7 @@ package Controladores;
 import Modelos.EmpresaTransporte;
 import Modelos.Reserva;
 import Modelos.Tiquete;
+import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
 import Servicios.ServicioCasetasPrincipal;
 import Servicios.ServicioPuntos;
@@ -51,22 +52,35 @@ public class ControladorReservasEmpr {
         Viaje viaje = sv.buscarViajePorId(idViaje);
         return sr.getReservasViaje(viaje);
     }
-    public void hacerEfectiva(int idReserva, int idViaje) {
-        Reserva reserva = getReservaPorId(idReserva, idViaje);
+    public void hacerEfectiva(int idReserva, int idViaje, int metodoPago) {
+        Reserva reservaViaje = getReservaPorIdViaje(idReserva, idViaje);
+        // Validaciones por si el metodo de pago es por puntos
+        if (metodoPago == 1) {
+            if (reservaViaje.getViaje().getVlrUnit() > 30000)throw new RuntimeException("Solo se pueden redimir 90 puntos por un tiquete de máximo 30k");
+            if (reservaViaje.getCliente().getPuntosAcumulados() < 90) throw new RuntimeException("El cliente no tiene suficientes puntos para canjear");
+        }
+        if (reservaViaje.isEfectiva()) throw new RuntimeException("La Reserva ya está efectiva");
         
-        sr.hacerEfectiva(reserva);
-        IList<Tiquete> tiquetesVenta = st.crearTiquete(reserva.getViaje(), reserva.getCliente(), 1, (reserva.getMetodoPago().equals("efectivo") ? 0 : 1));
+        Reserva reservaCli = getReservaPorIdCli(idReserva, reservaViaje.getCliente().getNroId());
+        sr.hacerEfectiva(reservaViaje);
+        sr.hacerEfectiva(reservaCli);
+
+        IList<Tiquete> tiquetesVenta = st.crearTiquete(reservaViaje.getViaje(), reservaCli.getCliente(), 1, metodoPago);
         
         // Agrega Puntos al usuario segun tiquetes creados
-        ServicioPuntos sm = new ServicioPuntos(reserva.getCliente());
+        ServicioPuntos sm = new ServicioPuntos(reservaCli.getCliente());
         sm.actualizarPuntos(tiquetesVenta.get(0));
         
         // Guarda informacion en binarios
         scp.saveDataCasetas();
         su.saveDataUsuarios();
     }
-    public Reserva getReservaPorId(int idReserva, int idViaje) {
+    public Reserva getReservaPorIdViaje(int idReserva, int idViaje) {
         Viaje viaje = sv.buscarViajePorId(idViaje);
-        return sr.getReservaPorId(idReserva, viaje);
+        return sr.getReservaPorIdViaje(idReserva, viaje);
+    }
+    public Reserva getReservaPorIdCli(int idReserva, int idCliente) {
+        Cliente cliente = (Cliente) su.buscarUsuarioPorId(idCliente);
+        return sr.getReservaPorIdCliente(idReserva, cliente);
     }
 }

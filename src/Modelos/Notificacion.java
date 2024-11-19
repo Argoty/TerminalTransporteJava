@@ -11,6 +11,7 @@ package Modelos;
 import Modelos.Usuarios.Cliente;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Notificacion implements Serializable{
     private Cliente cliente;
@@ -42,6 +43,9 @@ public class Notificacion implements Serializable{
 
     public LocalDateTime getFechaEnvio() {
         return fechaEnvio;
+    }
+    public String getFechaEnvioStr() {
+        return fechaEnvio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     public void setFechaEnvio(LocalDateTime fechaEnvio) {

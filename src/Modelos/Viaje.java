@@ -8,8 +8,11 @@ package Modelos;
  *
  * @author Javier Argoty
  */
+import Modelos.Usuarios.Cliente;
 import Utils.IList;
+import Utils.IQueue;
 import Utils.Lista;
+import Utils.Queue;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +30,7 @@ public class Viaje implements Serializable{
  
     private IList<Tiquete> tiquetes;
     private IList<Reserva> reservas;
+    private IQueue<Cliente> colaEspera;
     // Constructor
     public Viaje(String destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int vlrUnit, Bus bus) {
         this.id = cont++; 
@@ -39,6 +43,7 @@ public class Viaje implements Serializable{
         
         this.tiquetes = new Lista<>();
         this.reservas = new Lista<>();
+        this.colaEspera = new Queue<>();
     }
 
     // Getters y Setters
@@ -94,14 +99,14 @@ public class Viaje implements Serializable{
     public void setBus(Bus bus) {
         this.bus = bus;
     }
-    public int getPuestosOcupados() {
+    public int getPuestosDesocupados() {
         int contReservasNoEfectivas= 0;
         for (int i =0; i < reservas.size(); i++) {
             if (!reservas.get(i).isEfectiva()) {
                 contReservasNoEfectivas++;
             }
         }
-        return tiquetes.size() + contReservasNoEfectivas;
+        return bus.getPuestos() - (tiquetes.size() + contReservasNoEfectivas);
     }
     // Método para ajustar contador en la persistencia
     public static void ajustarContadorPersistencia(int numeroDeViajes) {
@@ -113,6 +118,9 @@ public class Viaje implements Serializable{
     }
     public IList<Reserva> getReservas(){
         return this.reservas;
+    }
+    public IQueue<Cliente> getColaEspera() {
+        return this.colaEspera;
     }
 }
 

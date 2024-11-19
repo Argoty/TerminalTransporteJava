@@ -57,7 +57,8 @@ public class ControladorTiquetes {
 
         IList<Tiquete> tiquetesVenta = st.crearTiquete(viaje, cliente, cantidad, metodoPago);
 
-        // Agrega Puntos al usuario segun tiquetes creados
+        // Agrega Puntos al usuario segun tiquetes creados si no se hizo venta si no es null
+        // si es null es porque mandó un cliente a la cola de espera
         if (tiquetesVenta != null) {
             ServicioPuntos sp = new ServicioPuntos(cliente);
             for (int i = 0; i < tiquetesVenta.size(); i++) {
@@ -88,7 +89,7 @@ public class ControladorTiquetes {
         sd.crearDevolucion(this.empresa, viaje, cliente, registroPuntos, puntosResultado);
         
         boolean desencolo = false;
-        // Actualizar los puestos disponibles y verificar la cola de espera
+        // VERIFICA SI HAY PARA DESENCOLAR Y CREA RESERVA SI ES ASI
         if (!viaje.getColaEspera().isEmpty() && viaje.getPuestosDesocupados() == 1) {
             Cliente clienteDesencolado = buscarClientePorId(viaje.getColaEspera().dequeue().getNroId());
 
@@ -111,6 +112,7 @@ public class ControladorTiquetes {
         return st.getTiquetes(viaje);
     }
 
+    // METODO PARA MOSTRAR COLA DE ESPERA DE ESE VIAJE
     public String getColaEspera(int idViaje) {
         Viaje viaje = buscarViajePorId(idViaje);
         IQueue<Cliente> colaAux = st.getColaEspera(viaje).clone();

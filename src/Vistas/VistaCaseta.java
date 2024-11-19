@@ -112,6 +112,7 @@ public class VistaCaseta extends javax.swing.JFrame {
         jLabel10.setText("Plazas estacionamiento");
 
         guardarFlotaBtn.setBackground(new java.awt.Color(102, 255, 102));
+        guardarFlotaBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         guardarFlotaBtn.setText("Guardar Flota");
         guardarFlotaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -200,6 +201,7 @@ public class VistaCaseta extends javax.swing.JFrame {
                 .addGap(23, 23, 23))
         );
 
+        regresarBtn.setBackground(new java.awt.Color(153, 153, 153));
         regresarBtn.setText("Regresar");
         regresarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -207,6 +209,7 @@ public class VistaCaseta extends javax.swing.JFrame {
             }
         });
 
+        desocuparBtn.setBackground(new java.awt.Color(0, 153, 51));
         desocuparBtn.setText("Desocupar caseta");
         desocuparBtn.setEnabled(false);
         desocuparBtn.addActionListener(new java.awt.event.ActionListener() {

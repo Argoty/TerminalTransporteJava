@@ -84,14 +84,15 @@ public class ServicioViajes {
             if (viajeExistente.getBus().getPlaca().equals(bus.getPlaca())) {
                 LocalDateTime inicioExistente = viajeExistente.getFechaSalida();
                 LocalDateTime finExistente = viajeExistente.getFechaLlegada();
+                LocalDateTime habilitadoDesde = finExistente.plusDays(1);
+
 
                 // Verificar si el bus está actualmente en un viaje
-                if (!ahora.isBefore(inicioExistente) && !ahora.isAfter(finExistente.plusDays(1))) {
+                if (!ahora.isBefore(inicioExistente) && !ahora.isAfter(habilitadoDesde)) {
                     throw new RuntimeException("NO PUEDE SER PROGRAMADO HASTA QUE PASE 1 DIA DE SU LLEGADA.");
                 }
 
                 // Valida si el nuevo viaje comienza antes de 1 día después de la llegada del viaje existente
-                LocalDateTime habilitadoDesde = finExistente.plusDays(1);
                 if (fechaSalida.isBefore(habilitadoDesde)) {
                     throw new RuntimeException("EL BUS NO ESTÁ DISPONIBLE HASTA EL DÍA SIGUIENTE A LA LLEGADA DE SU ÚLTIMO VIAJE ("
                             + habilitadoDesde.format(formatter) + ").");

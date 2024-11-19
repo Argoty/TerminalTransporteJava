@@ -3,14 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Servicios/ServicioDevoluciones.java</file>
             <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Servicios/ServicioReservas.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Controladores/ControladorReservasEmpr.java</file>
             <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Vistas/VistaGestionAdminFlota.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Controladores/ControladorReservar.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Servicios/ServicioTiquetes.java</file>
-            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Vistas/VistaGestionCliente.java</file>
             <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Servicios/ServicioPuntos.java</file>
+            <file>file:/D:/JAVA%20WORKSPACE/SEMESTRE%202/TerminalTransporte/src/Vistas/VistaGestionCliente.java</file>
         </group>
     </open-files>
 </project-private>

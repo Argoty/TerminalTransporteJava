@@ -38,21 +38,12 @@ public class ServicioPuntos {
                 puntosGanados += 3;
             }
 
-            cliente.setDineroInvertido(cliente.getDineroInvertido() + tiquete.getViaje().getVlrUnit());
+            cliente.setDineroInvertido(cliente.getDineroInvertido() + precioTiquete);
             cliente.getHistorialCompras().add(new RegistroPuntos(puntosGanados, tiquete));
         } else { // Pago con puntos
             cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() - 90);
             cliente.getHistorialCompras().add(new RegistroPuntos(-90, tiquete));
         }
-    }
-
-    // AUN NADA
-    public int puntosResultado(int precioTiquete) {
-        cliente.setDineroRestante(cliente.getDineroRestante() + precioTiquete);
-//        while() {
-//            
-//        }
-        return 0;
     }
 
     public int actualizarPuntosDevolucion(RegistroPuntos registro) {
@@ -61,17 +52,28 @@ public class ServicioPuntos {
         if (tiquete.getMetodoPago().equals("efectivo")) {
             int precioTiquete = tiquete.getViaje().getVlrUnit();
 
-//            while(cliente.getDineroRestante() >= 10000) {
-//                
-//            }
-            int puntosADevolver = registro.getPuntos(); // Puntos obtenidos por esta compra
+            int puntosDevueltos = 0;
+            int contDinero = precioTiquete;
+
+            // Cuento los puntos exclusivos de esa compra
+            while (contDinero >= 10000) {
+                contDinero -= 10000;
+                puntosDevueltos += 3;
+            }
+            contDinero = cliente.getDineroRestante() - contDinero;
+            
+            if (contDinero < 0) {
+                puntosDevueltos += 3;
+                contDinero += 10000;
+            }
+            
+            int puntosTotales = cliente.getPuntosAcumulados() - puntosDevueltos;
+            if (puntosTotales < 0) throw new RuntimeException("No se puede hacer devolucion de este tiquete porque los puntos que se ganaron en este ya fueron gastados");
+            cliente.setPuntosAcumulados(puntosTotales);
             cliente.setDineroInvertido(cliente.getDineroInvertido() - precioTiquete);
+            cliente.setDineroRestante(contDinero);
 
-            cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() - puntosADevolver);
-
-            cliente.setDineroRestante(cliente.getDineroRestante() - precioTiquete % 10000);
-
-            return -puntosADevolver;
+            return -puntosDevueltos;
         } else {
             // Devolución de una compra realizada con puntos
             cliente.setPuntosAcumulados(cliente.getPuntosAcumulados() + 90);

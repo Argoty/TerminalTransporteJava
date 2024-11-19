@@ -81,6 +81,8 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI Semibold", 3, 18)); // NOI18N
         jLabel4.setText("LOGIN DE USUARIO");
 
+        loginBtn.setBackground(new java.awt.Color(224, 144, 3));
+        loginBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         loginBtn.setText("LOGIN");
         loginBtn.setToolTipText("");
         loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +138,8 @@ public class VistaAccesoUsuario extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setText("Número de identificacion");
 
+        registroCliBtn.setBackground(new java.awt.Color(255, 153, 0));
+        registroCliBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         registroCliBtn.setText("Registrar");
         registroCliBtn.setToolTipText("");
         registroCliBtn.addActionListener(new java.awt.event.ActionListener() {

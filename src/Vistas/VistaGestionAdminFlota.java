@@ -337,6 +337,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPaneAdminFlota.setBackground(new java.awt.Color(102, 102, 102));
+
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel1.setText("Plazas Ocupadas:");
 
@@ -351,6 +353,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel5.setText("Puestos");
 
+        agregarBusBtn.setBackground(new java.awt.Color(255, 153, 51));
+        agregarBusBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         agregarBusBtn.setText("Agregar");
         agregarBusBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -358,6 +362,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        eliminarBusBtn.setBackground(new java.awt.Color(255, 102, 102));
+        eliminarBusBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         eliminarBusBtn.setText("Eliminar");
         eliminarBusBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -365,6 +371,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        editarBusBtn.setBackground(new java.awt.Color(204, 102, 255));
+        editarBusBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         editarBusBtn.setText("Editar");
         editarBusBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -372,6 +380,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        buscarBusBtn.setBackground(new java.awt.Color(153, 153, 255));
+        buscarBusBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         buscarBusBtn.setText("Buscar");
         buscarBusBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -379,6 +389,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        busesTabla.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         busesTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -390,6 +401,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 "Placa", "Marca", "Tipo", "Numero Puestos"
             }
         ));
+        busesTabla.setGridColor(new java.awt.Color(0, 0, 0));
         jScrollPane1.setViewportView(busesTabla);
 
         jLabel15.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -454,9 +466,6 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionBusesPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(58, Short.MAX_VALUE))
-                    .addGroup(gestionBusesPanelLayout.createSequentialGroup()
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(placaBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -464,7 +473,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel15)
                             .addComponent(marcaBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel16)
                             .addComponent(tipoBusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -487,6 +496,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                         .addGroup(gestionBusesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buscarBusBtn)
                             .addComponent(editarBusBtn))
+                        .addContainerGap(44, Short.MAX_VALUE))
+                    .addGroup(gestionBusesPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -495,6 +507,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel8.setText("Destino");
 
+        crearViajeBtn.setBackground(new java.awt.Color(255, 153, 51));
+        crearViajeBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         crearViajeBtn.setText("Crear Viaje");
         crearViajeBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -502,6 +516,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             }
         });
 
+        viajesTabla.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         viajesTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -513,6 +528,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"
             }
         ));
+        viajesTabla.setGridColor(new java.awt.Color(0, 0, 0));
         jScrollPane2.setViewportView(viajesTabla);
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -600,7 +616,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             panelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelContainerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(panelContainerLayout.createSequentialGroup()
                         .addGroup(panelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
@@ -644,9 +661,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(vlrUnitField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
-                        .addComponent(crearViajeBtn))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addComponent(crearViajeBtn)))
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout gestionViajesPanelLayout = new javax.swing.GroupLayout(gestionViajesPanel);
@@ -673,6 +689,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel14.setText("Método Pago");
 
+        venderTiquete.setBackground(new java.awt.Color(255, 153, 51));
+        venderTiquete.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         venderTiquete.setText("Vender Tiquete");
         venderTiquete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -691,6 +709,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"
             }
         ));
+        viajesTablaTiq.setGridColor(new java.awt.Color(0, 0, 0));
+        viajesTablaTiq.setSelectionBackground(new java.awt.Color(51, 51, 51));
         jScrollPane4.setViewportView(viajesTablaTiq);
 
         jLabel13.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -707,8 +727,11 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 "ID", "Cliente", "Metodo Pago", "Fecha Compra"
             }
         ));
+        tablaTiquetes.setSelectionBackground(new java.awt.Color(0, 0, 0));
         jScrollPane5.setViewportView(tablaTiquetes);
 
+        buscarClienteBtn.setBackground(new java.awt.Color(255, 102, 102));
+        buscarClienteBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         buscarClienteBtn.setText("Buscar Cliente");
         buscarClienteBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -722,6 +745,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel22.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel22.setText("hacer su Devolución");
 
+        hacerDevolucionBtn.setBackground(new java.awt.Color(255, 102, 51));
+        hacerDevolucionBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         hacerDevolucionBtn.setText("Hacer Devolución");
         hacerDevolucionBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -763,29 +788,22 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addGap(0, 30, Short.MAX_VALUE)
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
-                                    .addComponent(buscarClienteBtn)
-                                    .addGap(63, 63, 63))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
-                                    .addComponent(infoClienteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addContainerGap())
-                                .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                    .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
-                                            .addComponent(jLabel12)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(idClienteField, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(21, 21, 21))
-                                        .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                            .addComponent(jLabel26)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                            .addComponent(jLabel14)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(16, 16, 16)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel12)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(idClienteField, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(21, 21, 21))
+                                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel26)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel14)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(16, 16, 16))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel22)
@@ -794,58 +812,59 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                                         .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGap(69, 69, 69))))
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                .addGap(0, 115, Short.MAX_VALUE)
-                                .addComponent(verColaEperaBtn)
-                                .addContainerGap())
-                            .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                                 .addComponent(puestosDisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 17, Short.MAX_VALUE))))
+                                .addGap(0, 23, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(venderTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(34, 34, 34))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                        .addComponent(buscarClienteBtn)
+                                        .addGap(69, 69, 69))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
+                                .addComponent(infoClienteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(venderTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37))))
+                        .addComponent(verColaEperaBtn)
+                        .addContainerGap())))
         );
         gestionVentaTiqPanelLayout.setVerticalGroup(
             gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(tituloViajeLabel))
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addGap(43, 43, 43)
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
                             .addComponent(idClienteField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buscarClienteBtn)
-                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(infoClienteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel26))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(infoClienteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cantidadTiquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel26))
                         .addGap(18, 18, 18)
                         .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel14)
                             .addComponent(metodoPagoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(venderTiquete)))
-                .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(verColaEperaBtn))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionVentaTiqPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tituloViajeLabel)))
+                        .addComponent(venderTiquete)
+                        .addGap(18, 18, 18)
+                        .addComponent(verColaEperaBtn)))
                 .addGroup(gestionVentaTiqPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gestionVentaTiqPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -878,6 +897,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"
             }
         ));
+        viajesTablaRes.setSelectionBackground(new java.awt.Color(0, 0, 0));
         jScrollPane7.setViewportView(viajesTablaRes);
 
         tituloViajeLabel1.setText("Reservas del Viaje");
@@ -890,6 +910,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
                 "ID", "Cliente", "Metodo Pago", "Fecha Reserva", "Estado"
             }
         ));
+        tablaReservas.setSelectionBackground(new java.awt.Color(0, 0, 0));
         jScrollPane8.setViewportView(tablaReservas);
 
         jLabel28.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -898,6 +919,8 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
         jLabel29.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel29.setText("HACER EFECTIVA UNA RESERVA");
 
+        hacerEfectivaBtn.setBackground(new java.awt.Color(255, 153, 51));
+        hacerEfectivaBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         hacerEfectivaBtn.setText("Hacer efectiva");
         hacerEfectivaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1029,6 +1052,9 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
 
         jTabbedPaneAdminFlota.addTab("Devoluciones", jPanel2);
 
+        cerrarSesionBtn.setBackground(new java.awt.Color(0, 0, 0));
+        cerrarSesionBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        cerrarSesionBtn.setForeground(new java.awt.Color(255, 255, 255));
         cerrarSesionBtn.setText("Cerrar sesión");
         cerrarSesionBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1048,7 +1074,7 @@ public class VistaGestionAdminFlota extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jTabbedPaneAdminFlota, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(jLabel24)

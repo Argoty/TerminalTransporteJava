@@ -187,6 +187,9 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="66" green="ff" red="66" type="rgb"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="12" style="1"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Guardar Flota"/>
       </Properties>
       <Events>
@@ -342,6 +345,9 @@
     </Container>
     <Component class="javax.swing.JButton" name="regresarBtn">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="99" green="99" red="99" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Regresar"/>
       </Properties>
       <Events>
@@ -350,6 +356,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="desocuparBtn">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="99" red="0" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Desocupar caseta"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>

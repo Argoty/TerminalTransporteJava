@@ -4,9 +4,7 @@
  */
 package Servicios;
 
-import Modelos.Notificacion;
 import Modelos.Reserva;
-import Modelos.Tiquete;
 import Modelos.Usuarios.Cliente;
 import Modelos.Viaje;
 import Utils.IList;

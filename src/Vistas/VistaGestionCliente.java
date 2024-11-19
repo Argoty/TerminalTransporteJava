@@ -69,7 +69,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         telefonoLabel.setText(cic.getTelefono());
         puntosAcumuladosLabel.setText(cic.getPuntosAcumulados() + "");
         dineroInvertidoLabel.setText("$" + cic.getDineroInvertido());
-        dineroContador.setText("$" + cliente.getDineroRestante());
     }
 
     // MÉTODOS PRIVADOS DEL TAB DE PUNTOS
@@ -201,6 +200,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
             });
         }
         tablaNotificaciones.setModel(model);
+        tablaNotificaciones.getColumnModel().getColumn(0).setPreferredWidth(300);
+        tablaNotificaciones.getColumnModel().getColumn(1).setPreferredWidth(100);
     }
 
     /**
@@ -226,8 +227,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         puntosAcumuladosLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         dineroInvertidoLabel = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        dineroContador = new javax.swing.JLabel();
         puntosAcumulados = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         puntosGanadosTable = new javax.swing.JTable();
@@ -273,8 +272,10 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel2.setText("Numero de Identificacion:");
 
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel8.setText("Email:");
 
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel9.setText("Telefono:");
 
         nombreCliLabel.setText("jLabel10");
@@ -285,78 +286,71 @@ public class VistaGestionCliente extends javax.swing.JFrame {
 
         telefonoLabel.setText("jLabel13");
 
+        jLabel10.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel10.setText("Puntos Acumulados");
 
         puntosAcumuladosLabel.setText("jLabel13");
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel3.setText("Dinero Invertido");
 
         dineroInvertidoLabel.setText("jLabel17");
-
-        jLabel14.setText("Dinero Contador");
-
-        dineroContador.setText("jLabel19");
 
         javax.swing.GroupLayout informacionPanelLayout = new javax.swing.GroupLayout(informacionPanel);
         informacionPanel.setLayout(informacionPanelLayout);
         informacionPanelLayout.setHorizontalGroup(
             informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(informacionPanelLayout.createSequentialGroup()
-                .addGap(98, 98, 98)
-                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel14))
-                .addGap(46, 46, 46)
-                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dineroContador)
-                    .addComponent(dineroInvertidoLabel)
-                    .addComponent(puntosAcumuladosLabel)
-                    .addComponent(telefonoLabel)
-                    .addComponent(emailLabel)
-                    .addComponent(nroIdLabel)
-                    .addComponent(nombreCliLabel))
-                .addContainerGap(415, Short.MAX_VALUE))
+                .addGap(146, 146, 146)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(informacionPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(telefonoLabel))
+                    .addGroup(informacionPanelLayout.createSequentialGroup()
+                        .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel3))
+                        .addGap(161, 161, 161)
+                        .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dineroInvertidoLabel)
+                            .addComponent(puntosAcumuladosLabel)
+                            .addComponent(nroIdLabel)
+                            .addComponent(nombreCliLabel)
+                            .addComponent(emailLabel))))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
         informacionPanelLayout.setVerticalGroup(
             informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(informacionPanelLayout.createSequentialGroup()
-                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(informacionPanelLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(nombreCliLabel))
-                    .addGroup(informacionPanelLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel1)
-                        .addGap(44, 44, 44)
-                        .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(nroIdLabel))))
-                .addGap(32, 32, 32)
+                .addGap(45, 45, 45)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(nombreCliLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(nroIdLabel))
+                .addGap(50, 50, 50)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(emailLabel))
-                .addGap(45, 45, 45)
+                .addGap(62, 62, 62)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(telefonoLabel))
-                .addGap(43, 43, 43)
+                .addGap(70, 70, 70)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(puntosAcumuladosLabel))
-                .addGap(40, 40, 40)
+                .addGap(68, 68, 68)
                 .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dineroInvertidoLabel)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(informacionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(dineroContador))
-                .addContainerGap(147, Short.MAX_VALUE))
+                    .addComponent(jLabel3)
+                    .addComponent(dineroInvertidoLabel))
+                .addGap(82, 82, 82))
         );
 
         clienteTabbedPane.addTab("Mi información", informacionPanel);
@@ -419,7 +413,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -466,7 +460,7 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Devoluciones", devolucionesPanel);
@@ -485,8 +479,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "Destino", "Fecha Salida", "Fecha llegada", "Bus", "Vlr Unit"
             }
         ));
+        viajesTablaRese.setSelectionBackground(new java.awt.Color(0, 0, 0));
         jScrollPane4.setViewportView(viajesTablaRese);
 
+        reservarBtn.setBackground(new java.awt.Color(255, 102, 51));
+        reservarBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         reservarBtn.setText("Reservar Viaje");
         reservarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -509,8 +506,11 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 "ID", "Viaje", "Bus", "Vlr Unit", "Fecha", "Metodo Pago", "Fecha Reserva", "Estado"
             }
         ));
+        tablaReservas.setSelectionBackground(new java.awt.Color(0, 0, 0));
         jScrollPane8.setViewportView(tablaReservas);
 
+        filtrarBtn.setBackground(new java.awt.Color(0, 204, 102));
+        filtrarBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         filtrarBtn.setText("Filtrar");
         filtrarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -529,6 +529,8 @@ public class VistaGestionCliente extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel7.setText("Cantidad");
 
+        cancelarReservaBtn.setBackground(new java.awt.Color(255, 153, 102));
+        cancelarReservaBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         cancelarReservaBtn.setText("Cancelar Reserva");
         cancelarReservaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -684,11 +686,14 @@ public class VistaGestionCliente extends javax.swing.JFrame {
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         clienteTabbedPane.addTab("Notificaciones", notificacionesPanel);
 
+        cerrarSesionBtn.setBackground(new java.awt.Color(0, 0, 0));
+        cerrarSesionBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        cerrarSesionBtn.setForeground(new java.awt.Color(255, 255, 255));
         cerrarSesionBtn.setText("Cerrar Sesión");
         cerrarSesionBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -778,7 +783,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JButton cerrarSesionBtn;
     private javax.swing.JTabbedPane clienteTabbedPane;
     private javax.swing.JPanel devolucionesPanel;
-    private javax.swing.JLabel dineroContador;
     private javax.swing.JLabel dineroInvertidoLabel;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JButton filtrarBtn;
@@ -791,7 +795,6 @@ public class VistaGestionCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;

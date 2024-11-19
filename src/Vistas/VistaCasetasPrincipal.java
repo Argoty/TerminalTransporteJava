@@ -56,8 +56,7 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
             for (int j = 0; j < botones[i].length; j++) {
                 botones[i][j] = new JButton();
                 // setBounds(posX, posY, ancho, alto)
-                
-
+               
                 int validacionSeparacion = ((i == 1) && (j >= 1) ? j + 3
                         : (i == 3) && (j >= 0) ? j + 3
                                 : j);
@@ -105,6 +104,9 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
 
         panelBtnCasetas.setBorder(javax.swing.BorderFactory.createTitledBorder("Casetas"));
 
+        cerrarSesionBtn.setBackground(new java.awt.Color(0, 0, 0));
+        cerrarSesionBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        cerrarSesionBtn.setForeground(new java.awt.Color(255, 255, 255));
         cerrarSesionBtn.setText("Cerrar Sesión");
         cerrarSesionBtn.setToolTipText("");
         cerrarSesionBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -118,7 +120,7 @@ public class VistaCasetasPrincipal extends javax.swing.JFrame implements ActionL
         panelBtnCasetasLayout.setHorizontalGroup(
             panelBtnCasetasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCasetasLayout.createSequentialGroup()
-                .addContainerGap(336, Short.MAX_VALUE)
+                .addContainerGap(334, Short.MAX_VALUE)
                 .addComponent(cerrarSesionBtn)
                 .addGap(22, 22, 22))
         );
